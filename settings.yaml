@@ -242,6 +242,87 @@ spec:
           label: 顶部 Banner
           value: true
         - $formkit: group
+          name: homeCenter
+          label: 首页中心轮播
+          if: $get(recentTop).value
+          value:
+            enable: false
+            tagText: 全站推荐
+            autoPlay: true
+            autoPlayInterval: 5000
+            desktopHeight: 290
+            mobileHeight: 220
+            items: [ ]
+          children:
+            - $formkit: switch
+              name: enable
+              id: homeCenterEnable
+              key: homeCenterEnable
+              label: 启用首页中心轮播
+              help: 开启后将替换默认顶部 Banner 区域
+            - $formkit: text
+              name: tagText
+              label: 标签文案
+              value: 全站推荐
+            - $formkit: switch
+              name: autoPlay
+              label: 自动轮播
+              value: true
+            - $formkit: number
+              name: autoPlayInterval
+              label: 轮播间隔(ms)
+              value: 5000
+              min: 2000
+              step: 500
+            - $formkit: number
+              name: desktopHeight
+              label: 桌面端高度(px)
+              value: 290
+              min: 220
+              step: 10
+            - $formkit: number
+              name: mobileHeight
+              label: 移动端高度(px)
+              value: 220
+              min: 180
+              step: 10
+            - $formkit: repeater
+              name: items
+              label: 轮播项目
+              help: 建议配置 3-6 项，主题色请使用 6 位十六进制颜色
+              min: 1
+              max: 6
+              value: [ ]
+              itemLabels:
+                - type: text
+                  label: $value.post
+              children:
+                - $formkit: postSelect
+                  name: post
+                  label: 文章
+                  value: ""
+                  validation: required
+                - $formkit: attachment
+                  name: cover
+                  label: 主图覆盖
+                  placeholder: 留空则使用文章封面
+                  width: "15rem"
+                  aspectRatio: "16/9"
+                - $formkit: attachment
+                  name: icon
+                  label: 右侧图标
+                  placeholder: 留空则使用主图
+                  width: "8rem"
+                  aspectRatio: "1/1"
+                - $formkit: color
+                  name: themeColor
+                  label: 主题色
+                  value: "#425AEF"
+                - $formkit: color
+                  name: selectedBgColor
+                  label: 右侧选中背景色
+                  value: "#6f63f6"
+        - $formkit: group
           name: BannerLeft
           label: Banner 左侧
           if: $get(recentTop).value
@@ -696,6 +777,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "post-audio"
+                      label: 文章音频播放器
                     - value: "visit-posts"
                       label: 热门文章
                     - value: "comments"

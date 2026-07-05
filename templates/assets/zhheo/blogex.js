@@ -223,19 +223,34 @@ var getTimeState = () => {
     },
 //深色模式切换
     switchDarkMode = () => {
+        // 添加过渡效果类
+        document.documentElement.classList.add('theme-transition');
+        
         "dark" === document.documentElement.getAttribute("data-theme") ? (activateLightMode(),
             saveToLocal.set("theme", "light", 2),
         void 0 !== GLOBAL_CONFIG.Snackbar && btf.snackbarShow(GLOBAL_CONFIG.Snackbar.night_to_day, false, 2000),
             $(".menu-darkmode-text").text("深色模式")) : (activateDarkMode(),
             saveToLocal.set("theme", "dark", 2),
         void 0 !== GLOBAL_CONFIG.Snackbar && btf.snackbarShow(GLOBAL_CONFIG.Snackbar.day_to_night, false, 2000),
-            $(".menu-darkmode-text").text("浅色模式")),
-            handleCases()
-        heo.darkModeStatus();
-        //代码块
-        if (GLOBAL_CONFIG.prism.enable) {
-            halo.dataCodeTheme();
-        }
+            $(".menu-darkmode-text").text("浅色模式"));
+        
+        // 先更新主题色，确保颜色变化平滑
+        heo.initThemeColor();
+        
+        // 延迟处理其他需要主题色的组件，确保颜色已经应用
+        setTimeout(() => {
+            handleCases();
+            heo.darkModeStatus();
+            //代码块
+            if (GLOBAL_CONFIG.prism.enable) {
+                halo.dataCodeTheme();
+            }
+            
+            // 移除过渡效果类，避免影响其他动画
+            setTimeout(() => {
+                document.documentElement.classList.remove('theme-transition');
+            }, 300);
+        }, 100);
     }
     , handleCases = () => {
         "function" == typeof utterancesTheme && utterancesTheme(),
@@ -596,6 +611,8 @@ function initBlog() {
         heo.darkModeStatus(),
         heo.categoriesBarActive(),
         heo.initThemeColor(),
+        heo.initPosterCoverText(),
+        heo.initHomeCenter(),
         heo.topCategoriesBarScroll(),
         //隐藏加载动画
     GLOBAL_CONFIG.loadingBox && heo.hideLoading(),

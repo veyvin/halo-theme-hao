@@ -2,9 +2,9 @@
     <!-- 有子菜单则显示子菜单 -->
     <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
         <!-- 子菜单 -->
-        <div class="menus_item_child"
-             th:classappend="${#annotations.get(menuItem,'isVertical')=='1'?'vertical_nav':''}">
-            <div class="recursion_menus_item" th:each="childMenu : ${menuItem.children}">
+        <ul class="menus_item_child"
+            th:classappend="${#annotations.get(menuItem,'isVertical')=='1'?' vertical_nav':''}">
+            <li class="recursion_menus_item" th:each="childMenu : ${menuItem.children}">
                 <a class="site-page child" th:target="${childMenu.spec.target?.value}"
                    th:href="@{${childMenu.status.href}}">
                     <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
@@ -21,8 +21,8 @@
                 </a>
                 <!--递归调用-->
                 <div th:replace="~{modules/widgets/nav-menu :: nav-menu-recursion(menuItem=${childMenu})}"></div>
-            </div>
-        </div>
+            </li>
+        </ul>
     </th:block>
 </th:block>
 
@@ -47,14 +47,15 @@
                 <span th:text="${menuItem.status.displayName}"></span>
             </a>
             
-            <a th:if="${not #lists.isEmpty(menuItem.children)}" class="site-page" rel="external nofollow">
+            <button th:if="${not #lists.isEmpty(menuItem.children)}" class="site-page" type="button">
                 <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
                     <svg class="ali_icon" aria-hidden="true">
                         <use th:href="${#annotations.getOrDefault(menuItem, 'icon','jiewen joe-icon-zuzhijiagou')}"></use>
                     </svg>
                 </th:block>
                 <span th:text="${menuItem.status.displayName}"></span>
-            </a>
+                <i class="fas fa-chevron-down expand"></i>
+            </button>
             <!--递归调用-->
             <div th:replace="~{modules/widgets/nav-menu :: nav-menu-recursion(menuItem=${menuItem})}"></div>
             

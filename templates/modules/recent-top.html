@@ -1,6 +1,10 @@
 <!-- 置顶的文章-->
-<div class="recent-top-post-group" id="recent-top-post-group" th:if="${theme.config.top.recentTop}">
-    <div class="recent-post-top" id="recent-post-top">
+<div class="recent-top-post-group" id="recent-top-post-group" th:if="${theme.config.top.recentTop}"
+     th:classappend="${theme.config.top.homeCenter.enable and not #lists.isEmpty(theme.config.top.homeCenter.items)} ? ' home-center-mode' : ''">
+    <div th:if="${theme.config.top.homeCenter.enable and not #lists.isEmpty(theme.config.top.homeCenter.items)}"
+         th:replace="~{modules/widgets/home-center}" />
+    <div class="recent-post-top" id="recent-post-top"
+         th:unless="${theme.config.top.homeCenter.enable and not #lists.isEmpty(theme.config.top.homeCenter.items)}">
         <!-- banner -->
         <div th:replace="~{modules/widgets/banner-group}" />
         <!-- top -->

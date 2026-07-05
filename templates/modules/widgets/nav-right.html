@@ -62,9 +62,10 @@
         </div>
     </div>
     <div th:if="${theme.config.nav.right.console.consoleEnable}" class="nav-button" id="nav-console">
-        <a class="console_switchbutton" href="javascript:void(0);" onclick="heo.showConsole()" rel="external nofollow"
-           title="显示中控台">
-            <i class="haofont hao-icon-dashboard"></i>
+        <a class="console_switchbutton" href="javascript:void(0);" onclick="heo.toggleConsole()" rel="external nofollow"
+           title="中控台">
+            <i class="haofont hao-icon-dashboard console-icon-dashboard"></i>
+            <i class="haofont hao-icon-guanbi console-icon-close"></i>
         </a>
     </div>
 

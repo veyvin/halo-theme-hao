@@ -6,14 +6,40 @@
         <div class="recent-post-item" th:each="post,iter : ${topGroupPosts}"
              th:if="${#strings.equals(theme.config.top.BannerRight.recommendPost, 'latest')}">
 
-            <div class="post_cover" th:classappend="${iter.index % 2 == 0 ? 'left_radius' : 'right_radius'}">
-                <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
+            <div class="post_cover"
+                 th:with="
+                    coverMode=${#annotations.getOrDefault(post, 'homeCardCoverMode', 'image')},
+                    coverTitle=${#strings.isEmpty(#annotations.get(post, 'homeCardCoverTitle')) ? post.spec.title : #annotations.get(post, 'homeCardCoverTitle')},
+                    coverSubtitle=${#annotations.get(post, 'homeCardCoverSubtitle')},
+                    coverBadge=${#annotations.get(post, 'homeCardCoverBadge')},
+                    coverLogo=${#annotations.get(post, 'homeCardCoverLogo')},
+                    coverPreset=${#annotations.getOrDefault(post, 'homeCardCoverPreset', 'tech')},
+                    coverStart=${#annotations.getOrDefault(post, 'homeCardCoverStart', '#6D5CFF')},
+                    coverEnd=${#annotations.getOrDefault(post, 'homeCardCoverEnd', '#1EC8A5')},
+                    coverAccent=${#annotations.getOrDefault(post, 'homeCardCoverAccent', '#F6D365')},
+                    coverTextColor=${#annotations.getOrDefault(post, 'homeCardCoverTextColor', '#FFFFFF')}"
+                 th:classappend="${iter.index % 2 == 0 ? 'left_radius' : 'right_radius'} + (${#strings.equals(coverMode, 'gradient')} ? ' cover-art cover-preset-' + coverPreset : '')">
+                <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
+                   th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                     <span class="recent-post-top-text"
                           th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
-                    <img class="post_bg"
+                    <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg"
                          th:with=' img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
                          th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
                          th:data-lazy-src="${ isLazyload ? img : ''}" />
+                    <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
+                         th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">
+                        <div class="post_art_glow"></div>
+                        <span class="post_art_badge" th:if="${!#strings.isEmpty(coverBadge)}" th:text="${coverBadge}"></span>
+                        <span class="post_art_back_title" th:text="${coverTitle}"></span>
+                        <div class="post_art_logo" th:if="${!#strings.isEmpty(coverLogo)}">
+                            <img th:src="${coverLogo}" th:alt="${coverTitle}">
+                        </div>
+                        <div class="post_art_content">
+                            <span class="post_art_kicker" th:if="${!#strings.isEmpty(coverSubtitle)}" th:text="${coverSubtitle}"></span>
+                            <span class="post_art_title" th:text="${coverTitle}"></span>
+                        </div>
+                    </div>
                 </a>
             </div>
             <div class="recent-post-info">
@@ -26,14 +52,40 @@
         <div class="recent-post-item" th:each="cuscomPost,iter : ${theme.config.top.BannerRight.recommendPostCustom}"
              th:if="${#strings.equals(theme.config.top.BannerRight.recommendPost, 'custom') && not #strings.isEmpty(cuscomPost.post) }">
             <th:block th:with="post = ${postFinder.getByName(cuscomPost.post)}">
-                <div class="post_cover" th:classappend="${iter.index % 2 == 0 ? 'left_radius' : 'right_radius'}">
-                    <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
+                <div class="post_cover"
+                     th:with="
+                        coverMode=${#annotations.getOrDefault(post, 'homeCardCoverMode', 'image')},
+                        coverTitle=${#strings.isEmpty(#annotations.get(post, 'homeCardCoverTitle')) ? post.spec.title : #annotations.get(post, 'homeCardCoverTitle')},
+                        coverSubtitle=${#annotations.get(post, 'homeCardCoverSubtitle')},
+                        coverBadge=${#annotations.get(post, 'homeCardCoverBadge')},
+                        coverLogo=${#annotations.get(post, 'homeCardCoverLogo')},
+                        coverPreset=${#annotations.getOrDefault(post, 'homeCardCoverPreset', 'tech')},
+                        coverStart=${#annotations.getOrDefault(post, 'homeCardCoverStart', '#6D5CFF')},
+                        coverEnd=${#annotations.getOrDefault(post, 'homeCardCoverEnd', '#1EC8A5')},
+                        coverAccent=${#annotations.getOrDefault(post, 'homeCardCoverAccent', '#F6D365')},
+                        coverTextColor=${#annotations.getOrDefault(post, 'homeCardCoverTextColor', '#FFFFFF')}"
+                     th:classappend="${iter.index % 2 == 0 ? 'left_radius' : 'right_radius'} + (${#strings.equals(coverMode, 'gradient')} ? ' cover-art cover-preset-' + coverPreset : '')">
+                    <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
+                       th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                         <span class="recent-post-top-text"
                               th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
-                        <img class="post_bg"
+                        <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg"
                              th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
                              th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
                              th:data-lazy-src="${ isLazyload ? img : ''}" />
+                        <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
+                             th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">
+                            <div class="post_art_glow"></div>
+                            <span class="post_art_badge" th:if="${!#strings.isEmpty(coverBadge)}" th:text="${coverBadge}"></span>
+                            <span class="post_art_back_title" th:text="${coverTitle}"></span>
+                            <div class="post_art_logo" th:if="${!#strings.isEmpty(coverLogo)}">
+                                <img th:src="${coverLogo}" th:alt="${coverTitle}">
+                            </div>
+                            <div class="post_art_content">
+                                <span class="post_art_kicker" th:if="${!#strings.isEmpty(coverSubtitle)}" th:text="${coverSubtitle}"></span>
+                                <span class="post_art_title" th:text="${coverTitle}"></span>
+                            </div>
+                        </div>
                     </a>
                 </div>
                 <div class="recent-post-info">

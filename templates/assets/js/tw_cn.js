@@ -66,15 +66,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetEncoding === 1) {
             currentEncoding = 1
             targetEncoding = 2
-            translateButtonObject.innerHTML = msgToTraditionalChinese;
-            translateRightMenuButtonObject.innerHTML = rightMenuMsgToTraditionalChinese;
+            if (translateButtonObject) {
+                translateButtonObject.innerHTML = msgToTraditionalChinese;
+            }
+            if (translateRightMenuButtonObject) {
+                translateRightMenuButtonObject.innerHTML = rightMenuMsgToTraditionalChinese;
+            }
             if (isSnackbar)
                 btf.snackbarShow(snackbarData.cht_to_chs)
         } else if (targetEncoding === 2) {
             currentEncoding = 2
             targetEncoding = 1
-            translateButtonObject.innerHTML = msgToSimplifiedChinese;
-            translateRightMenuButtonObject.innerHTML = rightMenuMsgToSimplifiedChinese;
+            if (translateButtonObject) {
+                translateButtonObject.innerHTML = msgToSimplifiedChinese;
+            }
+            if (translateRightMenuButtonObject) {
+                translateRightMenuButtonObject.innerHTML = rightMenuMsgToSimplifiedChinese;
+            }
             if (isSnackbar)
                 btf.snackbarShow(snackbarData.chs_to_cht)
         }
@@ -123,14 +131,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (translateButtonObject || translateRightMenuButtonObject) {
             if (currentEncoding !== targetEncoding) {
-                translateButtonObject.innerHTML = targetEncoding === 1 ? msgToSimplifiedChinese : msgToTraditionalChinese;
+                if (translateButtonObject) {
+                    translateButtonObject.innerHTML = targetEncoding === 1 ? msgToSimplifiedChinese : msgToTraditionalChinese;
+                }
                 if (translateRightMenuButtonElement) {
                     translateRightMenuButtonElement.innerHTML = targetEncoding === 1 ? rightMenuMsgToSimplifiedChinese : rightMenuMsgToTraditionalChinese;
                 }
                 setLang();
                 setTimeout(translateBody, translateDelay);
             }
-            translateButtonObject.addEventListener("click", translatePage, false);
+            if (translateButtonObject) {
+                translateButtonObject.addEventListener("click", translatePage, false);
+            }
             translateRightMenuButtonElement && translateRightMenuButtonElement.addEventListener("click", translatePage, false);
         }
     }

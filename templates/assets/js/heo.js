@@ -417,6 +417,7 @@ var heo = {
         $('.console-card-group-reward').attr('style', 'display: flex');
         $('.console-card-group').attr('style', 'display: none');
         document.querySelector("#console").classList.add("show");
+        document.querySelector("#nav-console")?.classList.add("active");
         heo.initConsoleState()
 
     },
@@ -426,13 +427,34 @@ var heo = {
         $('.console-card-group-reward').attr('style', 'display: none');
         $('.console-card-group').attr('style', 'display: flex');
         document.querySelector("#console").classList.add("show");
+        document.querySelector("#nav-console")?.classList.add("active");
 
 
+    },
+
+    toggleConsole: function () {
+        const consoleEl = document.querySelector("#console");
+        if (!consoleEl) return;
+        if (consoleEl.classList.contains("show")) {
+            heo.hideConsole();
+        } else {
+            heo.showConsole();
+        }
     },
 
     //隐藏中控台
     hideConsole: function () {
         document.querySelector("#console").classList.remove("show");
+        document.querySelector("#nav-console")?.classList.remove("active");
+    },
+
+    onNavBlankClickCloseConsole: function (event) {
+        const consoleEl = document.querySelector("#console");
+        if (!consoleEl || !consoleEl.classList.contains("show")) return;
+        const navConsole = document.querySelector("#nav-console");
+        if (navConsole && navConsole.contains(event.target)) return;
+        if (consoleEl.contains(event.target)) return;
+        heo.hideConsole();
     },
 
     //快捷键功能开关
@@ -610,6 +632,193 @@ var heo = {
     //初始化console图标
     initConsoleState: function() {
         document.documentElement.classList.contains("hide-aside") ? document.querySelector("#consoleHideAside").classList.add("on") : document.querySelector("#consoleHideAside").classList.remove("on")
+    },
+
+    applyHomeCenterTheme: function (homeCenter, color) {
+        if (!homeCenter || !color) return;
+        const normalizeColor = /^#[0-9a-fA-F]{6}$/.test(color) ? color : "#425AEF";
+        homeCenter.style.setProperty("--current-theme", normalizeColor);
+        homeCenter.style.setProperty("--current-theme-op", normalizeColor + "bd");
+        homeCenter.style.setProperty("--current-theme-op-deep", normalizeColor + "dd");
+    },
+
+    applyHomeCenterSelectedBg: function (homeCenter, color) {
+        if (!homeCenter || !color) return;
+        const normalizeColor = /^#[0-9a-fA-F]{6}$/.test(color) ? color : "#6f63f6";
+        homeCenter.style.setProperty("--current-selected-bg", normalizeColor);
+    },
+
+    syncHomeCenterHeight: function (homeCenter) {
+        if (!homeCenter) return;
+        const banner = homeCenter.querySelector(".home-center-banner");
+        const list = homeCenter.querySelector(".home-center-list");
+        if (!banner || !list || window.innerWidth <= 1100) {
+            homeCenter.style.removeProperty("--home-center-banner-height");
+            return;
+        }
+        homeCenter.style.setProperty("--home-center-banner-height", `${banner.offsetHeight}px`);
+
+        const items = homeCenter.querySelectorAll(".home-center-item");
+        if (!items.length) return;
+        const listStyle = window.getComputedStyle(list);
+        const gap = parseFloat(listStyle.rowGap || listStyle.gap || 0);
+        const availableHeight = banner.offsetHeight - gap * Math.max(items.length - 1, 0);
+        const itemHeight = availableHeight / items.length;
+        const iconSize = Math.max(36, Math.min(52, itemHeight - 18));
+        homeCenter.style.setProperty("--home-center-item-height", `${itemHeight}px`);
+        homeCenter.style.setProperty("--home-center-icon-size", `${iconSize}px`);
+    },
+
+    updateHomeCenterMarquee: function (homeCenter) {
+        if (!homeCenter) return;
+        const links = homeCenter.querySelectorAll(".home-center-item-title a");
+        links.forEach((link) => {
+            const text = link.querySelector("span");
+            if (!text) return;
+            const overflow = text.scrollWidth - link.clientWidth;
+            if (overflow > 6) {
+                link.classList.add("is-overflow");
+                link.style.setProperty("--marquee-distance", `${overflow}px`);
+            } else {
+                link.classList.remove("is-overflow");
+                link.style.removeProperty("--marquee-distance");
+            }
+        });
+    },
+
+    initPosterCoverText: function () {
+        const titles = document.querySelectorAll(".post_cover.cover-art .post_art_back_title");
+        if (!titles.length) return;
+
+        const isMobile = window.innerWidth <= 768;
+        titles.forEach((title) => {
+            if (isMobile) {
+                title.style.fontFamily = '"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+                title.style.color = "rgba(255,255,255,0.34)";
+                title.style.backgroundImage = "none";
+                title.style.webkitBackgroundClip = "border-box";
+                title.style.backgroundClip = "border-box";
+                title.style.webkitTextFillColor = "currentColor";
+                title.style.webkitTextStroke = "0";
+                title.style.textShadow = "0 8px 18px rgba(0,0,0,0.08)";
+            } else {
+                title.style.removeProperty("font-family");
+                title.style.removeProperty("color");
+                title.style.removeProperty("background-image");
+                title.style.removeProperty("-webkit-background-clip");
+                title.style.removeProperty("background-clip");
+                title.style.removeProperty("-webkit-text-fill-color");
+                title.style.removeProperty("-webkit-text-stroke");
+                title.style.removeProperty("text-shadow");
+            }
+        });
+    },
+
+    switchHomeCenterBanner: function (index, navigate) {
+        const homeCenter = document.getElementById("home_center");
+        if (!homeCenter) return;
+        const banners = homeCenter.querySelectorAll(".home-center-banner-item");
+        const items = homeCenter.querySelectorAll(".home-center-item");
+        const indicators = homeCenter.querySelectorAll(".home-center-indicator");
+        const activeBanner = banners[index];
+        const activeItem = items[index];
+        if (!activeBanner || !activeItem) return;
+
+        banners.forEach((banner) => banner.classList.remove("active"));
+        items.forEach((item) => item.classList.remove("active"));
+        indicators.forEach((indicator) => indicator.classList.remove("active"));
+
+        activeBanner.classList.add("active");
+        activeItem.classList.add("active");
+        indicators.forEach((indicator) => {
+            if (Number(indicator.dataset.index) === Number(index)) {
+                indicator.classList.add("active");
+            }
+        });
+
+        const titleLink = document.getElementById("home-center-active-link");
+        if (titleLink) {
+            const titleText = titleLink.querySelector("span");
+            if (titleText) {
+                titleText.textContent = activeBanner.dataset.title || "";
+            } else {
+                titleLink.textContent = activeBanner.dataset.title || "";
+            }
+            titleLink.setAttribute("href", activeBanner.dataset.link || "/");
+            titleLink.setAttribute("onclick", `heo.handlePostClick('${activeBanner.dataset.link || "/"}', event)`);
+        }
+
+        heo.applyHomeCenterTheme(homeCenter, activeBanner.dataset.theme || "#425AEF");
+        heo.applyHomeCenterSelectedBg(homeCenter, activeBanner.dataset.selectedBg || activeBanner.dataset.theme || "#6f63f6");
+        homeCenter.dataset.activeIndex = index;
+        heo.syncHomeCenterHeight(homeCenter);
+
+        if (navigate === true) {
+            heo.handlePostClick(activeBanner.dataset.link || "/", window.event);
+        }
+    },
+
+    handlePostClick: function (url, event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        if (typeof pjax !== "undefined" && typeof pjax.loadUrl === "function") {
+            pjax.loadUrl(url);
+            return;
+        }
+        window.location.href = url;
+    },
+
+    initHomeCenter: function () {
+        const homeCenter = document.getElementById("home_center");
+        if (!homeCenter) return;
+
+        const indicators = homeCenter.querySelectorAll(".home-center-indicator");
+        indicators.forEach((indicator) => {
+            if (indicator.dataset.bound === "true") return;
+            indicator.dataset.bound = "true";
+            indicator.addEventListener("click", () => {
+                heo.switchHomeCenterBanner(Number(indicator.dataset.index));
+            });
+        });
+
+        const bannerItems = homeCenter.querySelectorAll(".home-center-banner-item");
+        if (!bannerItems.length) return;
+
+        const autoplay = homeCenter.dataset.autoplay === "true";
+        const interval = Number(homeCenter.dataset.interval || 5000);
+        const startAutoPlay = function () {
+            if (!autoplay || bannerItems.length < 2) return;
+            stopAutoPlay();
+            homeCenter.homeCenterTimer = window.setInterval(() => {
+                const currentIndex = Number(homeCenter.dataset.activeIndex || 0);
+                const nextIndex = (currentIndex + 1) % bannerItems.length;
+                heo.switchHomeCenterBanner(nextIndex);
+            }, interval);
+        };
+        const stopAutoPlay = function () {
+            if (homeCenter.homeCenterTimer) {
+                window.clearInterval(homeCenter.homeCenterTimer);
+                homeCenter.homeCenterTimer = null;
+            }
+        };
+
+        if (homeCenter.dataset.bound !== "true") {
+            homeCenter.dataset.bound = "true";
+            homeCenter.addEventListener("mouseenter", stopAutoPlay);
+            homeCenter.addEventListener("mouseleave", startAutoPlay);
+            window.addEventListener("resize", () => {
+                heo.updateHomeCenterMarquee(homeCenter);
+                heo.syncHomeCenterHeight(homeCenter);
+            });
+        }
+
+        const initialIndex = Number(homeCenter.dataset.activeIndex || 0);
+        heo.switchHomeCenterBanner(initialIndex);
+        heo.updateHomeCenterMarquee(homeCenter);
+        heo.syncHomeCenterHeight(homeCenter);
+        startAutoPlay();
     },
 
 

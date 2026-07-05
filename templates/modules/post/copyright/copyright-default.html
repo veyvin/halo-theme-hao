@@ -58,7 +58,7 @@
                     <i class="haofont hao-icon-weibo" style="font-size:22px"></i></a>
             </div>
             <div class="share-link copyurl" th:if="${theme.config.post.share_right.copyurl_edit}">
-                <div class="share-button" id="post-share-url" onclick="rm.copyPageUrl()" title="复制链接"><i
+                <div class="share-button" id="post-share-url" onclick="copyPostPageUrl()" title="复制链接"><i
                         class="haofont hao-icon-link"></i></div>
             </div>
         </div>
@@ -95,7 +95,7 @@
             <span class="post-copyright-info" id="post-copyright-url">
                 <a href="javascript:window.location.href;">[[${post.spec.title}]]</a>
             </span>
-            <button class="post-copyright-copybtn" onclick="rm.copyPageUrl()">
+            <button class="post-copyright-copybtn" onclick="copyPostPageUrl()">
                 <i class="haofont hao-icon-paste"></i>
             </button>
         </div>
@@ -108,4 +108,37 @@
     </div>
 
     <link rel="stylesheet" th:href="${assets_link + '/css/post-copyright.css' + theme_version}">
+    <script>
+        function copyPostPageUrl() {
+            if (window.rm && typeof window.rm.copyPageUrl === 'function') {
+                window.rm.copyPageUrl();
+                return;
+            }
+            var url = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(showCopySuccess).catch(function () {
+                    legacyCopyUrl(url);
+                });
+            } else {
+                legacyCopyUrl(url);
+            }
+        }
+
+        function legacyCopyUrl(url) {
+            var input = document.createElement('input');
+            input.value = url;
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, input.value.length);
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            showCopySuccess();
+        }
+
+        function showCopySuccess() {
+            if (window.btf && typeof window.btf.snackbarShow === 'function') {
+                window.btf.snackbarShow('复制本页链接地址成功', false, 2000);
+            }
+        }
+    </script>
 </th:block>

@@ -1,0 +1,221 @@
+<!-- 文章音频播放器 -->
+<div class="card-widget card-post-audio" th:if="${htmlType == 'post' && not #strings.isEmpty(#annotations.get(post, 'audio'))}">
+    <div class="item-headline"><i class="haofont hao-icon-music"></i><span>文章音频</span></div>
+    
+    <div class="audio-player">
+        
+        <audio id="post-audio-player" preload="none">
+            <source th:src="@{${#annotations.get(post, 'audio')}}" type="audio/mpeg">
+            您的浏览器不支持音频播放。
+        </audio>
+        
+        <div class="audio-controls">
+            <button id="audio-play-btn" class="audio-btn" title="播放">
+                <i class="haofont hao-icon-play"></i>
+            </button>
+            <button id="audio-pause-btn" class="audio-btn" title="暂停" style="display: none;">
+                <i class="haofont hao-icon-pause"></i>
+            </button>
+            <div class="audio-progress">
+                <div class="audio-progress-bar">
+                    <div class="audio-progress-fill"></div>
+                </div>
+            </div>
+            <span class="audio-time">00:00</span>
+        </div>
+    </div>
+    
+    <style>
+        .card-post-audio {
+            padding: 15px;
+        }
+        
+        .audio-player {
+            margin-top: 10px;
+        }
+        
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .audio-btn {
+            background: var(--heo-secondbg);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--heo-fontcolor);
+            transition: all 0.3s ease;
+        }
+        
+        .audio-btn:hover {
+            background: var(--heo-hoverbg);
+            transform: scale(1.05);
+        }
+        
+        .audio-progress {
+            flex: 1;
+            height: 4px;
+            background: var(--heo-secondbg);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-progress-bar {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .audio-progress-fill {
+            height: 100%;
+            background: var(--heo-theme);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .audio-time {
+            font-size: 12px;
+            color: var(--heo-fontcolor);
+            min-width: 45px;
+            text-align: right;
+        }
+    </style>
+    
+    <script>
+        // 延迟3秒后初始化播放器
+        setTimeout(function() {
+            const audioPlayer = document.getElementById('post-audio-player');
+            const playBtn = document.getElementById('audio-play-btn');
+            const pauseBtn = document.getElementById('audio-pause-btn');
+            const progressBar = document.querySelector('.audio-progress-bar');
+            const progressFill = document.querySelector('.audio-progress-fill');
+            const timeDisplay = document.querySelector('.audio-time');
+            
+            // 加载音频
+            audioPlayer.load();
+            
+            // 只播放一次的标志
+            let hasTriggered = false;
+            
+            // 播放尝试函数
+            async function tryToPlay() {
+                // 确保音频已加载
+                if (audioPlayer.readyState === 0) {
+                    await new Promise(resolve => {
+                        audioPlayer.addEventListener('loadeddata', resolve, { once: true });
+                        audioPlayer.addEventListener('canplay', resolve, { once: true });
+                        // 1秒后超时
+                        setTimeout(resolve, 1000);
+                    });
+                }
+                
+                // 尝试播放
+                try {
+                    await audioPlayer.play();
+                    playBtn.style.display = 'none';
+                    pauseBtn.style.display = 'flex';
+                    return true;
+                } catch (error) {
+                    return false;
+                }
+            }
+            
+            // 点击任何区域触发播放
+            function handleClick() {
+                if (!hasTriggered) {
+                    hasTriggered = true;
+                    
+                    // 立即尝试播放
+                    tryToPlay().then(success => {
+                        if (!success) {
+                            // 如果直接播放失败，等待一小段时间后再尝试
+                            setTimeout(async () => {
+                                await tryToPlay();
+                            }, 300);
+                        }
+                    });
+                    
+                    // 移除监听器，确保只检测一次
+                    document.removeEventListener('click', handleClick);
+                }
+            }
+            
+            // 添加点击事件监听器
+            document.addEventListener('click', handleClick);
+            
+            // 预加载音频
+            audioPlayer.addEventListener('canplaythrough', () => {
+                // 音频准备就绪
+            });
+            
+            // 播放按钮点击事件
+            playBtn.addEventListener('click', function() {
+                audioPlayer.play().then(() => {
+                    playBtn.style.display = 'none';
+                    pauseBtn.style.display = 'flex';
+                }).catch(error => {
+                    // 播放失败处理
+                });
+            });
+            
+            // 暂停按钮点击事件
+            pauseBtn.addEventListener('click', function() {
+                audioPlayer.pause();
+                pauseBtn.style.display = 'none';
+                playBtn.style.display = 'flex';
+            });
+            
+            // 点击播放器区域可切换播放/暂停
+            document.querySelector('.audio-player').addEventListener('click', function(e) {
+                // 如果点击的不是按钮
+                if (!e.target.closest('.audio-btn')) {
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                        playBtn.style.display = 'none';
+                        pauseBtn.style.display = 'flex';
+                    } else {
+                        audioPlayer.pause();
+                        pauseBtn.style.display = 'none';
+                        playBtn.style.display = 'flex';
+                    }
+                }
+            });
+            
+            // 更新进度条和时间
+            audioPlayer.addEventListener('timeupdate', function() {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                
+                // 格式化时间显示
+                const minutes = Math.floor(audioPlayer.currentTime / 60);
+                const seconds = Math.floor(audioPlayer.currentTime % 60);
+                timeDisplay.textContent = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            });
+            
+            // 点击进度条跳转
+            progressBar.addEventListener('click', function(e) {
+                const rect = progressBar.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                audioPlayer.currentTime = pos * audioPlayer.duration;
+            });
+            
+            // 播放结束时重置
+            audioPlayer.addEventListener('ended', function() {
+                pauseBtn.style.display = 'none';
+                playBtn.style.display = 'flex';
+                progressFill.style.width = '0%';
+                timeDisplay.textContent = '00:00';
+                audioPlayer.currentTime = 0;
+            });
+        }, 3000);
+    </script>
+</div>

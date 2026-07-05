@@ -1,0 +1,94 @@
+<div class="home-center-wrapper"
+     th:if="${theme.config.top.homeCenter.enable and not #lists.isEmpty(theme.config.top.homeCenter.items)}"
+     th:with="homeCenterItems=${theme.config.top.homeCenter.items},
+              firstItem=${homeCenterItems.get(0)},
+              firstPost=${postFinder.getByName(firstItem.post)},
+              postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme.config.layout.postRandomImg+'&' : theme.config.layout.postRandomImg+'?'},
+              firstCover=${!#strings.isEmpty(firstItem.cover) ? firstItem.cover : (#strings.isEmpty(firstPost.spec.cover) ? postRandomImg + firstPost.spec.title : thumbnail.gen(firstPost.spec.cover, 's'))},
+              firstIcon=${!#strings.isEmpty(firstItem.icon) ? firstItem.icon : firstCover},
+              firstTheme=${#strings.isEmpty(firstItem.themeColor) ? '#425AEF' : firstItem.themeColor},
+              firstSelectedBg=${#strings.isEmpty(firstItem.selectedBgColor) ? firstTheme : firstItem.selectedBgColor},
+              tagText=${#strings.isEmpty(theme.config.top.homeCenter.tagText) ? '全站推荐' : theme.config.top.homeCenter.tagText}">
+    <div class="home-center" id="home_center"
+         th:attr="data-autoplay=${theme.config.top.homeCenter.autoPlay},
+                  data-interval=${theme.config.top.homeCenter.autoPlayInterval},
+                  style='--current-theme:' + ${firstTheme} + '; --current-theme-op:' + ${firstTheme} + 'bd; --current-theme-op-deep:' + ${firstTheme} + 'dd; --current-selected-bg:' + ${firstSelectedBg} + '; --home-center-desktop-height:' + ${theme.config.top.homeCenter.desktopHeight} + 'px; --home-center-mobile-height:' + ${theme.config.top.homeCenter.mobileHeight} + 'px;'">
+        <div class="home-center-content">
+            <div class="home-center-left">
+                <div class="home-center-banner">
+                    <th:block th:each="item,iter : ${homeCenterItems}" th:if="${not #strings.isEmpty(item.post)}">
+                        <th:block th:with="post=${postFinder.getByName(item.post)},
+                                           itemCover=${!#strings.isEmpty(item.cover) ? item.cover : (#strings.isEmpty(post.spec.cover) ? postRandomImg + post.spec.title : thumbnail.gen(post.spec.cover, 's'))},
+                                           itemTheme=${#strings.isEmpty(item.themeColor) ? '#425AEF' : item.themeColor},
+                                           itemSelectedBg=${#strings.isEmpty(item.selectedBgColor) ? itemTheme : item.selectedBgColor}">
+                            <div class="home-center-banner-item"
+                                 th:classappend="${iter.index == 0 ? ' active' : ''}"
+                                 th:attr="data-index=${iter.index},
+                                          data-link=@{${post.status.permalink}},
+                                          data-title=${post.spec.title},
+                                          data-theme=${itemTheme},
+                                          data-selected-bg=${itemSelectedBg},
+                                          onclick='heo.handlePostClick(\'' + @{${post.status.permalink}} + '\', event)',
+                                          style='--home-center-theme:' + ${itemTheme} + '; --home-center-theme-op:' + ${itemTheme} + '23; --home-center-theme-op-deep:' + ${itemTheme} + 'dd;'">
+                                <div class="home-center-cover">
+                                    <img class="home-center-cover-img"
+                                         th:src="${isLazyload ? '' : itemCover}"
+                                         th:data-lazy-src="${isLazyload ? itemCover : ''}"
+                                         th:alt="${post.spec.title}">
+                                </div>
+                                <div class="home-center-mask"></div>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <div class="home-center-title">
+                        <a id="home-center-active-link"
+                           th:href="@{${firstPost.status.permalink}}"
+                           th:attr="onclick='heo.handlePostClick(\'' + @{${firstPost.status.permalink}} + '\', event)'">
+                            <span th:text="${firstPost.spec.title}"></span>
+                        </a>
+                        <div class="home-center-title-bottom">
+                            <div class="home-center-title-tag">
+                                <i class="banner-icon haofont hao-icon-star-smile-fill"></i>
+                                <span th:text="${tagText}"></span>
+                            </div>
+                            <div class="home-center-indicators">
+                                <span class="home-center-indicator"
+                                      th:each="item,iter : ${homeCenterItems}"
+                                      th:classappend="${iter.index == 0 ? ' active' : ''}"
+                                      th:if="${not #strings.isEmpty(item.post)}"
+                                      th:attr="data-index=${iter.index}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="home-center-right">
+                <div class="home-center-list">
+                    <th:block th:each="item,iter : ${homeCenterItems}" th:if="${not #strings.isEmpty(item.post)}">
+                        <th:block th:with="post=${postFinder.getByName(item.post)},
+                                           itemCover=${!#strings.isEmpty(item.cover) ? item.cover : (#strings.isEmpty(post.spec.cover) ? postRandomImg + post.spec.title : thumbnail.gen(post.spec.cover, 's'))},
+                                           itemIcon=${!#strings.isEmpty(item.icon) ? item.icon : itemCover}">
+                            <div class="home-center-item"
+                                 th:classappend="${iter.index == 0 ? ' active' : ''}"
+                                 th:attr="data-index=${iter.index},
+                                          onmouseenter='heo.switchHomeCenterBanner(' + ${iter.index} + ')',
+                                          onclick='heo.switchHomeCenterBanner(' + ${iter.index} + ', true)'">
+                                <div class="home-center-item-icon">
+                                    <img th:src="${isLazyload ? '' : itemIcon}"
+                                         th:data-lazy-src="${isLazyload ? itemIcon : ''}"
+                                         th:alt="${post.spec.title}">
+                                </div>
+                                <div class="home-center-item-title">
+                                    <a th:href="@{${post.status.permalink}}"
+                                       th:attr="onclick='heo.handlePostClick(\'' + @{${post.status.permalink}} + '\', event)'">
+                                        <span th:text="${post.spec.title}"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </th:block>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
