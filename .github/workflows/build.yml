@@ -27,7 +27,6 @@ jobs:
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
           echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
           echo "ARTIFACT_PATHNAME=${ARTIFACT_PATHNAME}" >> $GITHUB_ENV
-          echo "RELEASE_ID=${{ github.event.release.id }}" >> $GITHUB_ENV
           mkdir $PRE_ZIP_FOLDER
           mkdir dist
           cp -r theme.yaml settings.yaml annotation-setting.yaml templates $PRE_ZIP_FOLDER/
@@ -42,47 +41,40 @@ jobs:
 
   github-release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    needs: build
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: false
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 16
-      - name: Compress zip
+          name: halo-theme-hao
+          path: dist
+      - name: Get version
         run: |
           PACKAGE_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
-          PRE_ZIP_FOLDER=halo-theme-hao-${PACKAGE_VERSION}
-          ARTIFACT_NAME=${PRE_ZIP_FOLDER}.zip
-          ARTIFACT_PATHNAME=dist/${ARTIFACT_NAME}
-          echo "halo-theme-hao version $PACKAGE_VERSION"
-          echo "Artifact name: ${ARTIFACT_NAME}"
-          echo "Artifact pathname: ${ARTIFACT_PATHNAME}"
+          ARTIFACT_NAME=halo-theme-hao-${PACKAGE_VERSION}.zip
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
           echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
-          echo "ARTIFACT_PATHNAME=${ARTIFACT_PATHNAME}" >> $GITHUB_ENV
-          echo "RELEASE_ID=${{ github.event.release.id }}" >> $GITHUB_ENV
-          mkdir $PRE_ZIP_FOLDER
-          mkdir dist
-          cp -r theme.yaml settings.yaml annotation-setting.yaml templates $PRE_ZIP_FOLDER/
-          zip -r $ARTIFACT_PATHNAME $PRE_ZIP_FOLDER
-      - name: Upload a release asset
-        uses: actions/github-script@v2
+      - name: Create release if workflow_dispatch
+        id: create_release
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs').promises;
-            const { repo: { owner, repo }, sha } = context;
-            console.log({ owner, repo, sha });
-            const releaseId = process.env.RELEASE_ID
-            const artifactPathName = process.env.ARTIFACT_PATHNAME
-            const artifactName = process.env.ARTIFACT_NAME
-            console.log('Releasing', releaseId, artifactPathName, artifactName)
-            await github.repos.uploadReleaseAsset({
-              owner, repo,
-              release_id: releaseId,
-              name: artifactName,
-              data: await fs.readFile(artifactPathName)
-            });
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          release_name: halo-theme-hao v${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
+      - name: Upload a release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url || steps.create_release.outputs.upload_url }}
+          asset_path: dist/${{ env.ARTIFACT_NAME }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_content_type: application/zip
