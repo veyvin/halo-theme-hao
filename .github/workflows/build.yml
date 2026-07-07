@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Compress zip
         run: |
-          PACKAGE_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
+          PACKAGE_VERSION=$(sed -nE 's/^\s*version:\s*"?([^"\s]+)"?/\1/p' theme.yaml)
           PRE_ZIP_FOLDER=halo-theme-hao-${PACKAGE_VERSION}
           ARTIFACT_NAME=${PRE_ZIP_FOLDER}.zip
           ARTIFACT_PATHNAME=dist/${ARTIFACT_NAME}
@@ -50,7 +50,7 @@ jobs:
           path: dist
       - name: Get version
         run: |
-          PACKAGE_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)
+          PACKAGE_VERSION=$(sed -nE 's/^\s*version:\s*"?([^"\s]+)"?/\1/p' theme.yaml)
           ARTIFACT_NAME=halo-theme-hao-${PACKAGE_VERSION}.zip
           echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
           echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
