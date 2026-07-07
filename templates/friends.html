@@ -3,11 +3,6 @@
     th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = '朋友圈 | ' + ${site.title}, head = ~{::head})}">
 
 <th:block th:fragment="head">
-    <th:block th:replace="~{modules/common/open-graph :: open-graph(_title = '朋友圈',
-                _permalink = '/moments',
-                _cover = '',
-                _excerpt = '友链朋友圈 - 发现更多精彩内容',
-                _type = 'website')}"></th:block>
     <!-- 分离CSS文件 -->
     <link rel="stylesheet" th:href="@{/assets/css/fmoments.css}" data-pjax>
 </th:block>

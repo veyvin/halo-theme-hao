@@ -130,7 +130,7 @@
             background: #2128bd;
         }
     </style>
-    <script defer>
+    <script defer th:inline="javascript">
         function initHelloAbout() {
             const helloAboutEl = document.querySelector(".hello-about");
             helloAboutEl.addEventListener("mousemove", evt => {
@@ -151,7 +151,7 @@
         if (typeof gsap === "object") {
             initHelloAbout()
         } else {
-            getScript("/themes/theme-hao/assets/libs/gsap/gsap.min.js").then(initHelloAbout);
+            getScript('[(${#theme.assets('/libs/gsap/gsap.min.js')})]').then(initHelloAbout);
         }
     </script>
 
