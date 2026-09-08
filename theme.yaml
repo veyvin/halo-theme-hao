@@ -48,7 +48,7 @@ spec:
   settingName: "theme-hao-setting"
   configMapName: "theme-hao-configMap"
   version: "1.7.2"
-  requires: ">=2.22.1"
+  requires: ">=2.22.8"
   license:
     - name: "GPL-3.0"
       url: "https://github.com/chengzhongxue/halo-theme-hao/blob/main/LICENSE"
