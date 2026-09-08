@@ -42,7 +42,7 @@ spec:
 
   description: Halo 2.x Theme base on Thymeleaf, Referring to Butterfly and Heo
   logo: /themes/theme-hao/assets/images/hao-logo.jpg
-  homepage: https://www.halo.run/store/apps/app-MgZJX
+  homepage: https://veyvin.com
   issues: https://github.com/veyvin/halo-theme-hao/issues
   repo: https://github.com/veyvin/halo-theme-hao
   settingName: "theme-hao-setting"
