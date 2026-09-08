@@ -18,7 +18,7 @@
                                th:target="${childMenu.spec.target?.value}" th:href="@{${childMenu.status.href}}">
                                 <!-- icon 预留 -->
                                 <img th:if="${!#strings.isEmpty(#annotations.getOrDefault(childMenu, 'icon', ''))}"
-                                     class="back-menu-item-icon"
+                                     class="back-menu-item-icon" width="20" height="20" alt="菜单图标"
                                      th:src="${#annotations.getOrDefault(childMenu, 'icon', '')}">
                                 <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
                             </a>

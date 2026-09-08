@@ -51,7 +51,7 @@
             <input id="toPageText" maxlength="3" title="跳转到指定页面"
                    oninput="value=value.replace(/[^0-9]/g,'')"
                    onkeyup="if (this.value === '0') this.value = ''">
-            <a id="toPageButton" onclick="heo.toPage();"><i class="haofont hao-icon-angles-right"></i>
+            <a id="toPageButton" onclick="heo.toPage();" aria-label="跳转到指定页面" title="跳转到指定页面"><i class="haofont hao-icon-angles-right"></i>
             </a>
         </div>
 

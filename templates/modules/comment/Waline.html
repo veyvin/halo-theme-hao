@@ -21,7 +21,7 @@
                             if ([[${ isLazyload }]]) {
                                 name = 'data-lazy-src'
                             }
-                            result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'><div class='name'><span>${array[i].nick}</span></div></a>`
+                            result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}' width="20" height="20"><div class='name'><span>${array[i].nick}</span></div></a>`
                         }
 
                         result += `<div class='content'>
@@ -89,7 +89,7 @@
                             }
                             result += `
                             <a class="thumbnail" href="${array[i].url}">
-                                <img alt="dasda" ${name}="${array[i].avatar}">
+                                <img alt="评论者头像" ${name}="${array[i].avatar}" width="20" height="20">
                             </a>
                         `
                         }

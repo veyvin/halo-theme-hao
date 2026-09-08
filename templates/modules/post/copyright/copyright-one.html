@@ -8,7 +8,7 @@
                     <!--                <img class="post-copyright__author_img_back entered loading"-->
                     <!--                 th:src="@{${#strings.isEmpty(site.logo) ?  assets_link + '/images/hao-logo.jpg' : site.logo}}">-->
                     <!-- 获取当前文章对象（假设变量为 $post） -->
-                    <img class="post-copyright__author_img_back entered loading"
+                    <img class="post-copyright__author_img_back entered loading" width="40" height="40" alt="作者头像"
                          th:src="${contributor.avatar ?: assets_link + '/images/hao-logo.jpg'}"/>
                 </a>
             </div>
@@ -29,12 +29,12 @@
                                 <ul class="reward-group">
                                     <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
                                                                target="_blank">
-                                        <img alt="微信" class="post-qr-code-img"
+                                        <img alt="微信" class="post-qr-code-img" width="200" height="200"
                                              th:src="${theme.config.aboutReward.reward.wxPay}"></a>
                                         <div class="post-qr-code-desc">微信</div>
                                     </li>
                                     <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.alipay}}"
-                                                               target="_blank"><img alt="支付宝"
+                                                               target="_blank"><img alt="支付宝" width="200" height="200"
                                                                                     class="post-qr-code-img"
                                                                                     th:src="${theme.config.aboutReward.reward.alipay}"></a>
                                         <div class="post-qr-code-desc">支付宝</div>
