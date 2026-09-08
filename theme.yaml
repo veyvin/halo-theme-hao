@@ -47,7 +47,7 @@ spec:
   repo: https://github.com/chengzhongxue/halo-theme-hao
   settingName: "theme-hao-setting"
   configMapName: "theme-hao-configMap"
-  version: "1.7.2"
+  version: "1.7.4"
   requires: ">=2.22.8"
   license:
     - name: "GPL-3.0"
