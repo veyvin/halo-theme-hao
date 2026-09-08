@@ -35,6 +35,23 @@ spec:
           label: 版权协议
           placeholder: 请输入版权协议地址
           help: 文章模块声明版权，也会使用此协议
+        - $formkit: group
+          name: seo
+          label: SEO 设置
+          value:
+            keywords: ""
+            description: ""
+          children:
+            - $formkit: textarea
+              name: keywords
+              label: 站点关键词
+              placeholder: "多个关键词用英文逗号分隔，如：AI Agent,开源项目,GitHub Trending,开发工具,技术博客"
+              help: "设置 meta keywords，有助于搜索引擎理解站点主题"
+            - $formkit: textarea
+              name: description
+              label: 站点描述
+              placeholder: "建议 150-220 个字符，简要描述站点内容与特色"
+              help: "设置 meta description，建议长度 150-220 个字符（包括空格）。如未填写，将自动使用站点副标题"
 
     - group: nav
       label: 导航
