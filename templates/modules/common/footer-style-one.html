@@ -51,7 +51,7 @@
             description = "[(${theme.config.footer.footerContent.style_one.offduty_description})]";
         }
         if (document.getElementById("workboard")) {
-            currentTimeHtml =  `<img class="workSituationImg boardsign" src="${img}" alt="${description}" title="${description}">
+            currentTimeHtml =  `<img class="workSituationImg boardsign" src="${img}" alt="${description}" title="${description}" width="80" height="20">
                 <div id="runtimeTextTip"> 本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='haofont hao-icon-heartbeat' style='color:red'></i> <br> 旅行者 1 号当前距离地球 ${t} 千米，约为 ${n} 个天文单位 🚀 </div>`
             document.getElementById("workboard").innerHTML = currentTimeHtml;
         }

@@ -10,7 +10,7 @@
                 <div class="author-info__top-group">
                     <div class="author-info__sayhi" id="author-info__sayhi" onclick="heo.changeSayHelloText()">你好啊！我是
                     </div>
-                    <img class="avatar-img"
+                    <img class="avatar-img" width="80" height="80" alt="站长头像"
                          th:with=" img = @{${#strings.isEmpty(site.logo) ? assets_link + '/images/hao-logo.jpg' : site.logo}}"
 
                          th:src="${isLazyload ? '' : img}"
@@ -142,13 +142,13 @@
                 </div>
             </div>
             <div class="avatar-img-group">
-                <img class="avatar-img" alt="avatar"
+                <img class="avatar-img" alt="avatar" width="80" height="80"
                      th:with="img = @{${#strings.isEmpty(site.logo) ? assets_link + '/images/hao-logo.jpg' : site.logo}}"
 
                      th:src="${isLazyload ? '' : img}"
                      th:data-lazy-src="${ isLazyload ? img : ''}">
                 <div class="avatar-sticker">
-                    <img class="avatar-sticker-img" alt="avatar"
+                    <img class="avatar-sticker-img" alt="avatar" width="40" height="40"
                          th:with="img = @{${theme.config.sidebar.profile.stickerImg}}"
 
                          th:src="${isLazyload ? '' : img}"
