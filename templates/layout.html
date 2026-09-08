@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!--
+  页面布局契约 (Halo Layout Contract)
+  Halo 2.26+ 引入的「页面布局契约」要求主题提供 templates/layout.html，
+  并声明名为 html 的片段，签名为 html (head, content)。
+  支持该契约的插件（如评论区、瞬间、友链等）前台页面会调用此片段，
+  以自动套用主题的页头/页脚、主题色与暗色模式，避免「换肤割裂感」。
+  若主题缺少此文件，将回退到 Halo 内置的 fallback 布局，视觉与主题不一致。
+  这里将契约委托给主题既有的 modules/layouts/layout :: layout(content, htmlType, title, head)，
+  其中 htmlType 默认使用 page，title 留空由既有布局通过 siteTitle 表达式自行计算。
+-->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="html (head, content)"
+      th:replace="~{modules/layouts/layout :: layout(content = ${content}, htmlType = 'page', title = null, head = ${head})}">
+</html>
