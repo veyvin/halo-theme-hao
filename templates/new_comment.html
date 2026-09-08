@@ -29,7 +29,7 @@
                              th:onclick="pjax.loadUrl([[${url}]])">
                             <div class="comment-info">
                                 <img th:with=" img =${#strings.isEmpty(comment.owner.avatar)? theme.config.sidebar.newcomment.providerMirror+'/avatar/'+comment.spec.owner.annotations['email-hash'] :comment.owner.avatar}"
-                                     th:alt="${comment.owner.displayName}" th:src="${isLazyload ? '' : img}"
+                                     th:alt="${comment.owner.displayName}" th:src="${isLazyload ? '' : img}" width="40" height="40"
                                      th:data-lazy-src="${ isLazyload ? img : ''}" class="no-lightbox nolazyload avatar">
                                 <div class="comment-information">
                                     <span class="comment-user">[[${comment.owner.displayName}]]</span>
@@ -175,7 +175,7 @@
                                     c = `${a.getFullYear().toString().slice(-2)}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}:${a.getSeconds()}`;
                                 html += `<div class="comment-card" title="${item.comment}" onclick="pjax.loadUrl('${item.url}#${item.id}')">
                                     <div class="comment-info no-lightbox">
-                                        <img src="${item.avatar}" alt='${item.nick}'/>
+                                        <img src="${item.avatar}" alt='${item.nick}' width="40" height="40"/>
                                         <div class="comment-information">
                                                 <span class="comment-user">${item.nick} ${item.barrageBlogger ? '<span class="isBlogger">博主</span>' : ''}</span>
                                                 <span class="comment-time">${c}</span>

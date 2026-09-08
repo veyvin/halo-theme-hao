@@ -1,6 +1,6 @@
 <!-- TODO 控制台功能 -->
 <div id="console" >
-  <div class="close-btn" onclick="heo.hideConsole()" href="javascript:void(0);">
+  <div class="close-btn" onclick="heo.hideConsole()" href="javascript:void(0);" role="button" tabindex="0" aria-label="关闭控制台">
     <i class="haofont hao-icon-circle-xmark"></i>
   </div>
   <div class="console-card-group">
@@ -23,7 +23,7 @@
                 <img th:with="img = ${#strings.isEmpty(comment.owner.avatar)?'https://cravatar.cn/avatar/?d=mp':comment.owner.avatar}"
                      th:src="${isLazyload ? '' : img}"
                      th:data-lazy-src="${ isLazyload ? img : ''}"
-                     th:alt="${comment.owner.displayName}">
+                     th:alt="${comment.owner.displayName}" width="20" height="20">
                 <div class="name"><span>stonewu</span></div>
               </a>
               <div class="content">
@@ -96,13 +96,13 @@
     <ul class="reward-all console-card">
       <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
                                  rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="微信"
+              class=" entered loaded" alt="微信" width="200" height="200"
               th:src="${theme.config.aboutReward.reward.wxPay}"></a>
         <div class="post-qr-code-desc">微信</div>
       </li>
       <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.alipay}}"
                                  rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="支付宝"
+              class=" entered loaded" alt="支付宝" width="200" height="200"
               th:src="${theme.config.aboutReward.reward.alipay}"></a>
         <div class="post-qr-code-desc">支付宝</div>
       </li>
@@ -111,13 +111,13 @@
   <div class="button-group">
     <div class="console-btn-item">
       <a class="darkmode_switchbutton" href="javascript:void(0);" onclick="navFn.switchDarkMode();" rel="external nofollow"
-         title="显示模式切换"><i class="haofont hao-icon-moon-clear-fill" style="font-size:1rem"></i>
+         title="显示模式切换" aria-label="显示模式切换"><i class="haofont hao-icon-moon-clear-fill" style="font-size:1rem"></i>
       </a>
     </div>
     <div class="console-btn-item" id="consoleHideAside" onclick="heo.hideAsideBtn()" title="边栏显示控制"><a
-            class="asideSwitch" data-pjax-state=""><i class="haofont hao-icon-arrows-left-right"></i></a></div>
+            class="asideSwitch" data-pjax-state="" aria-label="边栏显示控制"><i class="haofont hao-icon-arrows-left-right"></i></a></div>
     <div class="console-btn-item on" id="consoleCommentBarrage" onclick="heo.switchCommentBarrage()" title="热评开关"><a
-            class="commentBarrage" data-pjax-state=""><i class="haofont hao-icon-chat--fill"></i></a></div>
+            class="commentBarrage" data-pjax-state="" aria-label="热评开关"><i class="haofont hao-icon-chat--fill"></i></a></div>
 
     <!--<div class="console-btn-item" id="consoleKeyboard" onclick="heo.keyboardToggle()" title="快捷键开关"><a-->
     <!--        class="keyboard-switch"><i class="fa-duotone fa-keyboard"></i></a>-->
@@ -126,7 +126,7 @@
     <!--        class="assist-btn"><i class="fa-duotone fa-wheelchair"></i></a>-->
     <!--</div>-->
     <div th:if="${theme.config.tool.nav_music.nav_musicEnable}" class="console-btn-item" id="consoleMusic" onclick="heo.musicToggle()" title="音乐开关">
-      <a class="music-switch" data-pjax-state="">
+      <a class="music-switch" data-pjax-state="" aria-label="音乐开关">
         <i class="haofont hao-icon-disc-fill"></i>
       </a>
     </div>

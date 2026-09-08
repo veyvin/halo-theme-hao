@@ -26,7 +26,7 @@
                             <div class="equipment-item-content" th:with="equipmentList = ${group.equipments}">
                                 <div class="equipment-item-content-item" th:each="equipment : ${equipmentList}">
                                     <div class="equipment-item-content-item-cover">
-                                        <img class="equipment-item-content-item-image"
+                                        <img class="equipment-item-content-item-image" width="200" height="200"
                                              th:alt="${equipment.spec.displayName}"
                                              th:src="${isLazyload ? '' : equipment.spec.cover}"
                                              th:data-lazy-src="${ isLazyload ? equipment.spec.cover : ''}">

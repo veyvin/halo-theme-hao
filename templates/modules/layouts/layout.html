@@ -33,7 +33,7 @@
 <div id="web_bg">
     <div th:if="${theme.config.top.global_background.enable_global_background_img}">
         <img th:if="${theme.config.top.global_background.enable_global_background_above_video == false}"
-             class="global_background_img"
+             class="global_background_img" width="1920" height="1080" alt="网站背景图"
              th:src="${theme.config.top.global_background.global_background_img}"
         />
         <video th:if="${theme.config.top.global_background.enable_global_background_above_video}"

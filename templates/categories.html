@@ -30,7 +30,7 @@
                         <div id="lib-cards" class="container" >
                             <a th:each="categoryItem : ${categoryFinder.listAll()}" th:href="@{${categoryItem.status.permalink}}" th:id="${categoryItem.spec.displayName}">
                                 <card th:data-image="${categoryItem.spec.cover}">
-                                    <h1 slot="header">[[${categoryItem.spec.displayName}]]</h1>
+                                    <h2 slot="header">[[${categoryItem.spec.displayName}]]</h2>
                                     <p slot="content">[[${categoryItem.spec.description}]]</p>
                                 </card>
                             </a>

@@ -37,7 +37,7 @@
                         <a class="thumbnail div_border"
                            th:href="@{${post.status.permalink}}"
                            th:title="${post.spec.title}"><img
-                                loading="lazy"
+                                loading="lazy" width="80" height="80"
                                 th:src='${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")}'
                                 th:alt="${post.spec.title}"></a>
                         <div class="content">

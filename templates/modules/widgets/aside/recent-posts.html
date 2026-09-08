@@ -5,7 +5,7 @@
         <!-- 最新文章，用户可以自定义展示数量 -->
         <div class="aside-list-item" th:each="post : ${postFinder.list({page: 1, size: theme.config.sidebar.recentPost, sort: {'spec.publishTime,desc'}})}">
             <a class="thumbnail" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
-                <img th:alt="${post.spec.title}"
+                <img th:alt="${post.spec.title}" width="80" height="80"
                      th:with="img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, 's')}"
 
                      th:src="${isLazyload ? '' : img}"

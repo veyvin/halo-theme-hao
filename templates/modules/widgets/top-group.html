@@ -23,7 +23,7 @@
                    th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                     <span class="recent-post-top-text"
                           th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
-                    <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg"
+                    <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                          th:with=' img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
                          th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
                          th:data-lazy-src="${ isLazyload ? img : ''}" />
@@ -33,7 +33,7 @@
                         <span class="post_art_badge" th:if="${!#strings.isEmpty(coverBadge)}" th:text="${coverBadge}"></span>
                         <span class="post_art_back_title" th:text="${coverTitle}"></span>
                         <div class="post_art_logo" th:if="${!#strings.isEmpty(coverLogo)}">
-                            <img th:src="${coverLogo}" th:alt="${coverTitle}">
+                            <img th:src="${coverLogo}" th:alt="${coverTitle}" width="100" height="100">
                         </div>
                         <div class="post_art_content">
                             <span class="post_art_kicker" th:if="${!#strings.isEmpty(coverSubtitle)}" th:text="${coverSubtitle}"></span>
@@ -69,7 +69,7 @@
                        th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                         <span class="recent-post-top-text"
                               th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
-                        <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg"
+                        <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                              th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
                              th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
                              th:data-lazy-src="${ isLazyload ? img : ''}" />
@@ -79,7 +79,7 @@
                             <span class="post_art_badge" th:if="${!#strings.isEmpty(coverBadge)}" th:text="${coverBadge}"></span>
                             <span class="post_art_back_title" th:text="${coverTitle}"></span>
                             <div class="post_art_logo" th:if="${!#strings.isEmpty(coverLogo)}">
-                                <img th:src="${coverLogo}" th:alt="${coverTitle}">
+                                <img th:src="${coverLogo}" th:alt="${coverTitle}" width="100" height="100">
                             </div>
                             <div class="post_art_content">
                                 <span class="post_art_kicker" th:if="${!#strings.isEmpty(coverSubtitle)}" th:text="${coverSubtitle}"></span>

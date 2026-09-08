@@ -2,7 +2,7 @@
 <div class="card-widget card-recent-post" >
     <a th:if="${not #strings.isEmpty(theme.config.sidebar.newcomment.newcommentUrl)}"
        th:onclick="pjax.loadUrl([[${theme.config.sidebar.newcomment.newcommentUrl}]])"
-       title="查看更多"
+       title="查看更多" aria-label="查看更多"
        class="card-more-btn"
        style="cursor:pointer" draggable="false"><i class="haofont hao-icon-chevron-right"></i></a>
     <div class="item-headline"><i class="haofont hao-icon-chat--fill" style="font-size: 19px;"></i><span>最新评论</span></div>
@@ -15,7 +15,7 @@
                 url = ${page == null? '/' : page.status.permalink + '#comment-' + comment.metadata.name}">
                 <span th:text="${commentIndex}"></span>
                 <a class="thumbnail" th:href="${url}" data-pjax-state="">
-                    <img alt="头像"
+                    <img alt="头像" width="20" height="20"
                          th:with=" img =${#strings.isEmpty(comment.owner.avatar)? theme.config.sidebar.newcomment.providerMirror+'/avatar/'+comment.spec.owner.annotations['email-hash'] :comment.owner.avatar}"
                          th:src="${isLazyload ? '' : img}" th:data-lazy-src="${ isLazyload ? img : ''}">
                 </a>
