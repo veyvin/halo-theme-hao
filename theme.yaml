@@ -7,8 +7,8 @@ metadata:
 spec:
   displayName: Hao
   author:
-    name: 程序员小航 & 困困鱼 & Carol
-    website: https://github.com/chengzhongxue
+    name: veyvin
+    website: https://github.com/veyvin
   customTemplates:
     page:
       - name: 友情链接页面模版
@@ -43,11 +43,11 @@ spec:
   description: Halo 2.x Theme base on Thymeleaf, Referring to Butterfly and Heo
   logo: /themes/theme-hao/assets/images/hao-logo.jpg
   homepage: https://www.halo.run/store/apps/app-MgZJX
-  issues: https://github.com/chengzhongxue/halo-theme-hao/issues
-  repo: https://github.com/chengzhongxue/halo-theme-hao
+  issues: https://github.com/veyvin/halo-theme-hao/issues
+  repo: https://github.com/veyvin/halo-theme-hao
   settingName: "theme-hao-setting"
   configMapName: "theme-hao-configMap"
-  version: "1.7.4"
+  version: "1.7.5"
   requires: ">=2.22.8"
   license:
     - name: "GPL-3.0"
