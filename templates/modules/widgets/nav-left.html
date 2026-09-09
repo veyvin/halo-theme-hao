@@ -25,6 +25,16 @@
                         </th:block>
                     </div>
                 </div>
+                <th:block th:each="menuItem : ${leftMenu.menuItems}" th:if="${#lists.isEmpty(menuItem.children)}">
+                    <a class="back-menu-bottom-btn" rel="external nofollow"
+                       th:target="${menuItem.spec.target?.value}" th:href="@{${menuItem.status.href}}"
+                       th:title="${menuItem.status.displayName}">
+                        <img th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
+                             class="back-menu-bottom-btn-icon" width="20" height="20" alt="菜单图标"
+                             th:src="${#annotations.getOrDefault(menuItem, 'icon', '')}">
+                        <span class="back-menu-bottom-btn-text" th:text="${menuItem.status.displayName}"></span>
+                    </a>
+                </th:block>
             </div>
         </div>
     </th:block>
@@ -33,4 +43,29 @@
     <a href="/" id="site-name" title="返回博客主页">
         <span th:utext="${#strings.isEmpty(theme.config.basics.siteTitle)} ? ${site.title} : ${theme.config.basics.siteTitle}"></span>
     </a>
+    <style type="text/css">
+        .back-home-button .back-menu-bottom-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 12px 12px;
+            padding: 8px;
+            border-radius: 8px;
+            background: var(--heo-main-op, rgba(66, 90, 239, .1));
+            color: var(--heo-fontcolor);
+            font-size: 14px;
+        }
+
+        .back-home-button .back-menu-bottom-btn:hover {
+            background: var(--heo-main);
+            color: #fff;
+        }
+
+        .back-home-button .back-menu-bottom-btn-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+        }
+    </style>
 </div>

@@ -61,6 +61,13 @@
             </div>
         </div>
     </div>
+    <div class="nav-button" id="postChatNav-button" th:if="${theme.config.post.aiAssistantEnable}">
+        <a class="site-page social-icon" href="javascript:haoAiToggle();" rel="external nofollow"
+           title="AI 智能对话" aria-label="AI 智能对话">
+            <i class="haofont hao-icon-message" style="font-size: 1.1rem;"></i>
+        </a>
+    </div>
+
     <div th:if="${theme.config.nav.right.console.consoleEnable}" class="nav-button" id="nav-console">
         <a class="console_switchbutton" href="javascript:void(0);" onclick="heo.toggleConsole()" rel="external nofollow"
            title="中控台" aria-label="中控台">

@@ -29,18 +29,20 @@ var haoAi = (function () {
     box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   function clearMarks() {
-    Array.prototype.forEach.call(document.querySelectorAll('#article-container .hc-mark'), function (m) {
+    var c = document.querySelector('#article-container');
+    if (!c) { return; }
+    Array.prototype.forEach.call(c.querySelectorAll('.hc-mark'), function (m) {
       var t = document.createTextNode(m.textContent);
       m.parentNode.replaceChild(t, m);
     });
-    var c = document.querySelector('#article-container');
-    if (c) { c.normalize(); }
+    c.normalize();
   }
   function findInPage() {
     var input = document.querySelector('#hao-ai-find-input');
     var kw = input ? input.value.trim() : '';
     clearMarks();
     if (!kw) { return; }
+    if (!document.querySelector('#article-container')) { snack('当前页面没有可查找的正文'); return; }
     var count = 0;
     var walker = document.createTreeWalker(
       document.querySelector('#article-container'), NodeFilter.SHOW_TEXT,

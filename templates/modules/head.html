@@ -26,6 +26,8 @@
 
     <link rel="stylesheet" th:href="${assets_link + '/css/hao-canvas.css' + theme_version}">
 
+    <script defer th:if="${theme.config.post.aiAssistantEnable}" th:src="${assets_link + '/js/hao-ai.js' + theme_version}"></script>
+
     <style th:if="${theme.config.other.scrollbarLinearGradientEnable}">
         *::-webkit-scrollbar-thumb {
             background-color: var(--heo-main);
