@@ -710,21 +710,21 @@ $(window).on('keydown', function (ev) {
             return false;
         }
 
-        //陪读模式 shift+P（仅文章页可用）
+        //陪读模式 shift+P（仅文章页可用，需后台开启朗读）
         if (ev.keyCode == 80) {
-            if (typeof haoCompanion === 'function') { haoCompanion(); }
+            if (typeof haoCompanion === 'function' && (!window.GLOBAL_CONFIG || GLOBAL_CONFIG.source.post.readAloudEnable !== false)) { haoCompanion(); }
             return false;
         }
 
-        //AI 助手 shift+C（仅文章页可用）
+        //AI 助手 shift+C（仅文章页可用，需后台开启 AI 助手）
         if (ev.keyCode == 67) {
-            if (typeof haoAiToggle === 'function') { haoAiToggle(); }
+            if (typeof haoAiToggle === 'function' && (!window.GLOBAL_CONFIG || GLOBAL_CONFIG.source.post.aiAssistantEnable !== false)) { haoAiToggle(); }
             return false;
         }
 
-        //朗读文章 shift+T（仅文章页可用）
+        //朗读文章 shift+T（仅文章页可用，需后台开启朗读）
         if (ev.keyCode == 84) {
-            if (typeof haoReadAloud === 'function') { haoReadAloud(); }
+            if (typeof haoReadAloud === 'function' && (!window.GLOBAL_CONFIG || GLOBAL_CONFIG.source.post.readAloudEnable !== false)) { haoReadAloud(); }
             return false;
         }
 

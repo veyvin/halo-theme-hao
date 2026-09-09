@@ -1553,6 +1553,16 @@ spec:
           value: true
           help: 自动提取文章封面图主色作为页面强调色，让每篇文章有独特的视觉风格
         - $formkit: switch
+          name: readAloudEnable
+          label: 文章朗读
+          value: true
+          help: 在文章页右下角显示朗读按钮，支持快捷键 Shift+T 朗读全文、Shift+P 陪读模式
+        - $formkit: switch
+          name: aiAssistantEnable
+          label: AI 助手
+          value: true
+          help: 在文章页右下角显示 AI 助手按钮，支持快捷键 Shift+C，可查看摘要与页内查找
+        - $formkit: switch
           name: opacity
           label: 目录模糊效果
           value: true

@@ -84,7 +84,9 @@
                                    theme.config.comments.use == 'Waline' ? 'wl-editor' : 'appearance-none' }]]
             },
             post: {
-                dynamicBackground: [[${ theme.config.post.dynamicBackground }]]
+                dynamicBackground: [[${ theme.config.post.dynamicBackground }]],
+                readAloudEnable: [[${ theme.config.post.readAloudEnable ?: true }]],
+                aiAssistantEnable: [[${ theme.config.post.aiAssistantEnable ?: true }]]
             },
             tool: {
                 switch: [[${ theme.config.tool.snackbar.switch }]]
