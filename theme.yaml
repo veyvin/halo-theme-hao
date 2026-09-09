@@ -39,6 +39,14 @@ spec:
         description: 最近评论页面
         screenshot:
         file: new_comment.html
+      - name: 热门文章页面模版
+        description: 按访问量排行展示热门文章
+        screenshot:
+        file: hot.html
+      - name: 数据统计页面模版
+        description: 展示站点文章、评论、访问等数据大盘
+        screenshot:
+        file: stats.html
 
   description: Halo 2.x Theme base on Thymeleaf, Referring to Butterfly and Heo
   logo: /themes/theme-hao/assets/images/hao-logo.jpg

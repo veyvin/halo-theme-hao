@@ -4125,3 +4125,19 @@ spec:
                   placeholder: 请输入结束时间(小时)
                   help: 可以与开始时间相同，表示一个小时内的问候
               key: other_greeting_setting
+    - group: hot
+      label: 22 · 页面-热榜
+      formSchema:
+        - $formkit: number
+          name: listNum
+          label: 榜单数量
+          value: 20
+          min: 5
+          max: 50
+          placeholder: 例如：20
+          help: 热门页按访问量展示的文章数量，建议 10-30
+        - $formkit: switch
+          name: showCover
+          label: 显示封面
+          value: true
+          help: 榜单每行是否显示文章封面，关闭则只显示排名与标题

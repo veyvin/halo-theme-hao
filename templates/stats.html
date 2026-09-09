@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = ${singlePage.spec.title + ' | ' + site.title}, head = ~{::head})}">
+<th:block th:fragment="head">
+</th:block>
+<th:block th:fragment="content">
+
+    <div class="page" id="body-wrap">
+
+        <!-- 头部导航栏 -->
+        <header class="not-top-img" id="page-header">
+            <nav th:replace="~{modules/nav :: nav(title = ${singlePage.spec.title})}"></nav>
+        </header>
+        <main class="layout hide-aside" id="content-inner">
+            <div id="page">
+                <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
+                        smallTitle = '数据',
+                        bigTitle = ${singlePage.spec.title},
+                        detail = ${singlePage.spec.excerpt.raw},
+                        buttonUrl = '',
+                        buttonTitle = '')}"></div>
+
+                <div id="stats-board" th:with="stats = ${siteStatsFinder.getStats()}">
+                    <div class="stats-card">
+                        <div class="stats-value" th:text="${stats.post}"></div>
+                        <div class="stats-label">文章总数</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-value" th:text="${stats.category}"></div>
+                        <div class="stats-label">分类总数</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-value" th:text="${stats.comment}"></div>
+                        <div class="stats-label">评论总数</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-value" th:text="${stats.visit}"></div>
+                        <div class="stats-label">累计访问</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-value" th:text="${theme.config.basics.siteStartTime}" id="runtimeshow"></div>
+                        <div class="stats-label">建站天数</div>
+                    </div>
+                </div>
+                <style>
+                    #stats-board {
+                        display: grid;
+                        grid-template-columns: repeat(5, 1fr);
+                        gap: 12px;
+                    }
+
+                    #stats-board .stats-card {
+                        background: var(--heo-card-bg);
+                        border: var(--style-border);
+                        border-radius: 12px;
+                        box-shadow: var(--heo-shadow-border);
+                        padding: 1.2rem .5rem;
+                        text-align: center;
+                    }
+
+                    #stats-board .stats-value {
+                        font-size: 1.6em;
+                        font-weight: 800;
+                        line-height: 1.2;
+                    }
+
+                    #stats-board .stats-label {
+                        font-size: .85em;
+                        opacity: .65;
+                        margin-top: 4px;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        #stats-board {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
+                </style>
+            </div>
+
+        </main>
+        <!-- 底部 -->
+        <footer th:replace="~{modules/footer}"/>
+    </div>
+
+</th:block>
+
+</html>

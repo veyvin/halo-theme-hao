@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = ${singlePage.spec.title + ' | ' + site.title}, head = ~{::head})}">
+<th:block th:fragment="head">
+</th:block>
+<th:block th:fragment="content">
+
+    <div class="page" id="body-wrap">
+
+        <!-- 头部导航栏 -->
+        <header class="not-top-img" id="page-header">
+            <nav th:replace="~{modules/nav :: nav(title = ${singlePage.spec.title})}"></nav>
+        </header>
+        <main class="layout hide-aside" id="content-inner">
+            <div id="page">
+                <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
+                        smallTitle = '热度排行',
+                        bigTitle = ${singlePage.spec.title},
+                        detail = ${singlePage.spec.excerpt.raw},
+                        buttonUrl = '',
+                        buttonTitle = '')}"></div>
+
+                <div id="hot-list"
+                     th:with="hotPosts=${postFinder.list({page: 1, size: theme.config.hot.listNum, sort: {'stats.visit,desc'}})},
+                         postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme.config.layout.postRandomImg+'&' : theme.config.layout.postRandomImg+'?'}">
+                    <a class="hot-item" th:each="post,iStat : ${hotPosts}" th:href="@{${post.status.permalink}}"
+                       th:title="${post.spec.title}">
+                        <span class="hot-rank" th:text="${iStat.count}"
+                              th:classappend="${iStat.count <= 3} ? ' hot-top' : ''"></span>
+                        <img th:if="${theme.config.hot.showCover}" class="hot-cover" width="120" height="80"
+                             alt="文章封面"
+                             th:with="img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, 's')}"
+                             th:src="${isLazyload ? '' : img}"
+                             th:data-lazy-src="${ isLazyload ? img : ''}">
+                        <span class="hot-info">
+                            <span class="hot-title" th:text="${post.spec.title}"></span>
+                            <span class="hot-meta">
+                                <span th:text="${post.stats.visit}"></span> 热度 ·
+                                <span th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"></span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <style>
+                    #hot-list {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        background: var(--heo-card-bg);
+                        border: var(--style-border);
+                        border-radius: 12px;
+                        padding: 1rem 1.2rem;
+                        box-shadow: var(--heo-shadow-border);
+                    }
+
+                    #hot-list .hot-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 8px;
+                        border-radius: 8px;
+                    }
+
+                    #hot-list .hot-item:hover {
+                        background: var(--heo-main-op-light, rgba(66, 90, 239, .08));
+                    }
+
+                    #hot-list .hot-rank {
+                        min-width: 32px;
+                        height: 32px;
+                        line-height: 32px;
+                        text-align: center;
+                        font-weight: 800;
+                        border-radius: 8px;
+                        background: var(--heo-card-border);
+                        opacity: .8;
+                    }
+
+                    #hot-list .hot-rank.hot-top {
+                        background: var(--heo-main);
+                        color: #fff;
+                        opacity: 1;
+                    }
+
+                    #hot-list .hot-cover {
+                        width: 120px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 8px;
+                    }
+
+                    #hot-list .hot-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 4px;
+                        min-width: 0;
+                    }
+
+                    #hot-list .hot-title {
+                        font-weight: 700;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    #hot-list .hot-meta {
+                        font-size: .85em;
+                        opacity: .65;
+                    }
+
+                    @media screen and (max-width: 768px) {
+                        #hot-list .hot-cover {
+                            width: 90px;
+                            height: 64px;
+                        }
+                    }
+                </style>
+            </div>
+
+        </main>
+        <!-- 底部 -->
+        <footer th:replace="~{modules/footer}"/>
+    </div>
+
+</th:block>
+
+</html>
