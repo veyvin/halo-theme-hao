@@ -163,6 +163,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#mobile-toc-button').attr('style', 'display: none');
             }
         } else {
+            // 粘贴的 raw HTML 标题没有 id 会导致目录链接为 "#" 点不动，先补上
+            titles.forEach((h, i) => {
+                if (!h.id) {
+                    let n = i + 1, id = 'hao-toc-' + n;
+                    while (document.getElementById(id)) { n++; id = 'hao-toc-' + n; }
+                    h.id = id;
+                }
+            });
             tocbot.init({
                 tocSelector: '.toc-content',
                 contentSelector: '.post-content',
