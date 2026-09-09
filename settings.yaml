@@ -3873,7 +3873,7 @@ spec:
           name: use
           label: 页面样式
           value: default
-          help: 默认文字标签云；3D 为带封面的立体透视卡片，需给分类配封面图
+          help: 默认按分类分区展示最新文章；3D 为带封面的立体透视卡片，需给分类配封面图
           render-type: image
           size: 120
           gap: 12
@@ -3884,6 +3884,16 @@ spec:
             - label: 3D
               value: 3D
               render: /themes/theme-hao/assets/images/settings/category-3d.svg
+        - $formkit: number
+          if: $get(use).value == 'default'
+          name: listNum
+          label: 每类文章数
+          value: 10
+          min: 3
+          max: 20
+          placeholder: 例如：10
+          help: 默认样式下每个分类展示的最新文章数量
+          key: categories_listNum
 
     - group: other
       label: 21 · 高级与其他

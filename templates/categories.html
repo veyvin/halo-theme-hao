@@ -13,17 +13,112 @@
 
             <div id="page">
                 <h1 class="page-title" style="display: inline;">分类</h1>
-                <div th:if="${#strings.equals(theme.config.categories.use, 'default')}" class="category-lists">
-                    <div class="category-title is-center">分类 - <span class="category-amount">11</span></div>
-                    <div class="tag-cloud-list is-center">
-                        <a style="font-size: 1em;" th:each="categoryItem : ${categoryFinder.listAll()}"
-                           th:href="@{${categoryItem.status.permalink}}" th:id="${categoryItem.spec.displayName}">
-                            <span style="font-size: 22px;"
-                                  class="tags-punctuation">[[${categoryItem.spec.displayName}]]</span>
-
-                            <span class="tagsPageCount">[[${categoryItem.status.visiblePostCount}]]</span></a>
+                <div th:if="${#strings.equals(theme.config.categories.use, 'default')}" class="category-sections"
+                     th:with="allCats=${categoryFinder.listAll()},stats=${siteStatsFinder.getStats()}">
+                    <div class="category-stats">
+                        查看不同领域的 <a th:href="@{/categories}" th:text="${#lists.size(allCats)}"></a> 个分类，
+                        共 <a th:href="@{/archives}" th:text="${stats.post}"></a> 篇文章
                     </div>
+                    <section class="category-section" th:each="categoryItem : ${allCats}">
+                        <h2 class="category-section-title">
+                            <a th:href="@{${categoryItem.status.permalink}}"
+                               th:text="${categoryItem.spec.displayName}"></a>
+                            <span class="category-section-count"
+                                  th:text="${categoryItem.status.visiblePostCount}"></span>
+                        </h2>
+                        <ul class="category-post-list"
+                            th:with="catPosts=${postFinder.list({page: 1, size: theme.config.categories.listNum, sort: {'spec.publishTime,desc'}, categoryName: categoryItem.metadata.name})}">
+                            <li th:each="post : ${catPosts}">
+                                <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}"
+                                   th:title="${post.spec.title}"></a>
+                                <time th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"></time>
+                            </li>
+                        </ul>
+                        <a class="category-more" th:href="@{${categoryItem.status.permalink}}">进入分类 →</a>
+                    </section>
                 </div>
+                <style>
+                    .category-sections {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                    }
+
+                    .category-sections .category-stats {
+                        background: var(--heo-card-bg);
+                        border: var(--style-border);
+                        border-radius: 12px;
+                        box-shadow: var(--heo-shadow-border);
+                        padding: 1rem 1.5rem;
+                        text-align: center;
+                    }
+
+                    .category-sections .category-stats a {
+                        font-weight: 800;
+                        font-size: 1.2em;
+                        color: var(--heo-main);
+                        padding: 0 4px;
+                    }
+
+                    .category-sections .category-section {
+                        background: var(--heo-card-bg);
+                        border: var(--style-border);
+                        border-radius: 12px;
+                        box-shadow: var(--heo-shadow-border);
+                        padding: 1.2rem 1.5rem;
+                    }
+
+                    .category-sections .category-section-title {
+                        margin: 0 0 8px;
+                        font-size: 1.3em;
+                        display: flex;
+                        align-items: baseline;
+                        gap: 8px;
+                    }
+
+                    .category-sections .category-section-count {
+                        font-size: .7em;
+                        font-weight: 400;
+                        opacity: .6;
+                    }
+
+                    .category-sections .category-post-list {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    .category-sections .category-post-list li {
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 12px;
+                        padding: 7px 0;
+                        border-bottom: 1px dashed var(--heo-card-border);
+                    }
+
+                    .category-sections .category-post-list li:last-child {
+                        border-bottom: none;
+                    }
+
+                    .category-sections .category-post-list a {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .category-sections .category-post-list time {
+                        flex-shrink: 0;
+                        font-size: .85em;
+                        opacity: .55;
+                    }
+
+                    .category-sections .category-more {
+                        display: inline-block;
+                        margin-top: 8px;
+                        font-size: .9em;
+                        color: var(--heo-main);
+                    }
+                </style>
                 <th:block th:if="${#strings.equals(theme.config.categories.use, '3D')}">
                     <link rel="stylesheet" th:href="${assets_link + '/libs/no3d/no3d.css'}">
                     <div id="libCategories" >
