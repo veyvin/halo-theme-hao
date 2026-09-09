@@ -2,6 +2,9 @@
 <html  xmlns:th="http://www.thymeleaf.org"
       th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'post',title = ${post.spec.title + ' | ' + site.title}, head = ~{::head})}">
 <th:block th:fragment="head">
+  <link rel="stylesheet" th:href="${assets_link + '/css/hao-post-tools.css' + theme_version}">
+  <script defer th:src="${assets_link + '/js/hao-read.js' + theme_version}"></script>
+  <script defer th:src="${assets_link + '/js/hao-ai.js' + theme_version}"></script>
 </th:block>
 <th:block th:fragment="content">
     <div class="post" id="body-wrap">

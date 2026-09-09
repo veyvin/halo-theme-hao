@@ -45,8 +45,8 @@
                                 <div class="author-content-item-tips">相册集</div>
                                 <span class="author-content-item-title">全部</span>
                                 <div class="content-bottom">
-                                    <div class="tips"></div>
-                                </div>
+                                        <div class="tips" th:text="${theme.config.photos.detail}"></div>
+                                    </div>
                                 <div class="banner-button-group">
                                     <a class="banner-button" target="_blank"
                                        th:attr="onclick='pjax.loadUrl(\''+ ${theme.config.photos.topLink} +'\')'">

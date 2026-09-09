@@ -646,6 +646,14 @@ $(window).on('keydown', function (ev) {
         rm.hideRightMenu();
     }
 
+    //站内搜索 Ctrl/Command+F（仅搜索插件可用时接管，否则走浏览器查找）
+    if ((ev.ctrlKey || ev.metaKey) && ev.keyCode == 70 && !heo_intype) {
+        if (typeof SearchWidget !== 'undefined' && SearchWidget && typeof SearchWidget.open === 'function') {
+            SearchWidget.open();
+            return false;
+        }
+    }
+
     if (heo_keyboard && ev.shiftKey && !heo_intype) {
 
         // 显示快捷键面板 shift键
@@ -689,27 +697,34 @@ $(window).on('keydown', function (ev) {
             return false;
         }
 
-        //友链鱼塘 shift+F
+        //瞬间说说 shift+F
         if (ev.keyCode == 70) {
             pjax.loadUrl("/moments/");
             return false;
         }
 
-        //友情链接页面 shift+L
+        //友情链接页面 shift+L（地址跟随主题设置 linksUrl）
         if (ev.keyCode == 76) {
-            pjax.loadUrl("/link/");
+            var _linksUrl = (typeof GLOBAL_CONFIG !== 'undefined' && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.links && GLOBAL_CONFIG.source.links.linksUrl) || '/links';
+            pjax.loadUrl(_linksUrl);
             return false;
         }
 
-        //关于本站 shift+P
+        //陪读模式 shift+P（仅文章页可用）
         if (ev.keyCode == 80) {
-            pjax.loadUrl("/about/");
+            if (typeof haoCompanion === 'function') { haoCompanion(); }
             return false;
         }
 
-        //在线工具 shift+T
+        //AI 助手 shift+C（仅文章页可用）
+        if (ev.keyCode == 67) {
+            if (typeof haoAiToggle === 'function') { haoAiToggle(); }
+            return false;
+        }
+
+        //朗读文章 shift+T（仅文章页可用）
         if (ev.keyCode == 84) {
-            pjax.loadUrl("/tlink/");
+            if (typeof haoReadAloud === 'function') { haoReadAloud(); }
             return false;
         }
 

@@ -7,6 +7,9 @@
     <meta content="var(--heo-card-bg)" name="theme-color">
     <meta name="keywords" th:content="${not #strings.isEmpty(theme.config.basics.seo.keywords) ? theme.config.basics.seo.keywords : site.title}">
     <meta name="description" th:content="${not #strings.isEmpty(theme.config.basics.seo.description) ? theme.config.basics.seo.description : (not #strings.isEmpty(site.subtitle) ? site.subtitle : site.title)}">
+    <meta property="og:image" th:if="${not #strings.isEmpty(theme.config.other.opengraph.image)}" th:content="${theme.config.other.opengraph.image}">
+    <meta name="twitter:image" th:if="${not #strings.isEmpty(theme.config.other.opengraph.image)}" th:content="${theme.config.other.opengraph.image}">
+    <style th:if="${not #strings.isEmpty(theme.config.style.fontFamily)}" th:utext="|body{font-family:${theme.config.style.fontFamily}}|"></style>
     <title th:text="${siteTitle}"></title>
     <link rel="shortcut icon"
           th:href="@{${#strings.isEmpty(site.favicon) ? assets_link + '/images/hao-logo.jpg' : site.favicon}}"/>

@@ -1,0 +1,20 @@
+/* 文章朗读高亮 + 页内查找标记 + AI 助手面板，仅作用于文章页 */
+#article-container .hc-reading { background: color-mix(in srgb, var(--heo-main, #425aef) 12%, transparent); border-radius: 6px; transition: background .3s; }
+#article-container .hc-mark { background: #fde68a; color: inherit; border-radius: 3px; padding: 0 1px; }
+[data-theme="dark"] #article-container .hc-mark { background: #92400e; color: #fef3c7; }
+#hao-ai-panel { position: fixed; top: 50%; right: 64px; transform: translateY(-50%) scale(.96); width: 300px; max-width: calc(100vw - 32px); max-height: 80vh; overflow-y: auto; background: var(--heo-card-bg); border: 1px solid var(--heo-card-border); border-radius: 14px; box-shadow: 0 12px 40px rgba(0, 0, 0, .18); z-index: 1001; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; }
+#hao-ai-panel.show { opacity: 1; pointer-events: auto; transform: translateY(-50%) scale(1); }
+#hao-ai-panel .hao-ai-h { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; font-weight: 700; border-bottom: 1px solid var(--heo-card-border); }
+#hao-ai-panel .hao-ai-h button { border: none; background: none; cursor: pointer; color: var(--heo-fontcolor); font-size: 16px; }
+#hao-ai-panel .hao-ai-b { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+#hao-ai-panel .hao-ai-row { display: flex; flex-wrap: wrap; gap: 8px; }
+#hao-ai-panel .hao-ai-btn { flex: 1 1 auto; border: 1px solid var(--heo-card-border); background: var(--heo-card-bg); color: var(--heo-fontcolor); border-radius: 9px; padding: 7px 10px; font-size: 13px; cursor: pointer; text-align: center; }
+#hao-ai-panel .hao-ai-btn:hover { border-color: var(--heo-main, #425aef); color: var(--heo-main, #425aef); }
+#hao-ai-panel .hao-ai-find { display: flex; gap: 8px; }
+#hao-ai-panel .hao-ai-find input { flex: 1; min-width: 0; border: 1px solid var(--heo-card-border); border-radius: 9px; padding: 7px 10px; font-size: 13px; background: var(--heo-card-bg); color: var(--heo-fontcolor); }
+#hao-ai-panel .hao-ai-keys { font-size: 12px; opacity: .75; line-height: 1.9; }
+#hao-ai-panel .hao-ai-keys kbd { border: 1px solid var(--heo-card-border); border-radius: 5px; padding: 0 6px; font-family: inherit; background: var(--heo-card-bg); }
+@media screen and (max-width: 768px) {
+  #hao-ai-panel { top: auto; bottom: 12px; right: 12px; left: 12px; width: auto; transform: translateY(12px); max-height: 60vh; }
+  #hao-ai-panel.show { transform: translateY(0); }
+}

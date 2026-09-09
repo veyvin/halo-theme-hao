@@ -3515,11 +3515,18 @@ spec:
           placeholder: 例如：我和我的小伙伴们
           help: 友链页横幅主标题
         - $formkit: url
-          name: fcircleUrl
-          value: "/fcircle"
-          label: 鱼塘链接
-          placeholder: 例如 /fcircle
-          help: 「友链鱼塘」入口链接，需自行创建对应页面
+          name: fcircleApiUrl
+          value: ""
+          label: 鱼塘数据 API
+          placeholder: 例如 https://xxx.com/api
+          help: 友链页鱼塘的数据接口地址，留空则鱼塘无数据；鱼塘页面入口请在菜单中手配
+          validation: url
+        - $formkit: url
+          name: fmomentsApiUrl
+          value: /apis/api.friend.moony.la/v1alpha1/friendposts
+          label: 朋友圈数据 API
+          placeholder: 例如 /apis/api.friend.moony.la/v1alpha1/friendposts
+          help: 朋友圈页的数据接口地址，留空则使用内置默认地址
         - $formkit: url
           name: linksUrl
           value: "/links"
@@ -3558,17 +3565,17 @@ spec:
           key: photosStyle
           label: 样式
           value: default
-          help: 图库页相册列表的展示样式
-          render-type: text
-          size: 72
-          gap: 10
+          help: 默认顶部宽幅 Banner 加照片墙；样式一分组标题加照片墙，无 Banner
+          render-type: image
+          size: 120
+          gap: 12
           options:
             - value: default
               label: 默认
-              render: 默认
+              render: /themes/theme-hao/assets/images/settings/photos-default.svg
             - value: one
               label: 样式一
-              render: 样式一
+              render: /themes/theme-hao/assets/images/settings/photos-one.svg
         - $formkit: text
           name: topLink
           key: topLink
@@ -3585,6 +3592,14 @@ spec:
           help: 图库页横幅下方的描述文案
           placeholder: 例如：每一张照片都是一次美好的记忆。
           key: photos_detail
+        - $formkit: text
+          if: $get(photosStyle).value == 'one'
+          name: bigTitle
+          label: 分组标题
+          value: 相册集
+          placeholder: 例如：相册集
+          help: 样式一下相册分组页顶部的大标题
+          key: photos_bigTitle
         - $formkit: switch
           name: tagEnable
           label: 图片标签
@@ -3848,17 +3863,17 @@ spec:
           name: use
           label: 页面样式
           value: default
-          help: 分类页的展示风格，3D 为立体卡片效果
-          render-type: text
-          size: 72
-          gap: 10
+          help: 默认文字标签云；3D 为带封面的立体透视卡片，需给分类配封面图
+          render-type: image
+          size: 120
+          gap: 12
           options:
             - label: 默认
               value: default
-              render: 默认
+              render: /themes/theme-hao/assets/images/settings/category-default.svg
             - label: 3D
               value: 3D
-              render: 3D
+              render: /themes/theme-hao/assets/images/settings/category-3d.svg
 
     - group: other
       label: 21 · 高级与其他
