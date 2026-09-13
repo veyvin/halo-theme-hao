@@ -1,0 +1,15 @@
+<!-- 首页分类条固定入口（精选/热门/必看等）：对标原站 home-category-bar，由主题设置驱动 -->
+<th:block th:fragment="fixed-items" th:if="${theme.config.layout.navs.fixedEnable && not #lists.isEmpty(theme.config.layout.navs.fixedItems)}">
+    <div class="category-bar-item category-bar-fixed"
+         th:each="fixedItem : ${theme.config.layout.navs.fixedItems}"
+         th:id="'fixed-' + ${fixedItem.title}">
+        <a th:href="@{${fixedItem.url}}"
+           th:title="${not #strings.isEmpty(fixedItem.tip) ? fixedItem.tip : fixedItem.title}"
+           th:attr="data-tip=${not #strings.isEmpty(fixedItem.tip) ? fixedItem.tip : null}">
+            <i th:if="${not #strings.isEmpty(fixedItem.icon)}"
+               th:class="${fixedItem.icon}"
+               th:style="${not #strings.isEmpty(fixedItem.color) ? 'color:' + fixedItem.color : ''}"
+               aria-hidden="true"></i><span th:text="${fixedItem.title}"></span>
+        </a>
+    </div>
+</th:block>

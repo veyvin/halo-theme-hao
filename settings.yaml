@@ -646,6 +646,23 @@ spec:
             navCustomUrl:
             navMore:
             navMoreCustomUrl:
+            fixedEnable: true
+            fixedItems:
+              - title: 热门
+                url: /hot
+                icon: haofont hao-icon-fire
+                color: '#ff4d4f'
+                tip: 查看热门文章页面
+              - title: 必看
+                url: /must-read
+                icon: haofont hao-icon-book
+                color: '#16c2c2'
+                tip: 查看必看精选页面
+              - title: 全部文章
+                url: /archives
+                icon: haofont hao-icon-box-archive
+                color: '#ff8f1f'
+                tip: 查看所有文章
           children:
             - $formkit: select
               name: nav
@@ -729,6 +746,54 @@ spec:
               help: 选择自定义地址后，填写“更多”按钮的跳转链接
               placeholder: 例如 /archives
               value:
+            - $formkit: switch
+              name: fixedEnable
+              key: fixedEnable
+              id: navFixedEnable
+              label: 固定入口（精选/热门/必看）
+              value: true
+              help: 在导航条最前方显示精选、热门、必看等固定入口，对标原站首页分类条
+            - $formkit: array
+              name: fixedItems
+              key: fixedItems
+              label: 固定入口配置
+              if: $get(fixedEnable).value
+              value: []
+              min: 0
+              max: 8
+              itemLabels:
+                - type: text
+                  label: $value.title
+                - type: text
+                  label: $value.url
+              children:
+                - $formkit: text
+                  name: title
+                  label: 入口名称
+                  placeholder: 例如：热门
+                  validation: required
+                  help: 固定入口显示的文字
+                - $formkit: url
+                  name: url
+                  label: 入口链接
+                  placeholder: 例如：/hot
+                  validation: required
+                  help: 点击入口后跳转的地址
+                - $formkit: text
+                  name: icon
+                  label: 入口图标
+                  placeholder: 例如：haofont hao-icon-fire
+                  help: 支持 haofont 图标类名，留空则不显示图标
+                - $formkit: color
+                  name: color
+                  label: 图标颜色
+                  value: "#2f6bff"
+                  help: 图标的显示颜色
+                - $formkit: text
+                  name: tip
+                  label: 悬停提示
+                  placeholder: 例如：查看热门文章页面
+                  help: 鼠标悬停时显示的提示文字，留空则不显示
         - $formkit: group
           name: post
           label: 文章卡片
@@ -736,6 +801,8 @@ spec:
           value:
             cols: col2
             postLocation: top
+            latestDays: 7
+            visitedMark: true
           children:
             - $formkit: toggle
               name: cols
@@ -786,6 +853,21 @@ spec:
           label: 首页文章卡片擦亮效果
           value: false
           help: 鼠标悬停时文章卡片有擦亮动画效果
+        - $formkit: number
+          name: latestDays
+          key: latestDays
+          label: 最新角标天数
+          value: 7
+          min: 0
+          step: 1
+          placeholder: 例如：7
+          help: 发布 N 天内的文章显示“最新”角标，0 表示关闭，对标原站 lastestpost
+        - $formkit: switch
+          name: visitedMark
+          key: visitedMark
+          label: 已读/未读标记
+          value: true
+          help: 根据浏览器本地阅读记录显示“未读”，已读过的文章标记自动消失，对标原站 unvisited-post
 
     - group: sidebar
       label: 05 · 侧边栏
@@ -1558,6 +1640,35 @@ spec:
           value: true
           help: 在文章页右下角显示朗读按钮，支持快捷键 Shift+T 朗读全文、Shift+P 陪读模式
         - $formkit: switch
+          name: dockEnable
+          key: dockEnable
+          label: 底部播放 dock 栏
+          value: true
+          help: 在文章页底部显示朗读/陪读/电台/音乐快捷 dock 栏，对标原站 bottom-dock
+        - $formkit: group
+          name: radio
+          label: 电台模式
+          value:
+            radioEnable: true
+            radioCount: 10
+          children:
+            - $formkit: switch
+              name: radioEnable
+              key: radioEnable
+              label: 电台模式
+              value: true
+              help: 在 dock 栏显示电台按钮，随机挑选站内文章连续朗读，对标原站电台模式
+            - $formkit: number
+              name: radioCount
+              key: radioCount
+              label: 电台候选文章数
+              value: 10
+              min: 3
+              max: 30
+              step: 1
+              placeholder: 例如：10
+              help: 电台模式随机池的文章数量（取最新 N 篇打乱）
+        - $formkit: switch
           name: aiAssistantEnable
           label: AI 助手
           value: true
@@ -1580,6 +1691,11 @@ spec:
             basicWordCount:
             key:
             Referer:
+            posterEnable: true
+            askEnable: true
+            askUrl: https://ai.zhheo.com/
+            askPlaceholder: 针对这个文章有什么想问的？
+            suggestions: 这篇文章讲了什么？|有什么实践建议？|相关文章推荐？
           children:
             - $formkit: switch
               name: aiDescriptionEnable
@@ -1663,6 +1779,44 @@ spec:
               key: post_aiDescription_Referer
               placeholder: 例如：https://xxx.com/
               validation: url
+            - $formkit: switch
+              if: $get(aiDescriptionEnable).value
+              name: posterEnable
+              key: posterEnable
+              label: 摘要配图
+              value: true
+              help: 在 AI 摘要卡片中显示文章封面配图，无封面时自动隐藏，对标原站 ai-poster
+            - $formkit: switch
+              if: $get(aiDescriptionEnable).value
+              name: askEnable
+              key: askEnable
+              label: 问答输入框
+              value: true
+              help: 在 AI 摘要底部显示问答输入框，提交后携带问题跳转到外部 AI 对话（主题不直连接口，不产生计费）
+            - $formkit: url
+              if: $get(aiDescriptionEnable).value && $get(askEnable).value
+              name: askUrl
+              key: askUrl
+              label: AI 对话地址
+              value: https://ai.zhheo.com/
+              placeholder: 例如：https://ai.zhheo.com/
+              help: 问答提交后的跳转地址，问题拼在 ?q= 参数后；留空则仅在站内提示
+            - $formkit: text
+              if: $get(aiDescriptionEnable).value && $get(askEnable).value
+              name: askPlaceholder
+              key: askPlaceholder
+              label: 输入框提示文案
+              value: 针对这个文章有什么想问的？
+              placeholder: 例如：针对这个文章有什么想问的？
+              help: 问答输入框的占位提示文字
+            - $formkit: text
+              if: $get(aiDescriptionEnable).value && $get(askEnable).value
+              name: suggestions
+              key: suggestions
+              label: 联想问题
+              value: 这篇文章讲了什么？|有什么实践建议？|相关文章推荐？
+              placeholder: 用 | 分隔多个联想问题
+              help: 输入框下方的快捷问题，点击直接跳转 AI 对话，多个用英文竖线 | 分隔
         - $formkit: group
           name: passage_tips
           label: 温馨提示
@@ -2760,6 +2914,38 @@ spec:
               if: $get(rightsideEnable).value
               label: 阅读模式
               help: 开启后右下角悬浮按钮中提供「阅读模式」入口
+        - $formkit: group
+          name: aggSearch
+          label: 聚合搜索
+          value:
+            aggSearchEnable: true
+            friendCount: 20
+            commentCount: 20
+          children:
+            - $formkit: switch
+              name: aggSearchEnable
+              key: aggSearchEnable
+              label: 聚合搜索面板
+              value: true
+              help: 点击搜索按钮先弹出主题聚合面板（综合/文章/友链/评论），文章走搜索插件，友链评论走站内数据前端过滤，对标原站 heosearch
+            - $formkit: number
+              name: friendCount
+              key: friendCount
+              label: 友链候选数
+              value: 20
+              min: 5
+              max: 100
+              step: 1
+              help: 聚合搜索友链 Tab 的候选数量（需安装友链插件，否则该 Tab 自动隐藏）
+            - $formkit: number
+              name: commentCount
+              key: commentCount
+              label: 评论候选数
+              value: 20
+              min: 5
+              max: 100
+              step: 1
+              help: 聚合搜索评论 Tab 的候选数量
         - $formkit: group
           name: nav_music
           label: 音乐
@@ -3947,7 +4133,7 @@ spec:
           value:
             enable: true
             errorImg: "/themes/theme-hao/assets/images/404.gif"
-            loadingImg: /themes/theme-hao/assets/images/404s.gif
+            loadingImg: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='100%25' height='100%25' fill='%23f2f4f7'/%3E%3C/svg%3E"
           children:
             - $formkit: switch
               name: enable
@@ -3963,9 +4149,8 @@ spec:
               label: 加载占位图
               width: "15rem"
               aspectRatio: "16/9"
-              validation: required
-              placeholder: 请输入图片 url
-              help: 图片加载过程中显示的占位图片
+              placeholder: 请输入图片 url，留空使用内联灰色占位（零请求）
+              help: 图片加载过程中显示的占位图片；留空则使用内联 SVG 灰色占位，不产生额外请求
             - $formkit: attachment
               name: errorImg
               label: 加载失败图

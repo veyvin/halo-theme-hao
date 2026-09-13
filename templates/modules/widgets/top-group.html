@@ -25,7 +25,7 @@
                           th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
                     <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                          th:with=' img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
-                         th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
+                         th:alt="${post.spec.title}" th:src="${isLazyload ? loadingImg : img}"
                          th:data-lazy-src="${ isLazyload ? img : ''}" />
                     <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
                          th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">
@@ -71,7 +71,7 @@
                               th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
                         <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                              th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")}'
-                             th:alt="${post.spec.title}" th:src="${isLazyload ? '' : img}"
+                             th:alt="${post.spec.title}" th:src="${isLazyload ? loadingImg : img}"
                              th:data-lazy-src="${ isLazyload ? img : ''}" />
                         <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
                              th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">

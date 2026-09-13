@@ -5,10 +5,13 @@
             <a href="/">首页</a>
         </div>
 
-        <th:block th:with="tags = ${tagFinder.listAll()}">
+        <th:block th:replace="~{modules/bar/fixed-items :: fixed-items}" />
+
+        <!-- perf-10：标签可能上百，bar 只取前 30 个，全量页走 /tags -->
+        <th:block th:with="tags = ${tagFinder.list(1,30)}">
 
             <div class="category-bar-item"
-                 th:each="tagItem : ${tags}"
+                 th:each="tagItem : ${tags.items}"
                  th:id="${tagItem.spec.displayName}">
                 <a th:href="@{${tagItem.status.permalink}}" th:text="${tagItem.spec.displayName}"></a>
             </div>

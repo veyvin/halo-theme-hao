@@ -3,7 +3,7 @@
       th:with="assets_link=${theme.config.other.staticResource.use == 'custom' ? theme.config.other.staticResource.cdn_link : '/themes/' + theme.metadata.name + '/assets'},
       theme_version = ${ theme.config.other.staticResource.use == 'local' ? '?v='+ theme.spec.version : ''},
       isLazyload = ${theme.config.other.vanillaLazyload.enable},
-      loadingImg = ${theme.config.other.vanillaLazyload.loadingImg},
+      loadingImg = ${#strings.isEmpty(theme.config.other.vanillaLazyload.loadingImg) ? 'data:image/svg+xml,%3Csvg xmlns=''http://www.w3.org/2000/svg'' width=''800'' height=''450''%3E%3Crect width=''100%25'' height=''100%25'' fill=''%23f2f4f7''/%3E%3C/svg%3E' : theme.config.other.vanillaLazyload.loadingImg},
       siteTitle = ${not #strings.isEmpty(title) ?  title  :  #strings.isEmpty(site.subtitle) ? site.title :  site.title +' - ' +site.subtitle }">
 
 <!-- head 中自定义的  -->
@@ -77,11 +77,13 @@
     </style>
 </th:block>
 
-<script th:if="${not #lists.isEmpty(postFinder.listAll())}"
-        th:inline="javascript"
-    th:with="allPostList=${postFinder.listAll()},
+<!-- perf-7: 随机文章只取最新 20 篇（原 listAll 全表查询，文章上千后每页都慢） -->
+<script th:with="candidatePosts=${postFinder.list({page: 1, size: 20, sort: {'spec.publishTime,desc'}})},
+    allPostList=${candidatePosts.items},
     randomIndex=${T(java.lang.Math).floor(T(java.lang.Math).random()*#lists.size(allPostList))},
     postPermalink=${allPostList[randomIndex].status.permalink}"
+        th:if="${not #lists.isEmpty(candidatePosts.items)}"
+        th:inline="javascript"
 >
     function toRandomPost() {
         // 随机跳转全站的一篇文章
@@ -114,6 +116,12 @@
 
 <!-- todo 右下角悬浮操作按钮 -->
 <th:block th:replace="~{modules/widgets/rightside}"/>
+
+<!-- 底部播放 dock 栏 -->
+<div th:replace="~{modules/widgets/bottom-dock}"/>
+
+<!-- 聚合搜索面板 -->
+<div th:replace="~{modules/widgets/agg-search}"/>
 
 
 <div th:replace="~{modules/widgets/right-menu}"/>
@@ -166,17 +174,20 @@
     
     <script th:src="${assets_link + '/libs/view-image/view-image.min.js'}"></script>
 
-    <link rel="stylesheet" th:href="${assets_link + '/libs/aplayer/APlayer.min.css'}"
-          media="all" onload="this.media='all'">
-    
-    <script th:src="${assets_link + '/libs/aplayer/APlayer.min.js'}"></script>
-    
-    <script th:src="${assets_link + '/libs/aplayer/Meting2.min.js'}"></script>
+    <!-- perf-6: 音乐播放器仅开启左下角音乐时加载 -->
+    <th:block th:if="${theme.config.tool.nav_music.nav_musicEnable}">
+        <link rel="stylesheet" th:href="${assets_link + '/libs/aplayer/APlayer.min.css'}"
+              media="all" onload="this.media='all'">
+
+        <script th:src="${assets_link + '/libs/aplayer/APlayer.min.js'}"></script>
+
+        <script th:src="${assets_link + '/libs/aplayer/Meting2.min.js'}"></script>
+    </th:block>
     
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
     
-    <!-- swiper 在瞬间滚动时会使用 -->
-    <script th:if="${theme.config.top.moment}" data-pjax
+    <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换） -->
+    <script th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax
             th:src="${assets_link + '/libs/swiper/swiper-bundle.min.js'}"></script>
     
     <!-- 右键菜单 -->

@@ -19,7 +19,7 @@
         </th:block>
 
         <img th:if="${not #strings.isEmpty(theme.config.footer.social_media.centerImg)}" class="footer_mini_logo" width="40" height="40"
-             th:with="img = @{${theme.config.footer.social_media.centerImg}}" th:src="${isLazyload ? '' : img}"
+             th:with="img = @{${theme.config.footer.social_media.centerImg}}" th:src="${isLazyload ? loadingImg : img}"
              th:data-lazy-src="${ isLazyload ? img : ''}" alt="返回顶部" title="返回顶部" onclick="btf.scrollToDest(0, 500)">
 
         <th:block th:with="socialMedias = ${theme.config.footer.social_media.socialMediaRight}">
@@ -75,7 +75,7 @@
        id="ghbdages" style="width:60%;margin: 0 auto 0;">
         <a class="github-badge" th:each="data : ${bdageitem}" target="_blank" th:href="@{${data.link}}"
            style="margin-inline:5px" th:title="${data.message}" th:aria-label="${data.message}">
-            <img th:with=" img = @{${data.shields}}" th:src="${isLazyload ? '' : img}"
+            <img th:with=" img = @{${data.shields}}" th:src="${isLazyload ? loadingImg : img}"
                  th:data-lazy-src="${ isLazyload ? img : ''}" th:alt="${data.message}" width="80" height="20" />
         </a>
     </p>

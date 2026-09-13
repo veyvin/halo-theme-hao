@@ -1,0 +1,53 @@
+<!-- 聚合搜索面板：对标原站 heosearch（综合/文章/友链/评论）
+  文章走搜索插件 SearchWidget；友链/评论由后端注入候选，前端按关键词过滤 -->
+<th:block th:if="${theme.config.tool.aggSearch.aggSearchEnable}">
+  <div id="hao-aggsearch" style="display:none;">
+    <div class="aggsearch-dialog">
+      <div class="aggsearch-navbar">
+        <div class="aggsearch-title">搜索</div>
+        <span class="aggsearch-close" onclick="haoAggSearch.close()" title="关闭"><i class="haofont hao-icon-xmark"></i></span>
+      </div>
+      <div class="aggsearch-input-panel">
+        <div class="aggsearch-input">
+          <input id="aggsearch-input" placeholder="输入关键词搜索" type="text" autocomplete="off">
+          <button id="aggsearch-btn" type="button" title="搜索" onclick="haoAggSearch.toArticle()"><i class="haofont hao-icon-search--line"></i></button>
+        </div>
+      </div>
+      <div class="aggsearch-tabs">
+        <span class="aggsearch-tab active" data-type="all">综合</span>
+        <span class="aggsearch-tab" data-type="post">文章</span>
+        <span class="aggsearch-tab" data-type="friend" th:if="${pluginFinder.available('PluginLinks')}">友链</span>
+        <span class="aggsearch-tab" data-type="comment">评论</span>
+      </div>
+      <div class="aggsearch-results">
+        <div class="aggsearch-hint">在上方输入关键词，站内搜友链与评论；回车或点“文章”调起全文搜索。</div>
+        <div id="aggsearch-hits"></div>
+        <div id="aggsearch-stats"></div>
+      </div>
+    </div>
+    <div class="aggsearch-mask" onclick="haoAggSearch.close()"></div>
+  </div>
+  <!-- 友链候选（需友链插件） -->
+  <script data-pjax th:inline="javascript" th:if="${pluginFinder.available('PluginLinks')}">
+    window.HAO_FRIENDS = [
+      /*[# th:each="group : ${linkFinder.groupBy()}"]*/
+      /*[# th:each="link : ${group.links}"]*/
+      { name: [[${link.spec.displayName}]], url: [[${link.spec.url}]], desc: [[${link.spec.description ?: ''}]] },
+      /*[/]*/
+      /*[/]*/
+    ];
+  </script>
+  <!-- 评论候选（Halo 原生评论） -->
+  <script data-pjax th:inline="javascript"
+          th:with="aggComments=${commentFinder.list(null, 1, theme.config.tool.aggSearch.commentCount)}">
+    window.HAO_COMMENTS = [
+      /*[# th:each="c : ${aggComments.items}"]*/
+      { text: [[${c.spec.content}]], author: [[${c.owner.displayName}]] },
+      /*[/]*/
+    ];
+  </script>
+  <script data-pjax th:inline="javascript">
+    window.HAO_AGGSEARCH = { friendCount: [[${theme.config.tool.aggSearch.friendCount}]] };
+  </script>
+  <script data-pjax th:src="${assets_link + '/js/hao-aggsearch.js' + theme_version}"></script>
+</th:block>

@@ -136,8 +136,13 @@
                             statisticEl.innerHTML +=
                                     "<div><span>" + title[i] + "</span><span id=" + title[i] + ">" + num[i] + "</span></div>";
                             queueMicrotask(() => {
+                                // countup 2.x 签名：new CountUp(target, endVal, options)；endVal 去逗号转数字
+                                const endVal = Number(String(num[i]).replace(/,/g, "")) || 0;
                                 statistic.push(
-                                        new CountUp(title[i], 0, num[i], 0, 2, {
+                                        new CountUp(title[i], endVal, {
+                                            startVal: 0,
+                                            decimalPlaces: 0,
+                                            duration: 2,
                                             useEasing: true,
                                             useGrouping: true,
                                             separator: ",",

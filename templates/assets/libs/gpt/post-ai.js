@@ -440,4 +440,40 @@
 
     aiAbstract();
     showAiBtn();
+
+    // P1-5 问答输入框 + 联想词：提交后携带问题跳转外部 AI 对话（主题不直连接口）
+    try {
+        var askInput = document.querySelector('#ai-input-field');
+        var askSend = document.querySelector('#ai-input-send');
+        var askBox = document.querySelector('.post-ai .ai-input');
+        if (askInput && askSend && askBox) {
+            var buildAskUrl = function (q) {
+                var base = askInput.getAttribute('data-ask-url') || '';
+                var title = askInput.getAttribute('data-post-title') || document.title;
+                var url = askInput.getAttribute('data-post-url') || window.location.href;
+                q = (q || '').trim();
+                if (!q) return null;
+                if (!base) return null;
+                var sep = base.indexOf('?') > -1 ? '&' : '?';
+                return base + sep + 'q=' + encodeURIComponent('关于文章《' + title + '》(' + url + ')：' + q);
+            };
+            var submitAsk = function (q) {
+                var target = buildAskUrl(q !== undefined ? q : askInput.value);
+                if (!target) {
+                    if (window.btf && typeof window.btf.snackbarShow === 'function') {
+                        window.btf.snackbarShow('请先在主题设置中填写 AI 对话地址', false, 2000);
+                    }
+                    return;
+                }
+                window.open(target, '_blank', 'noopener');
+            };
+            askSend.addEventListener('click', function () { submitAsk(); });
+            askInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') { submitAsk(); }
+            });
+            document.querySelectorAll('.post-ai .ai-suggestion').forEach(function (s) {
+                s.addEventListener('click', function () { submitAsk(s.getAttribute('data-q') || s.innerText); });
+            });
+        }
+    } catch (e) { /* ignore ask init errors */ }
 })()

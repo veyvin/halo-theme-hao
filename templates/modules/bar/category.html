@@ -5,6 +5,8 @@
             <a href="/">首页</a>
         </div>
 
+        <th:block th:replace="~{modules/bar/fixed-items :: fixed-items}" />
+
         <th:block th:with="categories = ${categoryFinder.listAll()}">
 
             <div class="category-bar-item"

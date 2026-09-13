@@ -1,0 +1,41 @@
+<!-- 底部播放 dock 栏：对标原站 bottom-dock（全文朗读/播客陪读/电台模式/音乐） -->
+<th:block th:if="${theme.config.post.dockEnable}">
+  <div class="needEndHide" id="bottom-dock">
+    <a class="dock-item" id="dock-tts" href="javascript:void(0);"
+       th:if="${htmlType == 'post' && theme.config.post.readAloudEnable}"
+       onclick="haoRead.toggle(false); return false;" title="播放全文朗读" aria-label="播放全文朗读">
+      <i class="haofont hao-icon-play dock-icon-play"></i>
+      <i class="haofont hao-icon-pause dock-icon-pause" style="display:none;"></i>
+      <span class="dock-title">全文朗读</span>
+    </a>
+    <a class="dock-item" id="dock-podcast" href="javascript:void(0);"
+       th:if="${htmlType == 'post' && theme.config.post.readAloudEnable}"
+       onclick="haoRead.toggle(true); return false;" title="播放全文播客陪读" aria-label="播放全文播客陪读">
+      <i class="haofont hao-icon-chat--fill dock-icon-play"></i>
+      <i class="haofont hao-icon-pause dock-icon-pause" style="display:none;"></i>
+      <span class="dock-title">播客陪读</span>
+    </a>
+    <a class="dock-item" id="dock-radio" href="javascript:void(0);"
+       th:if="${theme.config.post.radio.radioEnable}"
+       onclick="haoRadio.toggle(); return false;" title="开启电台模式，随机挑选文章陪读" aria-label="电台模式">
+      <i class="haofont hao-icon-radio"></i>
+      <span class="dock-title" id="dock-radio-title">电台模式</span>
+    </a>
+    <a class="dock-item" id="dock-music" href="javascript:void(0);"
+       th:if="${theme.config.tool.nav_music.nav_musicEnable}"
+       onclick="heo.musicToggle(); return false;" title="音乐播放" aria-label="音乐播放">
+      <i class="haofont hao-icon-music"></i>
+      <span class="dock-title">音乐</span>
+    </a>
+  </div>
+  <!-- 电台候选队列：取最新 N 篇，JS 端打乱顺序连续朗读 -->
+  <script data-pjax th:inline="javascript"
+          th:if="${theme.config.post.radio.radioEnable}"
+          th:with="radioPosts=${postFinder.list({page: 1, size: theme.config.post.radio.radioCount, sort: {'spec.publishTime,desc'}})}">
+    window.HAO_RADIO_LIST = [
+      /*[# th:each="rp : ${radioPosts.items}"]*/
+      { title: [[${rp.spec.title}]], url: [[${rp.status.permalink}]] },
+      /*[/]*/
+    ];
+  </script>
+</th:block>

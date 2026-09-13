@@ -19,7 +19,7 @@ var heo = {
         }
     },
 
-    // 首页bb
+    // 首页bb（perf-5：无 swiper 时降级为静态展示，fallback 由 CSS 轮换）
     initIndexEssay: function() {
         if (document.querySelector("#bber-talk")) {
             $(".swiper-wrapper .swiper-slide").each(function () {
@@ -28,6 +28,7 @@ var heo = {
                     $(this).text(btf.changeContent(text));
                 }
             })
+            if (typeof Swiper === 'undefined') return;
             new Swiper(".swiper-container",{
                 direction: "vertical",
                 loop: !0,
@@ -100,7 +101,99 @@ var heo = {
                         o.style.order = "-1")
                 }
             }
+            // P0-1 固定入口高亮：按当前路径匹配固定项链接（如 /hot、/archives）
+            if (document.querySelector("#category-bar")) {
+                var barItems = document.querySelectorAll("#category-bar .category-bar-fixed");
+                for (var i = 0; i < barItems.length; i++) {
+                    var link = barItems[i].querySelector("a");
+                    if (!link) continue;
+                    var href = link.getAttribute("href");
+                    if (!href) continue;
+                    try {
+                        var path = new URL(href, window.location.origin).pathname;
+                        path = decodeURIComponent(path);
+                        if (path !== "/" && (e === path || e === path + "/")) {
+                            barItems[i].classList.add("select");
+                            barItems[i].style.order = "-1";
+                            break;
+                        }
+                    } catch (err) { /* ignore invalid href */ }
+                }
+            }
         }
+    },
+
+    // P0-2 已读/未读：文章页记录阅读，列表页隐藏已读项的“未读”标记（对标原站 unvisited-post）
+    markPostVisited: function () {
+        if (typeof GLOBAL_CONFIG === "undefined" || !GLOBAL_CONFIG.isPost || !GLOBAL_CONFIG.postTitle) return;
+        try {
+            var key = "hao-visited-posts";
+            var list = JSON.parse(localStorage.getItem(key) || "[]");
+            if (!Array.isArray(list)) list = [];
+            var url = window.location.pathname;
+            if (list.indexOf(url) === -1) {
+                list.push(url);
+                if (list.length > 300) list = list.slice(list.length - 300);
+                localStorage.setItem(key, JSON.stringify(list));
+            }
+        } catch (err) { /* ignore storage errors */ }
+    },
+
+    applyVisitedMark: function () {
+        var marks = document.querySelectorAll(".unvisited-post[data-post-url]");
+        if (!marks.length) return;
+        var list = [];
+        try {
+            list = JSON.parse(localStorage.getItem("hao-visited-posts") || "[]");
+            if (!Array.isArray(list)) list = [];
+        } catch (err) { list = []; }
+        marks.forEach(function (mark) {
+            var url = mark.getAttribute("data-post-url") || mark.getAttribute("href");
+            if (!url) return;
+            try {
+                var path = new URL(url, window.location.origin).pathname;
+                if (list.indexOf(path) !== -1) mark.classList.add("is-visited");
+            } catch (err) { /* ignore invalid url */ }
+        });
+    },
+
+    // jquery4 兼容垫片：fancybox 3.5.7 等旧插件调用的已移除 API（$.isArray / $.type / $.isFunction / $.isNumeric / $.isPlainObject / $.trim）
+    jqueryLegacyShim: function () {
+        try {
+            if (typeof window.$ === 'undefined') return;
+            if (typeof window.$.isArray === 'undefined') { window.$.isArray = Array.isArray; }
+            if (typeof window.$.isFunction === 'undefined') {
+                window.$.isFunction = function (obj) { return typeof obj === 'function'; };
+            }
+            if (typeof window.$.isNumeric === 'undefined') {
+                window.$.isNumeric = function (obj) {
+                    return !Array.isArray(obj) && (obj - parseFloat(obj) + 1) >= 0;
+                };
+            }
+            if (typeof window.$.isPlainObject === 'undefined') {
+                window.$.isPlainObject = function (obj) {
+                    if (typeof obj !== 'object' || obj === null) { return false; }
+                    var proto = Object.getPrototypeOf(obj);
+                    return proto === Object.prototype || proto === null;
+                };
+            }
+            if (typeof window.$.trim === 'undefined') {
+                window.$.trim = function (text) { return text == null ? '' : String.prototype.trim.call(text); };
+            }
+            if (typeof window.$.type === 'undefined') {
+                window.$.type = function (obj) {
+                    if (obj == null) { return String(obj); }
+                    var t = typeof obj;
+                    if (t === 'object') {
+                        if (Array.isArray(obj)) { return 'array'; }
+                        if (obj instanceof Date) { return 'date'; }
+                        if (obj instanceof RegExp) { return 'regexp'; }
+                        if (obj instanceof Error) { return 'error'; }
+                    }
+                    return t;
+                };
+            }
+        } catch (e) { /* ignore */ }
     },
 
     // 页脚友链

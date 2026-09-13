@@ -76,6 +76,7 @@ var btf = {
             if (typeof $.fancybox === 'undefined') {
                 // $('head').append(`<link rel="stylesheet" type="text/css" href="${GLOBAL_CONFIG.source.fancybox.css}">`)
                 $.getScript(`${GLOBAL_CONFIG.source.fancybox.js}`, function () {
+                    if (typeof heo !== 'undefined' && heo.jqueryLegacyShim) { heo.jqueryLegacyShim(); }
                     runFancybox($(ele))
                 })
             } else {

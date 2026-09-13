@@ -1,11 +1,8 @@
 @font-face {
   font-family: "haofont"; /* Project id 4159149 */
-  src: url('iconfont.eot?t=1708243411223'); /* IE9 */
-  src: url('iconfont.eot?t=1708243411223#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('iconfont.woff2?t=1708243411223') format('woff2'),
-       url('iconfont.woff?t=1708243411223') format('woff'),
-       url('iconfont.ttf?t=1708243411223') format('truetype'),
-       url('iconfont.svg?t=1708243411223#haofont') format('svg');
+  font-display: swap;
+  src: url('iconfont.woff2?t=1708243411223') format('woff2'),
+       url('iconfont.woff?t=1708243411223') format('woff');
 }
 
 .haofont {

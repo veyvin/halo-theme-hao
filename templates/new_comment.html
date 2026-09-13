@@ -29,7 +29,7 @@
                              th:onclick="pjax.loadUrl([[${url}]])">
                             <div class="comment-info">
                                 <img th:with=" img =${#strings.isEmpty(comment.owner.avatar)? theme.config.sidebar.newcomment.providerMirror+'/avatar/'+comment.spec.owner.annotations['email-hash'] :comment.owner.avatar}"
-                                     th:alt="${comment.owner.displayName}" th:src="${isLazyload ? '' : img}" width="40" height="40"
+                                     th:alt="${comment.owner.displayName}" th:src="${isLazyload ? loadingImg : img}" width="40" height="40"
                                      th:data-lazy-src="${ isLazyload ? img : ''}" class="no-lightbox nolazyload avatar">
                                 <div class="comment-information">
                                     <span class="comment-user">[[${comment.owner.displayName}]]</span>
@@ -46,7 +46,8 @@
                 </div>
                 <th:block th:if="${!#strings.equals(theme.config.comments.use, 'commentWidget') }">
                     <script data-pjax th:inline="javascript">
-                        var postsData = [[${ postFinder.listAll() }]];
+                        <!-- perf-7: 评论页文章映射只取最新 200 篇（原 listAll 全表） -->
+                        var postsData = [[${ postFinder.list({page: 1, size: 200, sort: {'spec.publishTime,desc'}}).items }]];
                         var pageData = [[${ singlePageFinder.list(1, 50) }]];
                         var articles = [{ path: '/links', title: '友链' }, { path: '/bangumis', title: '追番' }, { path: '/equipment', title: '我的装备' }, { path: '/moments', title: '瞬间' }, { path: '/photos', title: '图库' }];
 

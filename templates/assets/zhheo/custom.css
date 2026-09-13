@@ -3293,3 +3293,335 @@ p.p.gray,span.p.gray {
     --at-color-green: #4caf50;
     --at-color-gradient: linear-gradient(180deg, transparent, rgba(30, 34, 36, 1))
 }
+
+/* P0-1 首页分类条固定入口：对标原站 home-category-bar 图标+高亮 */
+.category-bar-item.category-bar-fixed a {
+    gap: 4px;
+}
+.category-bar-item.category-bar-fixed a i.haofont {
+    font-size: 14px;
+    line-height: 1;
+}
+.category-bar-item.category-bar-fixed.select a i.haofont,
+.category-bar-item.category-bar-fixed:hover a i.haofont {
+    color: inherit;
+}
+
+/* P0-2 已读文章隐藏“未读”标记：对标原站 unvisited-post（:visited 需同源，localStorage 兜底） */
+.unvisited-post.is-visited {
+    display: none;
+}
+
+/* P0-3 中控台左侧双卡片（最近评论+最近发布）：上下叠放 */
+#console .console-card-group-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+#console .console-card-group-left .console-card {
+    flex: 1;
+    min-height: 0;
+}
+#console .console-recent-list {
+    max-height: 100%;
+    overflow: hidden;
+}
+#console .console-recent-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 2px 0;
+}
+#console .console-recent-link {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#console .console-recent-date {
+    flex: none;
+    font-size: 0.75em;
+    opacity: 0.6;
+}
+
+/* P1-4 底部播放 dock 栏：对标原站 bottom-dock */
+#bottom-dock {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 90;
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    box-shadow: var(--heo-shadow-border);
+    border-radius: 16px;
+    padding: 8px 12px;
+    align-items: center;
+    max-width: calc(100vw - 32px);
+}
+#bottom-dock .dock-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: var(--heo-fontcolor);
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+#bottom-dock .dock-item:hover {
+    background: var(--heo-main-op);
+}
+#bottom-dock .dock-item.playing {
+    background: var(--heo-main);
+    color: var(--heo-white);
+}
+#bottom-dock .dock-item .dock-icon-pause {
+    display: none;
+}
+#bottom-dock .dock-item.playing .dock-icon-play {
+    display: none;
+}
+#bottom-dock .dock-item.playing .dock-icon-pause {
+    display: inline-block;
+}
+@media screen and (max-width: 768px) {
+    #bottom-dock {
+        bottom: 12px;
+        padding: 6px 8px;
+    }
+    #bottom-dock .dock-title {
+        display: none;
+    }
+}
+
+/* P1-5 AI 摘要配图 + 问答输入框 + 联想词：对标原站 post-ai */
+.post-ai .ai-poster {
+    margin: 10px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.post-ai .ai-poster img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    display: block;
+}
+.post-ai .ai-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 4px;
+}
+.post-ai .ai-suggestion {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 16px;
+    background: var(--heo-secondbg);
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+}
+.post-ai .ai-suggestion:hover {
+    background: var(--heo-main);
+    color: var(--heo-white);
+}
+.post-ai .ai-input {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.post-ai .ai-input-field {
+    flex: 1;
+    min-width: 0;
+    border: var(--style-border);
+    background: var(--heo-secondbg);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--heo-fontcolor);
+    outline: none;
+}
+.post-ai .ai-input-field:focus {
+    border-color: var(--heo-main);
+}
+.post-ai .ai-input-send {
+    flex: none;
+    border: none;
+    background: var(--heo-main);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* P1-6 聚合搜索面板：对标原站 heosearch */
+#hao-aggsearch {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+}
+#hao-aggsearch .aggsearch-mask {
+    position: absolute;
+    inset: 0;
+    background: var(--heo-maskbgdeep);
+}
+#hao-aggsearch .aggsearch-dialog {
+    position: relative;
+    max-width: 640px;
+    margin: 12vh auto 0;
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    box-shadow: var(--heo-shadow-border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+}
+#hao-aggsearch .aggsearch-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+#hao-aggsearch .aggsearch-title {
+    font-size: 16px;
+    font-weight: 700;
+}
+#hao-aggsearch .aggsearch-close {
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+}
+#hao-aggsearch .aggsearch-close:hover {
+    opacity: 1;
+}
+#hao-aggsearch .aggsearch-input {
+    display: flex;
+    gap: 8px;
+}
+#hao-aggsearch #aggsearch-input {
+    flex: 1;
+    min-width: 0;
+    border: var(--style-border);
+    background: var(--heo-secondbg);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+    color: var(--heo-fontcolor);
+    outline: none;
+}
+#hao-aggsearch #aggsearch-input:focus {
+    border-color: var(--heo-main);
+}
+#hao-aggsearch #aggsearch-btn {
+    flex: none;
+    border: none;
+    background: var(--heo-main);
+    color: #fff;
+    border-radius: 10px;
+    width: 44px;
+    cursor: pointer;
+    font-size: 16px;
+}
+#hao-aggsearch .aggsearch-tabs {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0 6px;
+    font-size: 14px;
+}
+#hao-aggsearch .aggsearch-tab {
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 8px;
+    opacity: 0.65;
+}
+#hao-aggsearch .aggsearch-tab.active {
+    background: var(--heo-main);
+    color: var(--heo-white);
+    opacity: 1;
+}
+#hao-aggsearch .aggsearch-results {
+    overflow-y: auto;
+    margin-top: 6px;
+}
+#hao-aggsearch .aggsearch-hint {
+    font-size: 12px;
+    opacity: 0.55;
+    margin-bottom: 8px;
+}
+#hao-aggsearch .aggsearch-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 4px;
+    border-bottom: 1px dashed var(--heo-card-border);
+    font-size: 14px;
+}
+#hao-aggsearch .aggsearch-tag {
+    flex: none;
+    font-size: 11px;
+    background: var(--heo-main-op);
+    color: var(--heo-main);
+    border-radius: 6px;
+    padding: 1px 6px;
+}
+#hao-aggsearch .aggsearch-desc {
+    font-size: 12px;
+    opacity: 0.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#hao-aggsearch .aggsearch-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#hao-aggsearch .aggsearch-empty {
+    padding: 18px 0;
+    text-align: center;
+    opacity: 0.6;
+    font-size: 14px;
+}
+#hao-aggsearch #aggsearch-stats {
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 8px;
+    text-align: right;
+}
+@media screen and (max-width: 768px) {
+    #hao-aggsearch .aggsearch-dialog {
+        margin: 8vh 12px 0;
+    }
+}
+
+/* perf-8: 移动端降毛玻璃（低端机滚动掉帧主因）+ 减少动态偏好 */
+@media screen and (max-width: 768px) {
+    #page-header #nav {
+        backdrop-filter: blur(8px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+    }
+    #console.show .console-mask {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #page-header #nav,
+    #console .console-mask,
+    #bottom-dock,
+    .category-bar-item a {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}

@@ -14,9 +14,10 @@
     <link rel="shortcut icon"
           th:href="@{${#strings.isEmpty(site.favicon) ? assets_link + '/images/hao-logo.jpg' : site.favicon}}"/>
 
-    <script th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
+    <script defer th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
 
-    <script th:src="${assets_link + '/js/heo.js' + theme_version}"></script>
+    <!-- perf-2: defer 非首屏关键脚本；首屏主题切换逻辑已内联在下方（带 heo 存在性守卫），defer 脚本就绪后会补调 initThemeColor -->
+    <script defer th:src="${assets_link + '/js/heo.js' + theme_version}"></script>
 
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/zhheoblog.css' + theme_version}">
 
@@ -36,8 +37,8 @@
         }
     </style>
 
-    <!-- swiper 在瞬间滚动时会使用 -->
-    <link th:if="${theme.config.top.moment}" rel="stylesheet" th:href="${assets_link + '/libs/swiper/swiper-bundle.min.css'}"/>
+    <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换，省 144KB+CSS） -->
+    <link th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" rel="stylesheet" th:href="${assets_link + '/libs/swiper/swiper-bundle.min.css'}"/>
     
     <!-- 右下角通知 -->
     <link th:href="${assets_link + '/libs/node-snackbar/snackbar.min.css'}"
@@ -46,10 +47,14 @@
           rel="stylesheet"
     />
 
-    <!-- 代码块自动识别语言 -->
-    <th:block th:replace="~{modules/common/code}"/>
-    <!--  代码块-->
-    <th:block th:replace="~{macro/prism-code}"/>
+    <!-- perf-4: 代码高亮按需加载：仅文章/页面且正文含代码块时加载（首页省 ~850KB） -->
+    <th:block th:if="${(htmlType == 'post' && #strings.contains(post.content.content, '<pre')) ||
+                        (htmlType == 'page' && #strings.contains(singlePage.content.content, '<pre'))}">
+        <!-- 代码块自动识别语言 -->
+        <th:block th:replace="~{modules/common/code}"/>
+        <!--  代码块-->
+        <th:block th:replace="~{macro/prism-code}"/>
+    </th:block>
 
     <!-- 页脚内容-样式一 -->
     <th:block th:replace="~{modules/common/footer-style-one}"/>
@@ -117,12 +122,12 @@
             win.activateDarkMode = function () {
                 document.documentElement.setAttribute('data-theme', 'dark')
                 document.documentElement.classList.add('color-scheme-dark')
-                heo.initThemeColor()
+                if (typeof heo !== 'undefined' && heo.initThemeColor) heo.initThemeColor()
             }
             win.activateLightMode = function () {
                 document.documentElement.setAttribute('data-theme', 'light')
                 document.documentElement.classList.remove('color-scheme-dark')
-                heo.initThemeColor()
+                if (typeof heo !== 'undefined' && heo.initThemeColor) heo.initThemeColor()
             }
             const t = saveToLocal.get('theme')
 

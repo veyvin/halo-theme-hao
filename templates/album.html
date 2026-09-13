@@ -25,7 +25,7 @@
                         <th:block th:each="group : ${photoFinder.groupBy()}">
                             <div class="card" th:onclick="pjax.loadUrl([['/photos?group='+${group.metadata.name}]])">
                                 <img class="card_cover" width="300" height="200" alt="相册封面"
-                                     th:src="${isLazyload ? '' : #annotations.get(group, 'cover')}"
+                                     th:src="${isLazyload ? loadingImg : #annotations.get(group, 'cover')}"
                                      th:data-lazy-src="${ isLazyload ? #annotations.get(group, 'cover') : ''}"
                                 >
                                 <div class="card__content">
@@ -45,7 +45,7 @@
                         <th:block th:each="group : ${photoFinder.groupBy()}">
                             <figure class="gallery-group no-lightbox">
                                 <img class="gallery-group-img no-lightbox" width="300" height="200" alt="相册分组封面"
-                                     th:src="${isLazyload ? '' : #annotations.get(group, 'cover')}"
+                                     th:src="${isLazyload ? loadingImg : #annotations.get(group, 'cover')}"
                                      th:data-lazy-src="${ isLazyload ? #annotations.get(group, 'cover') : ''}">
                                 <figcaption>
                                     <div class="gallery-group-name">[[${group.spec.displayName}]]</div>

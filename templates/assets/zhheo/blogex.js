@@ -5,9 +5,12 @@ checkOpen.toString = function () {
     this.opened = true;
 };
 
-//封面纯色
+//封面纯色（perf-9：优先用小图取色 + 空闲时调度，避免阻塞首屏渲染）
 function coverColor() {
-    var path = document.getElementById("post-cover")?.src;
+    var coverEl = document.getElementById("post-cover");
+    // 小图优先：解码更快，主线程占用更少
+    var path = coverEl?.getAttribute("data-cover-small") || coverEl?.src;
+    var run = function () {
     // console.log(path);
     if (path !== undefined) {
 
@@ -55,6 +58,13 @@ function coverColor() {
         styleSheet.insertRule(`:root{--heo-main-op-deep:var(--heo-theme-op-deep)!important}`, styleSheet.cssRules.length);
         styleSheet.insertRule(`:root{--heo-main-none: var(--heo-theme-none)!important}`, styleSheet.cssRules.length);
         heo.initThemeColor()
+    }
+    };
+    // 空闲时调度：首屏渲染优先，取色延后
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(function () { run(); }, { timeout: 2000 });
+    } else {
+        setTimeout(run, 800);
     }
 }
 
@@ -305,8 +315,8 @@ document.addEventListener('touchstart', e => {
     RemoveRewardMask()
 }, false)
 
-//监听ctrl+C
-$(document).unbind('keydown').bind('keydown', function (e) {
+//监听ctrl+C（jquery4：bind/unbind 已移除，改用 on/off）
+$(document).off('keydown').on('keydown', function (e) {
     if (GLOBAL_CONFIG.rightMenuEnable) {
         if ((e.ctrlKey || e.metaKey) && (e.keyCode == 67) && (selectTextNow != '')) {
             btf.snackbarShow('复制成功，复制和转载请标注本文地址');
@@ -610,6 +620,8 @@ function initBlog() {
         heo.reflashEssayWaterFall(),
         heo.darkModeStatus(),
         heo.categoriesBarActive(),
+        heo.markPostVisited(),
+        heo.applyVisitedMark(),
         heo.initThemeColor(),
         heo.initPosterCoverText(),
         heo.initHomeCenter(),

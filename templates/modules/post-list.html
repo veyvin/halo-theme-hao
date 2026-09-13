@@ -28,7 +28,7 @@
                 <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="800" height="450"
                      th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")}'
                      th:alt="${post.spec.title}" th:data-lazy-src="${ isLazyload ? img : ''}"
-                     th:src="${isLazyload ? '' : img}">
+                     th:src="${isLazyload ? loadingImg : img}">
                 <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
                      th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">
                     <div class="post_art_glow"></div>
@@ -54,8 +54,13 @@
                               th:text="${category.spec.displayName}" th:title="${category.spec.displayName}"
                               class="original"></span>
                     </th:block>
-                    <!--                    <span class="lastestpost">最新</span>-->
-                    <a class="unvisited-post" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
+                    <!-- 最新角标：发布 N 天内显示，对标原站 lastestpost -->
+                    <span class="lastestpost" th:if="${theme.config.layout.post.latestDays > 0}"
+                          th:with="publishDays=${(new java.util.Date().getTime()-post.spec.publishTime.toEpochMilli())/86400000}"
+                          th:unless="${publishDays > theme.config.layout.post.latestDays}">最新</span>
+                    <a class="unvisited-post" th:if="${theme.config.layout.post.visitedMark}"
+                       th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
+                       th:attr="data-post-url=${post.status.permalink}"
                        data-pjax-state="">未读</a>
                 </div>
                 <a class="article-title"
