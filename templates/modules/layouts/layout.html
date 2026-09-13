@@ -220,9 +220,10 @@
     <!-- Tocbot 目录生成 start -->
     <th:block th:replace="~{modules/common/toc-bot}"/>
     
-    <!-- 51统计 -->
-    <th:block th:replace="~{modules/common/51-la}"/>
-    
+    <!-- 站点统计：busuanzi 极简 PV/UV（替代 51.la，无需 JS SDK） -->
+    <span id="busuanzi_container_site_pv" style="display:none">总访问量 <span id="busuanzi_value_site_pv"></span> 次</span>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
     <script>
         let pjaxSelectors = ['title', '#config-diff', '#body-wrap', '#rightside-config-hide', '#rightside-config-show', '.js-pjax', '#site-config']
         
