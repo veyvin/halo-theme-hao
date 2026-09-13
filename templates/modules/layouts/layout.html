@@ -134,7 +134,23 @@
     <script th:src="${assets_link + '/js/tw_cn.js' + theme_version}"></script>
     <!-- 预加载 https://github.com/GoogleChromeLabs/quicklink（替代 instant.page，viewport 内链接空闲预取） -->
     <script th:src="${assets_link + '/libs/quicklink/quicklink.umd.js'}"></script>
-    <script>window.addEventListener('load', function () { try { window.quicklink && quicklink.listen(); } catch (e) {} });</script>
+    <script>
+        // quicklink 预取限流：默认并发无限会打爆小带宽服务器（503），且必须排除 logout 等敏感 GET
+        window.addEventListener('load', function () {
+            try {
+                if (!window.quicklink) return;
+                quicklink.listen({
+                    limit: 10,
+                    throttle: 2,
+                    delay: 1500,
+                    ignores: [
+                        function (uri) { return uri.indexOf('#') !== -1; },
+                        /\/console|\/logout|\/login|\/uc\b|\/apis?\/|\/upload|\/avatar|\/search|\/moments|\/photos|\/videos|\/music|\/links|\/about|\.xml|\.txt|\.json|javascript:/i
+                    ]
+                });
+            } catch (e) {}
+        });
+    </script>
     
     <script th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
     
