@@ -18,8 +18,9 @@ function coverColor() {
         const fac = new FastAverageColor();
 
         fac.getColorAsync(path, {
-            // 忽略白色
-            ignoredColor: [255, 255, 255, 255]
+            // 忽略白色；silent：图床 403/跨域时库内部不打 error 日志
+            ignoredColor: [255, 255, 255, 255],
+            silent: true
         })
             .then(color => {
                 /**
@@ -45,7 +46,7 @@ function coverColor() {
                 document.getElementById("coverdiv").classList.add("loaded");
             })
             .catch(e => {
-                console.log(e);
+                // 图床 403/跨域导致取色失败时静默：保留默认主题色，不刷屏
             });
 
     } else {
