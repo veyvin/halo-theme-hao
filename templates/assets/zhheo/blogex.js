@@ -844,3 +844,11 @@ document.addEventListener('pjax:click', function () {
         heo.showLoading();
     }
 })
+
+// blogex 在 body 尾部加载，此时 DOM 已就绪，直接初始化（heo.js 的 ready 可能先于本文件执行）
+// pjax 跳转后由 heo.js 的 pjax:complete 守卫调用，此处只负责首次加载
+if (document.readyState !== 'loading') {
+    initBlog();
+} else {
+    document.addEventListener('DOMContentLoaded', function () { initBlog(); });
+}

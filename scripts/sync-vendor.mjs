@@ -11,7 +11,7 @@
 //   prism 全语言包  — npm 只有 core，需官网 download.html 定制，保持本地 prism.min.js
 //   fcircle         — 无 npm 包，保留本地
 //   no3d/vue.min.js — 已删除（与顶层 vue@2.6.14 重复）
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -41,7 +41,7 @@ const MAP = [
   ["pace-js/pace.min.js", "pace/pace.min.js"],
   ["node-snackbar/dist/snackbar.min.js", "node-snackbar/snackbar.min.js"],
   ["node-snackbar/dist/snackbar.min.css", "node-snackbar/snackbar.min.css"],
-  ["countup.js/dist/countUp.min.js", "countup/countup.js"],
+  ["countup.js/dist/countUp.umd.js", "countup/countup.js"],
   ["masonry-layout/dist/masonry.pkgd.min.js", "masonry/masonry.pkgd.min.js"],
   ["quicklink/dist/quicklink.umd.js", "quicklink/quicklink.umd.js"],
   ["fast-average-color/dist/index.browser.min.js", "fast-average-color/index.browser.min.js"],
@@ -68,3 +68,16 @@ for (const [from, to] of MAP) {
   ok++;
 }
 console.log(`\ndone ${ok}/${MAP.length}`);
+
+// 后处理：countup UMD 只导出 countUp.CountUp，主题用裸 `new CountUp`，追加全局别名
+{
+  const f = lib("countup/countup.js");
+  if (existsSync(f)) {
+    const tag = "\n;var CountUp = window.CountUp || (window.countUp && window.countUp.CountUp);\n";
+    const cur = readFileSync(f, "utf8");
+    if (!cur.includes("window.countUp && window.countUp.CountUp")) {
+      appendFileSync(f, tag);
+      console.log("OK countup/countup.js (+global alias)");
+    }
+  }
+}
