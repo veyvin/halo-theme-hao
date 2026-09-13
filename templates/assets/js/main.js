@@ -102,33 +102,41 @@ document.addEventListener('DOMContentLoaded', function () {
      * fancybox
      */
     const addFancybox = function (ele) {
+        // fancybox v6（@fancyapps/ui，无 jQuery 依赖）：Fancybox.bind 委托 data-fancybox
         const runFancybox = (ele) => {
-            ele.each(function (i, o) {
-                const $this = $(o)
-                const lazyloadSrc = $this.attr('data-lazy-src') || $this.attr('src')
-                const dataCaption = $this.attr('alt') || ''
-                $this.wrap(`<a href="${lazyloadSrc}" data-fancybox="images" data-caption="${dataCaption}" class="fancybox" data-srcset="${lazyloadSrc}"></a>`)
-
+            ele.forEach(function (o) {
+                const img = o.tagName === 'IMG' ? o : o.querySelector('img')
+                if (!img) return
+                const lazyloadSrc = img.getAttribute('data-lazy-src') || img.getAttribute('src')
+                const dataCaption = img.getAttribute('alt') || ''
+                if (o.tagName === 'A' && o.hasAttribute('data-fancybox')) return
+                const a = document.createElement('a')
+                a.href = lazyloadSrc
+                a.setAttribute('data-fancybox', 'images')
+                a.setAttribute('data-caption', dataCaption)
+                a.setAttribute('data-srcset', lazyloadSrc)
+                a.className = 'fancybox'
+                o.replaceWith(a)
+                a.appendChild(o.tagName === 'IMG' ? img : o)
             })
 
-            $().fancybox({
-                selector: '[data-fancybox]',
-                loop: true,
-                transitionEffect: 'slide',
-                protect: true,
-                buttons: ['slideShow', 'fullScreen', 'thumbs', 'close'],
-                hash: false
-            })
+            if (typeof Fancybox !== 'undefined') {
+                Fancybox.bind('[data-fancybox]', {
+                    l10n: undefined
+                })
+            }
         }
 
-        if (typeof $.fancybox === 'undefined') {
-            // $('head').append(`<link rel="stylesheet" type="text/css" href="${GLOBAL_CONFIG.source.fancybox.css}">`)
-            $.getScript(`${GLOBAL_CONFIG.source.fancybox.js}`, function () {
-                if (typeof heo !== 'undefined' && heo.jqueryLegacyShim) { heo.jqueryLegacyShim(); }
-                runFancybox($(ele))
+        if (typeof Fancybox === 'undefined') {
+            getCSS(`${GLOBAL_CONFIG.source.fancybox.css}`).then(() => {
+                return getScript(`${GLOBAL_CONFIG.source.fancybox.js}`)
+            }).then(() => {
+                return getScript(`${GLOBAL_CONFIG.source.fancybox.locale}`).catch(() => {})
+            }).then(() => {
+                runFancybox(Array.from(ele))
             })
         } else {
-            runFancybox($(ele))
+            runFancybox(Array.from(ele))
         }
     }
 

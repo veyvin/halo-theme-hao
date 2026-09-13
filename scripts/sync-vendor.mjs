@@ -3,11 +3,11 @@
 //      npm run update-vendor          （npm update 后同步）
 //
 // 未进 npm 的库（手动维护）：
-//   fancybox 3.5.7  — npm 只有 3.0.1，从 GitHub releases 手动更新
-//   qrcodejs        — 已进 npm（qrcodejs@1.0.0）
 //   waterfall       — raphamorim/waterfall.js 无 npm 包，保留本地
 //   view-image      — tokinx/ViewImage 无有效 npm 包，保留本地
 //   prism 全语言包  — npm 只有 core，需官网 download.html 定制，保持本地 prism.min.js
+//   highlight.js    — npm 包无浏览器 min 构建，手动从 highlightjs/cdn-release 同步
+//   instant.page    — npm 包无 min 构建，手动从 jsdelivr 同步 min 版
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,6 +44,9 @@ const MAP = [
   ["artalk/dist/Artalk.js", "artalk/Artalk.js"],
   ["artalk/dist/Artalk.css", "artalk/Artalk.css"],
   ["vue/dist/vue.min.js", "vue/vue.min.js"],
+  ["@fancyapps/ui/dist/fancybox/fancybox.umd.js", "fancybox/fancybox.umd.js"],
+  ["@fancyapps/ui/dist/fancybox/fancybox.css", "fancybox/fancybox.css"],
+  ["@fancyapps/ui/dist/fancybox/l10n/zh_CN.umd.js", "fancybox/fancybox.zh_CN.umd.js"],
 ];
 
 let ok = 0;

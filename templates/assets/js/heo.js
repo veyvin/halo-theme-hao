@@ -157,45 +157,6 @@ var heo = {
         });
     },
 
-    // jquery4 兼容垫片：fancybox 3.5.7 等旧插件调用的已移除 API（$.isArray / $.type / $.isFunction / $.isNumeric / $.isPlainObject / $.trim）
-    jqueryLegacyShim: function () {
-        try {
-            if (typeof window.$ === 'undefined') return;
-            if (typeof window.$.isArray === 'undefined') { window.$.isArray = Array.isArray; }
-            if (typeof window.$.isFunction === 'undefined') {
-                window.$.isFunction = function (obj) { return typeof obj === 'function'; };
-            }
-            if (typeof window.$.isNumeric === 'undefined') {
-                window.$.isNumeric = function (obj) {
-                    return !Array.isArray(obj) && (obj - parseFloat(obj) + 1) >= 0;
-                };
-            }
-            if (typeof window.$.isPlainObject === 'undefined') {
-                window.$.isPlainObject = function (obj) {
-                    if (typeof obj !== 'object' || obj === null) { return false; }
-                    var proto = Object.getPrototypeOf(obj);
-                    return proto === Object.prototype || proto === null;
-                };
-            }
-            if (typeof window.$.trim === 'undefined') {
-                window.$.trim = function (text) { return text == null ? '' : String.prototype.trim.call(text); };
-            }
-            if (typeof window.$.type === 'undefined') {
-                window.$.type = function (obj) {
-                    if (obj == null) { return String(obj); }
-                    var t = typeof obj;
-                    if (t === 'object') {
-                        if (Array.isArray(obj)) { return 'array'; }
-                        if (obj instanceof Date) { return 'date'; }
-                        if (obj instanceof RegExp) { return 'regexp'; }
-                        if (obj instanceof Error) { return 'error'; }
-                    }
-                    return t;
-                };
-            }
-        } catch (e) { /* ignore */ }
-    },
-
     // 页脚友链
     addFriendLinksInFooter: function () {
         var footerRandomFriendsBtn = document.getElementById("footer-random-friends-btn");

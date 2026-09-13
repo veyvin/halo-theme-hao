@@ -70,8 +70,9 @@
                 css: 'https://npm.elemecdn.com/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
             },
             fancybox: {
-                js: [[${assets_link + '/libs/fancybox/jquery.fancybox.min.js'}]],
-                css: '/null'
+                js: [[${assets_link + '/libs/fancybox/fancybox.umd.js'}]],
+                css: [[${assets_link + '/libs/fancybox/fancybox.css'}]],
+                locale: [[${assets_link + '/libs/fancybox/fancybox.zh_CN.umd.js'}]]
             },
             comments: {
                 use: [[${theme.config.comments.use}]],
