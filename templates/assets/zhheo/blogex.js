@@ -328,9 +328,9 @@ $(document).off('keydown').on('keydown', function (e) {
     }
 })
 
-//颜色
+//颜色（heo.js 为 defer 加载，滚动早于其执行时加守卫）
 document.addEventListener('scroll', btf.throttle(function () {
-    heo.initThemeColor()
+    typeof heo !== 'undefined' && heo.initThemeColor && heo.initThemeColor()
 }, 200))
 
 //友链随机传送
@@ -526,9 +526,9 @@ document.querySelector('#console') && document.querySelector('#console').addEven
 //   e.preventDefault()
 // })
 
-//自动调整即刻短文尺寸
+//自动调整即刻短文尺寸（heo.js 为 defer 加载，加守卫）
 window.addEventListener("resize", (function () {
-        document.querySelector("#waterfall") && heo.reflashEssayWaterFall()
+        document.querySelector("#waterfall") && typeof heo !== 'undefined' && heo.reflashEssayWaterFall && heo.reflashEssayWaterFall()
     }
 ));
 
