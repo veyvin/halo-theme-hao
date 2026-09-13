@@ -16,19 +16,4 @@
     </th:block>
 
     <!-- 自动识别语言 -->
-    <th:block th:if="${theme.config.code.enable}">
-        <script th:src="${assets_link+'/libs/prism/highlight.min.js'}"></script>
-
-
-        <script>
-            document.addEventListener("pjax:complete", function () {
-                hljs.highlightAll()
-            })
-            document.addEventListener("DOMContentLoaded", function () {
-                hljs.highlightAll()
-            })
-        </script>
-
-    </th:block>
-
 </th:block>

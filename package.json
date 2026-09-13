@@ -24,6 +24,8 @@
     "pace-js": "1.2.4",
     "node-snackbar": "0.1.16",
     "countup.js": "2.10.1",
+    "masonry-layout": "4.2.2",
+    "quicklink": "2.3.0",
     "@fancyapps/ui": "6.1.13",
     "fast-average-color": "9.6.0",
     "twikoo": "1.7.22",

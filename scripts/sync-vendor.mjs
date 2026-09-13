@@ -3,11 +3,14 @@
 //      npm run update-vendor          （npm update 后同步）
 //
 // 未进 npm 的库（手动维护）：
-//   waterfall       — raphamorim/waterfall.js 无 npm 包，保留本地
-//   view-image      — tokinx/ViewImage 无有效 npm 包，保留本地
+//   view-image      — 已删除（全仓零调用，fancybox v6 接管图片灯箱）
+//   waterfall       — 已替换为 masonry-layout（npm）
+//   link/box2d      — 已删除（互动友链 iframe 死代码，无模板引用）
+//   instant.page    — 已替换为 quicklink（npm）
+//   highlight.js    — 已删除（与 prism 二选一，保留 prism 全语言包）
 //   prism 全语言包  — npm 只有 core，需官网 download.html 定制，保持本地 prism.min.js
-//   highlight.js    — npm 包无浏览器 min 构建，手动从 highlightjs/cdn-release 同步
-//   instant.page    — npm 包无 min 构建，手动从 jsdelivr 同步 min 版
+//   fcircle         — 无 npm 包，保留本地
+//   no3d/vue.min.js — 已删除（与顶层 vue@2.6.14 重复）
 import { copyFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,6 +42,8 @@ const MAP = [
   ["node-snackbar/dist/snackbar.min.js", "node-snackbar/snackbar.min.js"],
   ["node-snackbar/dist/snackbar.min.css", "node-snackbar/snackbar.min.css"],
   ["countup.js/dist/countUp.min.js", "countup/countup.js"],
+  ["masonry-layout/dist/masonry.pkgd.min.js", "masonry/masonry.pkgd.min.js"],
+  ["quicklink/dist/quicklink.umd.js", "quicklink/quicklink.umd.js"],
   ["fast-average-color/dist/index.browser.min.js", "fast-average-color/index.browser.min.js"],
   ["twikoo/dist/twikoo.all.min.js", "twikoo/twikoo.all.min.js"],
   ["artalk/dist/Artalk.js", "artalk/Artalk.js"],

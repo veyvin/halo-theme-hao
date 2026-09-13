@@ -132,9 +132,9 @@
     <script th:src="${assets_link + '/js/main.js' + theme_version}"></script>
     <script charset="utf-8" data-pjax th:src="${assets_link + '/zhheo/blogex.js' + theme_version}"></script>
     <script th:src="${assets_link + '/js/tw_cn.js' + theme_version}"></script>
-    <!-- https://instant.page/ 网站预加载， 放在 </body> 之前 -->
-    <script th:src="${assets_link + '/libs/instantpage/instantpage.min.js'}"
-            type="module"></script>
+    <!-- 预加载 https://github.com/GoogleChromeLabs/quicklink（替代 instant.page，viewport 内链接空闲预取） -->
+    <script th:src="${assets_link + '/libs/quicklink/quicklink.umd.js'}"></script>
+    <script>window.addEventListener('load', function () { try { window.quicklink && quicklink.listen(); } catch (e) {} });</script>
     
     <script th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
     
@@ -165,14 +165,13 @@
     <!-- 应该是文章页分享使用 -->
     <script data-pjax th:src="${assets_link + '/libs/qrcode/qrcode.min.js'}" ></script>
     
-    <!--  https://raphamorim.io/waterfall.js/  应该是这个 还有相关的 js 代码 是否可以调整-->
-    <script th:src="${assets_link + '/libs/waterfall/waterfall.min.js'}"></script>
+    <!-- 瀑布流 https://masonry.desandro.com/（替代已停更的 waterfall.js，仅 moments 页用到） -->
+    <script th:if="${htmlType == 'moments'}" th:src="${assets_link + '/libs/masonry/masonry.pkgd.min.js'}"></script>
     
     <!-- 获取主色 https://lokeshdhakar.com/projects/color-thief/ -->
     <!--<script th:src="@{/assets/libs/color-thief/color-thief.umd.js}"></script>-->
     <script th:src="${assets_link + '/libs/fast-average-color/index.browser.min.js'}"></script>
     
-    <script th:src="${assets_link + '/libs/view-image/view-image.min.js'}"></script>
 
     <!-- perf-6: 音乐播放器仅开启左下角音乐时加载 -->
     <th:block th:if="${theme.config.tool.nav_music.nav_musicEnable}">

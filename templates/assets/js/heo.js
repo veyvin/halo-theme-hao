@@ -267,11 +267,13 @@ var heo = {
         }
     },
 
-    // 刷新即刻短文瀑布流
+    // 刷新即刻短文瀑布流（masonry-layout 替代已停更的 waterfall.js）
     reflashEssayWaterFall: function() {
         document.querySelector("#waterfall") && setTimeout((function() {
-                waterfall("#waterfall"),
-                    document.getElementById("waterfall") && document.getElementById("waterfall").classList.add("show")
+                if (typeof Masonry !== 'undefined') {
+                    new Masonry("#waterfall", { itemSelector: ".item", percentPosition: true });
+                }
+                document.getElementById("waterfall") && document.getElementById("waterfall").classList.add("show")
             }
         ), 500)
     },
