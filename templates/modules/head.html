@@ -14,7 +14,8 @@
     <link rel="shortcut icon"
           th:href="@{${#strings.isEmpty(site.favicon) ? assets_link + '/images/hao-logo.jpg' : site.favicon}}"/>
 
-    <script defer th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
+    <!-- jQuery 为 body 尾部同步脚本（blogex/rightmenu 顶层直接用 $）的前置依赖，必须同步加载 -->
+    <script th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
 
     <!-- perf-2: defer 非首屏关键脚本；首屏主题切换逻辑已内联在下方（带 heo 存在性守卫），defer 脚本就绪后会补调 initThemeColor -->
     <script defer th:src="${assets_link + '/js/heo.js' + theme_version}"></script>
