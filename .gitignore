@@ -196,3 +196,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Node.js (frontend vendor libs managed by npm, see package.json + scripts/sync-vendor.mjs)
+node_modules/
+package-lock.json
+
