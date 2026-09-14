@@ -190,6 +190,18 @@ function imageToBlob(imageURL) {
             c.width = this.naturalWidth;
             c.height = this.naturalHeight;
             ctx.drawImage(this, 0, 0);
+            // 盲水印：右下角低透明度站点标识（对标原站）
+            try {
+                var mark = (window.location.hostname || '') + ' ' + (document.title || '').slice(0, 20);
+                var fs = Math.max(12, Math.floor(c.width / 40));
+                ctx.font = fs + 'px sans-serif';
+                ctx.fillStyle = 'rgba(255,255,255,0.35)';
+                ctx.textBaseline = 'bottom';
+                var tw = ctx.measureText(mark).width;
+                ctx.fillText(mark, c.width - tw - 12, c.height - 10);
+                ctx.fillStyle = 'rgba(0,0,0,0.18)';
+                ctx.fillText(mark, c.width - tw - 11, c.height - 9);
+            } catch (e) { /* ignore watermark errors */ }
             c.toBlob((blob) => {
                 // here the image is a blob
                 resolve(blob)

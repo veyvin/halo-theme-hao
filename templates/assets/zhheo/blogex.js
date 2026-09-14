@@ -610,6 +610,7 @@ function initBlog() {
         setBodyDataType(),
         heo.topPostScroll(),
         heo.sayhi(),
+        heo.affinity(),
         heo.stopImgRightDrag(),
         heo.addPowerLinksInPostRightSide(),
         heo.qrcodeCreate(),
@@ -853,3 +854,21 @@ if (document.readyState !== 'loading') {
 } else {
     document.addEventListener('DOMContentLoaded', function () { initBlog(); });
 }
+
+// 切页标题切换（对标原站 titleSwitch）：离开时提示，回来恢复
+(function () {
+    var originTitle = document.title, titleTimer = null;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            document.title = '✨ 页面去远方旅行了~';
+            if (titleTimer) { clearTimeout(titleTimer); titleTimer = null; }
+        } else {
+            document.title = '🐴 欢迎回来~ ' + originTitle;
+            titleTimer = setTimeout(function () { document.title = originTitle; }, 2000);
+        }
+    });
+    // pjax 跳页后同步最新标题
+    document.addEventListener('pjax:complete', function () {
+        if (!document.hidden) { originTitle = document.title; }
+    });
+})();
