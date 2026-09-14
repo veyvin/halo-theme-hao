@@ -10,6 +10,7 @@
   其中 htmlType 默认使用 page，title 留空由既有布局通过 siteTitle 表达式自行计算。
 -->
 <html xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.toLanguageTag}"
       th:fragment="html (head, content)"
       th:replace="~{modules/layouts/layout :: layout(content = ${content}, htmlType = 'page', title = null, head = ${head})}">
 </html>

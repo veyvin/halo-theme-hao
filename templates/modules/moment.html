@@ -29,7 +29,7 @@
     <!--   瞬间插件   -->
     <th:block th:if="${pluginFinder.available('PluginMoments')}">
         <div class="swiper-container swiper-no-swiping" id="bbtalk" tabindex="-1">
-            <div class="swiper-wrapper" id="bber-talk" onclick="pjax.loadUrl('/moments')" th:if="${momentFinder}">
+            <div class="swiper-wrapper" id="bber-talk" th:attr="onclick='pjax.loadUrl(\''+ @{/moments} +'\')'" th:if="${momentFinder}">
                 <th:block th:each="moment : ${momentFinder.listAll()}" th:with="content=${moment.spec.content}">
                     <div class="li-style swiper-slide"
                          th:if="${not #strings.isEmpty(content.raw)}"

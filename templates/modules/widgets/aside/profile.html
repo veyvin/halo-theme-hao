@@ -28,7 +28,7 @@
 
         <!-- 跳转信息 -->
         <div class="banner-button-group">
-            <a class="banner-button" href="/about">
+            <a class="banner-button" th:href="@{/about}">
                 <i class="haofont hao-icon-circle-arrow-right"></i>
                 <span class="banner-button-text">了解更多</span>
             </a>
@@ -159,7 +159,7 @@
             </div>
             <div class="author-info__bottom-group">
                 <a th:if="${not #strings.isEmpty(theme.config.sidebar.profile.profileName)}"
-                   class="author-info__bottom-group-left" href="/about" data-pjax-state="">
+                   class="author-info__bottom-group-left" th:href="@{/about}" data-pjax-state="">
                     <div class="author-info__name">[[${theme.config.sidebar.profile.profileName}]]</div>
                     <div class="author-info__desc">[[${theme.config.sidebar.profile.desc}]]</div>
                 </a>

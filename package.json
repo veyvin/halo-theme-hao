@@ -1,11 +1,13 @@
 {
   "name": "halo-theme-hao-assets",
-  "version": "1.7.7",
+  "version": "1.9.4",
   "private": true,
   "description": "halo-theme-hao 前端第三方库：npm 统一管理，node scripts/sync-vendor.mjs 同步到 templates/assets/libs",
   "scripts": {
     "sync-vendor": "node scripts/sync-vendor.mjs",
-    "update-vendor": "npm update && npm run sync-vendor"
+    "update-vendor": "npm update && npm run sync-vendor",
+    "build": "npm run sync-vendor",
+    "package": "theme-package"
   },
   "dependencies": {
     "jquery": "4.0.0",
@@ -31,5 +33,8 @@
     "twikoo": "1.7.22",
     "artalk": "2.10.0",
     "vue": "2.6.14"
+  },
+  "devDependencies": {
+    "@halo-dev/theme-package-cli": "1.1.1"
   }
 }
