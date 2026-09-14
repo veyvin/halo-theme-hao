@@ -610,6 +610,7 @@ function initBlog() {
         setBodyDataType(),
         heo.topPostScroll(),
         heo.sayhi(),
+        heo.affinity(),
         heo.stopImgRightDrag(),
         heo.addPowerLinksInPostRightSide(),
         heo.qrcodeCreate(),

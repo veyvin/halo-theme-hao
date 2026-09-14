@@ -252,6 +252,29 @@ var heo = {
 
     },
 
+    // 作者卡好感度（对标原站 authorSayhi 好感系统）：访问累积，每日上限，localStorage 持久化
+    affinity: function () {
+        try {
+            var KEY = 'hao-affinity';
+            var today = new Date().toISOString().slice(0, 10);
+            var st = { total: 0, date: today, todayCount: 0 };
+            try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+            if (st.date !== today) { st.date = today; st.todayCount = 0; }
+            if (st.todayCount < 10) { st.total += 1; st.todayCount += 1; }
+            try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
+            var level = st.total >= 200 ? '挚友' : st.total >= 50 ? '知己' : st.total >= 10 ? '熟悉' : '初识';
+            var el = document.getElementById('author-info__sayhi');
+            if (el && !document.getElementById('hao-affinity-badge')) {
+                var badge = document.createElement('span');
+                badge.id = 'hao-affinity-badge';
+                badge.style.cssText = 'font-size:12px;opacity:.75;margin-left:6px;';
+                badge.textContent = '好感度 ' + st.total + ' · ' + level;
+                badge.title = '每天访问累积好感度（每日上限10）';
+                el.appendChild(badge);
+            }
+        } catch (e) { /* ignore */ }
+    },
+
     // 二维码
     qrcodeCreate: function () {
         if (document.getElementById('qrcode')) {
