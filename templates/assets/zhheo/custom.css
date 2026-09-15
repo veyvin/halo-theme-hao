@@ -3941,3 +3941,436 @@ p.p.gray,span.p.gray {
         display: none;
     }
 }
+
+/* ========== WeChat Flip 翻转卡片 ========== */
+#aside-content .card-widget#card-wechat {
+    perspective: 1000px;
+    cursor: pointer;
+}
+#aside-content .card-widget#card-wechat #flip-wrapper {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+#aside-content .card-widget#card-wechat:hover #flip-wrapper {
+    transform: rotateY(180deg);
+}
+#aside-content .card-widget#card-wechat #flip-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+#aside-content .card-widget#card-wechat .face,
+#aside-content .card-widget#card-wechat .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+    box-sizing: border-box;
+}
+#aside-content .card-widget#card-wechat .back {
+    transform: rotateY(180deg);
+    background: var(--heo-card-bg);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+#aside-content .card-widget#card-wechat .back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--heo-main-op) 0%, transparent 50%);
+    border-radius: 12px;
+}
+#aside-content .card-widget#card-wechat .back .wechat-desc {
+    color: var(--heo-fontcolor);
+    font-size: 13px;
+    text-align: center;
+    z-index: 1;
+}
+#aside-content .card-widget#card-wechat .back .wechat-qr {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* ========== 爱发电 Power 卡片增强 ========== */
+#aside-content .card-widget.card-power .power-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+#aside-content .card-widget.card-power .power-item {
+    transition: transform 0.2s ease;
+}
+#aside-content .card-widget.card-power .power-item:hover {
+    transform: translateY(-2px);
+}
+#aside-content .card-widget.card-power .power-item-body {
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+#aside-content .card-widget.card-power .power-item:hover .power-item-body {
+    border-color: var(--heo-main);
+    box-shadow: 0 6px 20px var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--heo-fontcolor);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+#aside-content .card-widget.card-power .power-star {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--heo-main-op) 0%, var(--heo-main-op-deep) 100%);
+    border: var(--style-border);
+    transition: all 0.3s ease;
+}
+#aside-content .card-widget.card-power .power-star:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--heo-main-op);
+}
+#aside-content .card-widget.card-power #power-star-image {
+    width: 100%;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+}
+#aside-content .card-widget.card-power .power-star-body {
+    padding: 12px;
+}
+#aside-content .card-widget.card-power #power-star-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heo-fontcolor);
+    margin-bottom: 4px;
+}
+#aside-content .card-widget.card-power #power-star-desc {
+    font-size: 12px;
+    color: var(--heo-secondtext);
+}
+#aside-content .card-widget.card-power .power-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+#aside-content .card-widget.card-power .power-item {
+    transition: transform 0.2s ease;
+}
+#aside-content .card-widget.card-power .power-item:hover {
+    transform: translateY(-2px);
+}
+#aside-content .card-widget.card-power .power-item-body {
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+#aside-content .card-widget.card-power .power-item:hover .power-item-body {
+    border-color: var(--heo-main);
+    box-shadow: 0 6px 20px var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-name {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--heo-fontcolor);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ========== 热门文章卡片 ========== */
+#aside-content .card-widget.card-hotpost .hotpost-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-rank {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--heo-main-op);
+    color: var(--heo-main);
+    font-size: 11px;
+    font-weight: 700;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(1) .hotpost-rank {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(2) .hotpost-rank {
+    background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(3) .hotpost-rank {
+    background: linear-gradient(135deg, #cd7f32, #b87333);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-link {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    text-decoration: none;
+}
+#aside-content .card-widget.card-hotpost .hotpost-cover {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+#aside-content .card-widget.card-hotpost .hotpost-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+#aside-content .card-widget.card-hotpost .hotpost-link:hover .hotpost-cover img {
+    transform: scale(1.05);
+}
+#aside-content .card-widget.card-hotpost .hotpost-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--heo-fontcolor);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--heo-secondtext);
+}
+#aside-content .card-widget.card-hotpost .hotpost-meta i {
+    font-size: 9px;
+}
+
+/* ========== Power Star 赞助展示 ========== */
+#aside-content .card-widget.card-power .power-star {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--heo-main-op) 0%, var(--heo-main-op-deep) 100%);
+    border: var(--style-border);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+#aside-content .card-widget.card-power .power-star:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--heo-main-op);
+}
+#aside-content .card-widget.card-power #power-star-image {
+    width: 100%;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+}
+#aside-content .card-widget.card-power .power-star-body {
+    padding: 12px;
+}
+#aside-content .card-widget.card-power #power-star-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heo-fontcolor);
+    margin-bottom: 4px;
+}
+#aside-content .card-widget.card-power #power-star-desc {
+    font-size: 12px;
+    color: var(--heo-secondtext);
+}
+#aside-content .card-widget.card-power .power-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+#aside-content .card-widget.card-power .power-item {
+    transition: transform 0.2s ease;
+}
+#aside-content .card-widget.card-power .power-item:hover {
+    transform: translateY(-2px);
+}
+#aside-content .card-widget.card-power .power-item-body {
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+#aside-content .card-widget.card-power .power-item:hover .power-item-body {
+    border-color: var(--heo-main);
+    box-shadow: 0 6px 20px var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--heo-main-op);
+}
+#aside-content .card-widget.card-power .power-item-name {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--heo-fontcolor);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+#aside-content .card-widget.card-power .power-item-empty {
+    grid-column: span 2;
+    text-align: center;
+    padding: 16px;
+}
+#aside-content .card-widget.card-power .power-item-empty-text {
+    font-size: 12px;
+    color: var(--heo-secondtext);
+}
+
+/* ========== Hot Post 热门文章 ========== */
+#aside-content .card-widget.card-hotpost .hotpost-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-rank {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--heo-main-op);
+    color: var(--heo-main);
+    font-size: 11px;
+    font-weight: 700;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(1) .hotpost-rank {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(2) .hotpost-rank {
+    background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-item:nth-child(3) .hotpost-rank {
+    background: linear-gradient(135deg, #cd7f32, #b87333);
+    color: #fff;
+}
+#aside-content .card-widget.card-hotpost .hotpost-link {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+    text-decoration: none;
+}
+#aside-content .card-widget.card-hotpost .hotpost-cover {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+#aside-content .card-widget.card-hotpost .hotpost-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+#aside-content .card-widget.card-hotpost .hotpost-link:hover .hotpost-cover img {
+    transform: scale(1.05);
+}
+#aside-content .card-widget.card-hotpost .hotpost-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--heo-fontcolor);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+#aside-content .card-widget.card-hotpost .hotpost-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--heo-secondtext);
+}
+#aside-content .card-widget.card-hotpost .hotpost-meta i {
+    font-size: 9px;
+}

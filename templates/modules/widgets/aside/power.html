@@ -1,21 +1,186 @@
 <!-- 爱发电赞助 -->
-<div>
-    <div class="card-widget card-power">
-        <div class="item-headline"><i class="haofont hao-icon-aifadian-line"></i><span>爱发电赞助</span>
-            <a class="power-charge" th:href="${theme.config.sidebar.power.powerLink}+${theme.config.sidebar.power.username}" target="_blank" title="赞助博主">赞助
-            </a>
+<div class="card-widget card-power" id="card-power"
+     th:if="${theme.config.sidebar.power.enable}">
+    <div class="item-headline">
+        <i class="haofont hao-icon-aifadian-line"></i>
+        <span>爱发电赞助</span>
+        <a class="power-charge" th:href="${theme.config.sidebar.power.powerLink}+${theme.config.sidebar.power.username}" target="_blank" title="赞助博主">赞助</a>
+    </div>
+    <a id="power-star" class="power-star" rel="external nofollow" target="_blank" title="推荐博主">
+        <div id="power-star-image"></div>
+        <div class="power-star-body">
+            <div id="power-star-title">爱发电加载中...</div>
+            <div id="power-star-desc">赞助博主，让你也出现在这里！</div>
         </div>
-        <a id="power-star" rel="external nofollow" target="_blank" title="推荐博主">
-
-        </a>
-        <div class="power-list">
-            <div class="power-item">
-                <div class="power-item-body">
-                    <div class="power-item-link" id="power-item-link">
-
-                    </div>
+    </a>
+    <div class="power-list" id="power-list">
+        <div class="power-item" th:each="sponsor : ${#lists.isEmpty(theme.config.sidebar.power.sponsors) ? ${#lists.list()} : theme.config.sidebar.power.sponsors}">
+            <div class="power-item-body">
+                <div class="power-item-link">
+                    <a th:href="${sponsor.url}" target="_blank" rel="external nofollow" th:title="${sponsor.name}">
+                        <img th:src="${sponsor.avatar}" th:alt="${sponsor.name}" width="32" height="32" class="power-item-avatar">
+                        <span class="power-item-name" th:text="${sponsor.name}"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="power-item power-item-empty" th:if="${#lists.isEmpty(theme.config.sidebar.power.sponsors)}">
+            <div class="power-item-body">
+                <div class="power-item-link">
+                    <span class="power-item-empty-text">暂无赞助者，期待第一位！</span>
                 </div>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        /* 爱发电动态加载：从配置或 API 获取赞助者列表 */
+        document.addEventListener('DOMContentLoaded', function() {
+            var powerLink = [[${theme.config.sidebar.power.powerLink}]];
+            var username = [[${theme.config.sidebar.power.username}]];
+            var apiUrl = powerLink + 'api/' + username + '/sponsors'; // 爱发电 API
+            var listEl = document.getElementById('power-list');
+            var starEl = document.getElementById('power-star');
+            var titleEl = document.getElementById('power-star-title');
+            var descEl = document.getElementById('power-star-desc');
+            var imgEl = document.getElementById('power-star-image');
+
+            // 如果配置了静态赞助列表，优先使用配置
+            var staticSponsors = /*[[${theme.config.sidebar.power.sponsors}]]*/ [];
+            if (staticSponsors && staticSponsors.length > 0) {
+                return; // 使用静态配置
+            }
+
+            // 否则尝试从爱发电 API 获取
+            fetch(apiUrl)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data && data.data && data.data.length > 0) {
+                        renderSponsors(data.data.slice(0, 6));
+                        if (data.data[0]) {
+                            updateStar(data.data[0]);
+                        }
+                    }
+                })
+                .catch(function() {
+                    // 静默失败，保持默认 UI
+                });
+        });
+
+        function renderSponsors(sponsors) {
+            var listEl = document.getElementById('power-list');
+            if (!listEl) return;
+            var html = '';
+            sponsors.forEach(function(s, i) {
+                html += '<div class="power-item">' +
+                    '<div class="power-item-body">' +
+                    '<div class="power-item-link">' +
+                    '<a href="' + s.url + '" target="_blank" rel="external nofollow" title="' + s.name + '">' +
+                    '<img src="' + s.avatar + '" alt="' + s.name + '" width="32" height="32" class="power-item-avatar">' +
+                    '<span class="power-item-name">' + s.name + '</span>' +
+                    '</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            });
+            listEl.innerHTML = html;
+        }
+
+        function updateStar(sponsor) {
+            var starEl = document.getElementById('power-star');
+            var titleEl = document.getElementById('power-star-title');
+            var descEl = document.getElementById('power-star-desc');
+            var imgEl = document.getElementById('power-star-image');
+            if (starEl && sponsor) {
+                starEl.href = sponsor.url || '#';
+                starEl.title = sponsor.name || '';
+                if (imgEl) imgEl.style.backgroundImage = 'url(' + sponsor.avatar + ')';
+                if (titleEl) titleEl.textContent = sponsor.name || '';
+                if (descEl) descEl.textContent = '来自 ' + sponsor.name + ' 的支持 ❤️';
+            }
+        }
+    </script>
+    <style>
+        #aside-content .card-widget.card-power {
+            position: relative;
+        }
+        #aside-content .card-widget.card-power .item-headline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        #aside-content .card-widget.card-power .power-charge {
+            font-size: 12px;
+            color: var(--heo-main);
+        }
+        #aside-content .card-widget.card-power .power-star {
+            display: block;
+            text-decoration: none;
+            margin-bottom: 16px;
+        }
+        #aside-content .card-widget.card-power #power-star-image {
+            width: 100%;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        #aside-content .card-widget.card-power .power-star-body {
+            padding: 8px;
+        }
+        #aside-content .card-widget.card-power #power-star-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--heo-fontcolor);
+            margin-bottom: 4px;
+        }
+        #aside-content .card-widget.card-power #power-star-desc {
+            font-size: 12px;
+            color: var(--heo-secondtext);
+        }
+        #aside-content .card-widget.card-power .power-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        #aside-content .card-widget.card-power .power-item {
+            flex: 0 0 calc(50% - 4px);
+            min-width: 80px;
+        }
+        #aside-content .card-widget.card-power .power-item-body {
+            background: var(--heo-card-bg);
+            border: var(--style-border);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        #aside-content .card-widget.card-power .power-item:hover .power-item-body {
+            border-color: var(--heo-main);
+            box-shadow: 0 4px 12px var(--heo-main-op);
+        }
+        #aside-content .card-widget.card-power .power-item-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 4px;
+        }
+        #aside-content .card-widget.card-power .power-item-name {
+            display: block;
+            font-size: 11px;
+            color: var(--heo-fontcolor);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #aside-content .card-widget.card-power .power-item-empty {
+            flex: 0 0 100%;
+        }
+        #aside-content .card-widget.card-power .power-item-empty-text {
+            font-size: 12px;
+            color: var(--heo-secondtext);
+        }
+    </style>
 </div>
