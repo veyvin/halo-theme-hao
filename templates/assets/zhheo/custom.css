@@ -3465,44 +3465,59 @@ p.p.gray,span.p.gray {
 #hao-aggsearch {
     position: fixed;
     inset: 0;
-    z-index: 200;
+    z-index: 1001;
 }
 #hao-aggsearch .aggsearch-mask {
     position: absolute;
     inset: 0;
-    background: var(--heo-maskbgdeep);
+    background: rgba(0, 0, 0, 0.6);
 }
+/* 对标 blog.zhheo.com Algolia 弹窗：12px 圆角 + lightblack 阴影 + slide-in 入场 */
 #hao-aggsearch .aggsearch-dialog {
     position: relative;
-    max-width: 640px;
-    margin: 12vh auto 0;
+    max-width: 560px;
+    margin: 10vh auto 0;
     background: var(--heo-card-bg);
     border: var(--style-border);
-    box-shadow: var(--heo-shadow-border);
-    border-radius: 16px;
+    box-shadow: var(--heo-shadow-lightblack);
+    border-radius: 12px;
     padding: 16px 18px;
-    max-height: 70vh;
+    max-height: 76vh;
     display: flex;
     flex-direction: column;
+    gap: 12px;
+    transition: 0.3s;
+    animation: slide-in 0.6s ease 0s 1 normal none running;
+}
+#hao-aggsearch .aggsearch-dialog:hover {
+    border: var(--style-border-hover);
+    box-shadow: var(--heo-shadow-theme);
 }
 #hao-aggsearch .aggsearch-navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
 }
 #hao-aggsearch .aggsearch-title {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
+    color: var(--heo-lighttext);
+    line-height: 1;
 }
 #hao-aggsearch .aggsearch-close {
     cursor: pointer;
-    font-size: 18px;
-    opacity: 0.6;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 50px;
+    color: var(--heo-secondtext);
+    transition: 0.3s;
 }
 #hao-aggsearch .aggsearch-close:hover {
-    opacity: 1;
+    color: var(--heo-white);
+    background: var(--heo-lighttext);
 }
+/* 搜索框：secondbg 底 + 8px 圆角，placeholder 半透明 */
 #hao-aggsearch .aggsearch-input {
     display: flex;
     gap: 8px;
@@ -3512,58 +3527,104 @@ p.p.gray,span.p.gray {
     min-width: 0;
     border: var(--style-border);
     background: var(--heo-secondbg);
-    border-radius: 10px;
-    padding: 10px 14px;
+    border-radius: 8px;
+    padding: 8px 12px;
     font-size: 15px;
     color: var(--heo-fontcolor);
     outline: none;
+    transition: border-color 0.2s ease;
+}
+#hao-aggsearch #aggsearch-input::placeholder {
+    opacity: 0.6;
 }
 #hao-aggsearch #aggsearch-input:focus {
-    border-color: var(--heo-main);
+    border: var(--style-border-hover);
 }
 #hao-aggsearch #aggsearch-btn {
     flex: none;
     border: none;
     background: var(--heo-main);
     color: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     width: 44px;
     cursor: pointer;
     font-size: 16px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
+#hao-aggsearch #aggsearch-btn:hover {
+    transform: scale(1.05);
+}
+/* Tabs：分段控制器样式 */
 #hao-aggsearch .aggsearch-tabs {
     display: flex;
-    gap: 12px;
-    margin: 12px 0 6px;
-    font-size: 14px;
+    gap: 4px;
+    padding: 3px;
+    background: var(--heo-secondbg);
+    border-radius: 10px;
+    font-size: 13px;
 }
 #hao-aggsearch .aggsearch-tab {
+    flex: 1;
+    text-align: center;
     cursor: pointer;
-    padding: 4px 10px;
+    padding: 6px 10px;
     border-radius: 8px;
-    opacity: 0.65;
+    color: var(--heo-secondtext);
+    transition: all 0.2s ease;
+}
+#hao-aggsearch .aggsearch-tab:hover {
+    color: var(--heo-fontcolor);
 }
 #hao-aggsearch .aggsearch-tab.active {
     background: var(--heo-main);
     color: var(--heo-white);
-    opacity: 1;
+    box-shadow: 0 2px 8px var(--heo-theme-op);
 }
+/* 结果列表：卡片行 + 悬停高亮 */
 #hao-aggsearch .aggsearch-results {
     overflow-y: auto;
-    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 60px;
 }
 #hao-aggsearch .aggsearch-hint {
     font-size: 12px;
-    opacity: 0.55;
-    margin-bottom: 8px;
+    color: var(--heo-secondtext);
+    opacity: 0.8;
+    margin-bottom: 4px;
 }
 #hao-aggsearch .aggsearch-row {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    padding: 7px 4px;
-    border-bottom: 1px dashed var(--heo-card-border);
+    padding: 10px 12px;
+    border-radius: 8px;
     font-size: 14px;
+    transition: background 0.2s ease;
+}
+#hao-aggsearch .aggsearch-row:hover {
+    background: var(--heo-main-op);
+}
+#hao-aggsearch .aggsearch-row a {
+    color: var(--heo-fontcolor);
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+}
+#hao-aggsearch .aggsearch-row a:hover {
+    color: var(--heo-lighttext);
+}
+/* 关键词高亮：对标 zhheo em 样式 */
+#hao-aggsearch .aggsearch-row em,
+#hao-aggsearch .aggsearch-text em {
+    color: var(--heo-theme);
+    font-style: normal;
+    font-weight: 700;
 }
 #hao-aggsearch .aggsearch-tag {
     flex: none;
@@ -3575,7 +3636,7 @@ p.p.gray,span.p.gray {
 }
 #hao-aggsearch .aggsearch-desc {
     font-size: 12px;
-    opacity: 0.55;
+    color: var(--heo-secondtext);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3584,22 +3645,51 @@ p.p.gray,span.p.gray {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--heo-fontcolor);
 }
 #hao-aggsearch .aggsearch-empty {
-    padding: 18px 0;
+    padding: 24px 0;
     text-align: center;
-    opacity: 0.6;
+    color: var(--heo-secondtext);
     font-size: 14px;
 }
 #hao-aggsearch #aggsearch-stats {
     font-size: 12px;
-    opacity: 0.5;
-    margin-top: 8px;
+    color: var(--heo-secondtext);
+    margin-top: 4px;
     text-align: right;
+}
+/* 底部全文搜索入口：对标 zhheo search-heoGPT-tips */
+#hao-aggsearch .aggsearch-footer-tip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--heo-secondbg);
+    color: var(--heo-secondtext);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: var(--style-border);
+}
+#hao-aggsearch .aggsearch-footer-tip:hover {
+    border: var(--style-border-hover);
+    color: var(--heo-fontcolor);
+}
+#hao-aggsearch .aggsearch-footer-tip .aggsearch-tip-badge {
+    margin-left: auto;
+    flex: none;
+    font-size: 11px;
+    background: var(--heo-main);
+    color: var(--heo-white);
+    border-radius: 6px;
+    padding: 1px 8px;
 }
 @media screen and (max-width: 768px) {
     #hao-aggsearch .aggsearch-dialog {
         margin: 8vh 12px 0;
+        max-height: 82vh;
     }
 }
 
