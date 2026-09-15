@@ -200,8 +200,11 @@
     </th:block>
     
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
-    
-    <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换） -->
+
+        <!-- 简繁转换 -->
+        <script th:src="${assets_link + '/js/translate.js'}"></script>
+
+        <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换） -->
     <script th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax
             th:src="${assets_link + '/libs/swiper/swiper-bundle.min.js'}"></script>
     
