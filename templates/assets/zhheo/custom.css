@@ -3627,15 +3627,15 @@ p.p.gray,span.p.gray {
 }
 
 /* =====================================================
-   移动端首页文章列表：双列网格 + 自适应封面 + 紧凑卡片
+   移动端首页文章列表：参考 zhheo.com 双列卡片布局
    ===================================================== */
 @media screen and (max-width: 768px) {
     /* 容器改为双列网格 */
     #recent-posts {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px !important;
-        padding: 0 8px !important;
+        gap: 10px !important;
+        padding: 0 12px !important;
         flex-wrap: nowrap !important;
         justify-content: flex-start !important;
     }
@@ -3646,65 +3646,208 @@ p.p.gray,span.p.gray {
         height: auto !important;
         width: 100% !important;
         margin: 0 !important;
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+        background: var(--card-bg) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* 封面自适应高度（16:9 比例） */
+    #recent-posts > .recent-post-item:active {
+        transform: scale(0.98);
+    }
+
+    /* 封面自适应高度（4:3 比例，更紧凑） */
     #recent-posts > .recent-post-item .post_cover {
         width: 100% !important;
         height: auto !important;
-        aspect-ratio: 16 / 9;
-        border-radius: 12px 12px 0 0 !important;
+        aspect-ratio: 4 / 3;
+        border-radius: 0 !important;
         order: 1 !important;
+        position: relative;
     }
 
     #recent-posts > .recent-post-item .post_cover img.post_bg {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    #recent-posts > .recent-post-item:hover .post_cover img.post_bg {
+        transform: scale(1.05);
+    }
+
+    /* 分类标签浮在封面左上角 */
+    #recent-posts > .recent-post-item .post_cover .post-category-badge,
+    #recent-posts > .recent-post-item .post_cover .post-meta-categories {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        color: #fff !important;
+        font-size: 10px !important;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-decoration: none;
     }
 
     /* 文章信息紧凑排布 */
     #recent-posts > .recent-post-item > .recent-post-info {
-        padding: 8px 10px 10px !important;
+        padding: 10px 12px 12px !important;
         width: 100% !important;
         order: 2 !important;
     }
 
+    #recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
     #recent-posts > .recent-post-item > .recent-post-info .article-title {
-        font-size: 0.95em !important;
-        line-height: 1.4 !important;
+        font-size: 0.92em !important;
+        line-height: 1.45 !important;
+        font-weight: 600;
         -webkit-line-clamp: 2;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        margin-bottom: 4px !important;
+        margin: 0 !important;
+        color: var(--text-highlight-color);
     }
 
+    /* 摘要显示一行 */
     #recent-posts > .recent-post-item > .recent-post-info .content {
-        display: none !important; /* 移动端隐藏摘要，更紧凑 */
+        display: -webkit-box !important;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.78em !important;
+        color: var(--heo-fontcolor);
+        opacity: 0.7;
+        margin-top: 4px;
+        height: auto !important;
     }
 
+    /* 元信息行 */
     #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
         font-size: 11px !important;
+        color: var(--heo-fontcolor);
+        opacity: 0.6;
+        margin-top: 8px;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-date {
+        display: flex;
+        align-items: center;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap i {
+        margin-right: 2px;
+    }
+
+    /* 标签在元信息中显示 */
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .article-meta.tags {
+        display: none;
+    }
+
+    /* 置顶角标 */
+    #recent-posts > .recent-post-item > .recent-post-info .sticky-warp {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-weight: 600;
     }
 
     /* 无封面时全宽显示 */
     #recent-posts > .recent-post-item > .recent-post-info.no-cover {
-        padding: 12px !important;
+        padding: 16px !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info.no-cover .article-title {
+        font-size: 1em !important;
+        -webkit-line-clamp: 3;
+    }
+
+    /* 最新角标 */
+    #recent-posts > .recent-post-item .lastestpost {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-right: 6px;
+    }
+
+    /* 未读标记 */
+    #recent-posts > .recent-post-item .unvisited-post {
+        display: none;
     }
 }
 
 /* 更小屏幕（375px 以下）微调 */
 @media screen and (max-width: 375px) {
     #recent-posts {
-        gap: 6px !important;
-        padding: 0 6px !important;
+        gap: 8px !important;
+        padding: 0 8px !important;
+    }
+
+    #recent-posts > .recent-post-item {
+        border-radius: 10px !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info {
+        padding: 8px 10px 10px !important;
     }
 
     #recent-posts > .recent-post-item > .recent-post-info .article-title {
-        font-size: 0.88em !important;
+        font-size: 0.85em !important;
+    }
+}
+
+/* ========== 移动端首页头部 ========== */
+@media screen and (max-width: 768px) {
+    .mobile-home-header {
+        padding: 24px 16px 16px;
+        text-align: center;
+        background: linear-gradient(180deg, var(--card-bg) 0%, transparent 100%);
+    }
+
+    .mobile-home-header .mobile-home-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--text-highlight-color);
+        margin-bottom: 4px;
+        letter-spacing: -0.02em;
+    }
+
+    .mobile-home-header .mobile-home-subtitle {
+        font-size: 0.85rem;
+        color: var(--heo-fontcolor);
+        opacity: 0.6;
+        font-weight: 400;
+    }
+
+    /* 当有首屏大图时隐藏移动端头部 */
+    .full_page + .mobile-home-header {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .mobile-home-header {
+        display: none;
     }
 }

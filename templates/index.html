@@ -14,6 +14,12 @@
             <!-- 第一屏 -->
             <th:block th:replace="~{modules/header/index-img}"/>
         </header>
+        
+        <!-- 移动端首页头部信息 -->
+        <div class="mobile-home-header" th:unless="${theme.config.top.above.enable_above}">
+            <div class="mobile-home-title">[[${site.title}]]</div>
+            <div class="mobile-home-subtitle" th:unless="${#strings.isEmpty(site.subtitle)}">[[${site.subtitle}]]</div>
+        </div>
         <div id="home_top">
             <!-- 每日说说 -->
             <div th:replace="~{modules/moment}"/>

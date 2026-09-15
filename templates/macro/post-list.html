@@ -41,6 +41,9 @@
                             <span class="post_art_title" th:text="${coverTitle}"></span>
                         </div>
                     </div>
+                    <!-- 分类标签浮层 -->
+                    <span class="post-category-badge" th:if="${not #lists.isEmpty(post.categories)}"
+                          th:text="${post.categories[0].spec.displayName}"></span>
                 </a>
             </div>
             <div class="recent-post-info">
