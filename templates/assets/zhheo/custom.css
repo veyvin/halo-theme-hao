@@ -3625,3 +3625,86 @@ p.p.gray,span.p.gray {
         animation: none !important;
     }
 }
+
+/* =====================================================
+   移动端首页文章列表：双列网格 + 自适应封面 + 紧凑卡片
+   ===================================================== */
+@media screen and (max-width: 768px) {
+    /* 容器改为双列网格 */
+    #recent-posts {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        padding: 0 8px !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+    }
+
+    /* 卡片重置为单列布局（上下排列） */
+    #recent-posts > .recent-post-item {
+        flex-direction: column !important;
+        height: auto !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* 封面自适应高度（16:9 比例） */
+    #recent-posts > .recent-post-item .post_cover {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9;
+        border-radius: 12px 12px 0 0 !important;
+        order: 1 !important;
+    }
+
+    #recent-posts > .recent-post-item .post_cover img.post_bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* 文章信息紧凑排布 */
+    #recent-posts > .recent-post-item > .recent-post-info {
+        padding: 8px 10px 10px !important;
+        width: 100% !important;
+        order: 2 !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info .article-title {
+        font-size: 0.95em !important;
+        line-height: 1.4 !important;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 4px !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info .content {
+        display: none !important; /* 移动端隐藏摘要，更紧凑 */
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap {
+        font-size: 11px !important;
+    }
+
+    /* 无封面时全宽显示 */
+    #recent-posts > .recent-post-item > .recent-post-info.no-cover {
+        padding: 12px !important;
+    }
+}
+
+/* 更小屏幕（375px 以下）微调 */
+@media screen and (max-width: 375px) {
+    #recent-posts {
+        gap: 6px !important;
+        padding: 0 6px !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info .article-title {
+        font-size: 0.88em !important;
+    }
+}

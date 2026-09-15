@@ -1,14 +1,22 @@
 <th:block th:if="${theme.config.top.above.enable_above}">
     <div class="pl-container">
         <th:block th:if="!${theme.config.top.above.enable_above_video}">
+            <!-- 模糊背景层：保留 div+background（priority 天然低，无需 fetchpriority） -->
             <div class="pl-img pl-blur pl-visible"></div>
-            <div class="pl-img pl-visible"></div>
+            <!-- 首屏主图：picture 让浏览器按 viewport 选合适的源 + fetchpriority 调度优先级 -->
+            <picture>
+                <source media="(max-width: 768px)" th:srcset="@{${theme.config.top.above.phone_index_img}}" type="image/webp">
+                <source media="(max-width: 768px)" th:srcset="@{${theme.config.top.above.phone_index_img}}">
+                <img alt="" aria-hidden="true" class="pl-img pl-visible" decoding="sync" fetchpriority="high"
+                     th:src="@{${theme.config.top.above.index_img}}" width="1920" height="1080">
+            </picture>
             <video class="video"></video>
         </th:block>
         <th:block th:if="${theme.config.top.above.enable_above_video}">
-            <video class="index-video" id="index-video" autoplay=""
-                   th:src="${theme.config.top.above.index_video}" loop="" muted="" playsinline=""
-                   webkit-playsinline=""
+            <video class="index-video" id="index-video" autoplay="" loop="" muted="" playsinline=""
+                   webkit-playsinline="" preload="none"
+                   th:poster="@{${theme.config.top.above.index_img}}"
+                   th:src="${theme.config.top.above.index_video}"
                    style="display:block;object-fit:cover;width:100%;height:100%;pointer-events:none;">
             </video>
         </th:block>
@@ -197,13 +205,13 @@
             }
         }
 
-        .pl-img {
+        /* 仅模糊背景层（div）使用 background-image，主图已改为 <picture>+fetchpriority */
+        div.pl-img {
             background-image: url([[${theme.config.top.above.index_img}]]);
-
         }
 
         @media screen and (max-width: 768px) {
-            .pl-img {
+            div.pl-img {
                 background-image: url([[${theme.config.top.above.phone_index_img}]]);
             }
         }
