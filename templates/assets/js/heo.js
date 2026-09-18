@@ -182,7 +182,6 @@ var heo = {
                 var item = randomFriendLinks[i]
                 htmlText += `<a class='footer-item' href='${item.spec.url}'  target="_blank" rel="noopener nofollow">${item.spec.displayName}</a>`;
             }
-            htmlText += `<a class='footer-item' href='${linksUrl}'>更多</a>`
             if(document.getElementById("friend-links-in-footer")){
                 document.getElementById("friend-links-in-footer").innerHTML = htmlText;
             }

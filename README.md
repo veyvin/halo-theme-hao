@@ -27,7 +27,7 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 - 📱 **响应式布局** — 完美适配桌面端与移动端
 - 🎵 **内置音乐播放器** — APlayer + Meting2，支持网易云 / QQ 音乐歌单
 - 💬 **多评论系统** — 支持 Twikoo、Waline、Artalk 与 Halo 原生评论
-- 🗂️ **丰富页面** — 首页、归档、分类、标签、作者、瞬间、友链、相册、装备等
+- 🗂️ **丰富页面** — 首页、归档、分类、标签、作者、瞬间、装备等
 - 🔍 **目录与搜索** — 文章自动生成 TOC 目录，配合搜索插件快速检索
 - 📝 **代码高亮** — PrismJS 多主题高亮，行号 / 复制按钮一应俱全
 - 🧭 **面包屑导航** — 分类、标签、作者等页面层级清晰
@@ -68,7 +68,7 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 
 - 评论功能 [plugin-comment-widget](https://www.halo.run/store/apps/app-YXyaD)
 - 搜索功能 [plugin-search-widget](https://www.halo.run/store/apps/app-DlacW)
-- 友链页面 [plugin-links](https://www.halo.run/store/apps/app-hfbQg)
+- 页脚友链 [plugin-links](https://www.halo.run/store/apps/app-hfbQg)
 - 瞬间页面 [plugin-moments](https://www.halo.run/store/apps/app-SnwWD)
 - 追番插件 [plugin-bilibili-bangumi](https://www.halo.run/store/apps/app-OTFPN)
 - 图库插件 [plugin-photos](https://www.halo.run/store/apps/app-BmQJW)
@@ -83,7 +83,7 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 
 1. 安装并启用主题后，进入 **主题管理** → 对应主题 → **设置**
 2. 按需配置基础信息（建站时间、ICP 备案等）与各功能模块
-3. 部分页面（友链、关于、音乐、留言板、相册等）需在 **页面** 中创建并选择对应的页面模板
+3. 部分页面（如热门文章）需在 **页面** 中创建并选择对应的页面模板
 4. 主题设置项较多，建议逐项浏览后再进行个性化配置
 
 ## 📄 新页面模板
@@ -92,23 +92,14 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 
 | 模板 | 建议 slug | 说明 |
 | --- | --- | --- |
-| 友情链接页面模版 | `links` | 含友链列表 + 鱼塘，需安装友链插件 |
-| 关于页面模版 | `about` | 个人介绍小部件流 |
-| 音乐页面模版 | `music` | 音乐馆，需在设置中填写歌单 |
-| 留言板页面模版 | `comments` | 信笺样式留言引导 + 评论 |
-| 待办清单页面模版 | `todolist` | 配置见设置 → 页面-待办 |
-| 相册页面模版 | `album` | 分组封面墙，需安装图库插件 |
-| 最近评论页面模版 | `new_comment` | 全站最新评论时间线 |
 | 热门文章页面模版 | `hot` | 按访问量排行，数量见设置 → 页面-热榜 |
-| 数据统计页面模版 | `stats` | 文章 / 分类 / 评论 / 访问 / 建站天数大盘 |
 
 > 改动设置或模板后，记得在主题管理页点 **重载主题配置**。
 
-## 🐟 鱼塘 API 配置
+## 🔗 朋友圈与图库配置
 
-- 友链页鱼塘：设置 → 页面-友链 → **鱼塘数据 API**（留空则鱼塘无数据）。
-- 朋友圈页：设置 → 页面-友链 → **朋友圈数据 API**（默认内置地址）+ **友链每页数量**。
-- 图库分组页：设置 → 页面-图库 → **返回地址**填图库分组页地址（如 `/album`）。
+- 朋友圈页：设置 → 页面-朋友圈 → **朋友圈数据 API**（默认内置地址）+ **友链每页数量**。
+- 图库页：设置 → 页面-图库 → **返回地址**（默认 `/album`，相册页已移除，可按需改为任意地址）。
 
 ## ⌨️ 快捷键
 
@@ -125,7 +116,6 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 | Shift + R | 随机文章 |
 | Shift + H | 首页 |
 | Shift + F | 瞬间 |
-| Shift + L | 友链（地址跟随设置） |
 | Shift + K | 关闭快捷键 |
 | Ctrl/⌘ + F | 站内搜索（需搜索插件） |
 

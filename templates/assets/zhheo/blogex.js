@@ -717,13 +717,6 @@ $(window).on('keydown', function (ev) {
             return false;
         }
 
-        //友情链接页面 shift+L（地址跟随主题设置 linksUrl）
-        if (ev.keyCode == 76) {
-            var _linksUrl = (typeof GLOBAL_CONFIG !== 'undefined' && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.links && GLOBAL_CONFIG.source.links.linksUrl) || '/links';
-            pjax.loadUrl(_linksUrl);
-            return false;
-        }
-
         //陪读模式 shift+P（仅文章页可用，需后台开启朗读）
         if (ev.keyCode == 80) {
             if (typeof haoCompanion === 'function' && (!window.GLOBAL_CONFIG || GLOBAL_CONFIG.source.post.readAloudEnable !== false)) { haoCompanion(); }
