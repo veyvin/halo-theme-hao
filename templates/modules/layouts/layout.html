@@ -77,18 +77,18 @@
     </style>
 </th:block>
 
-<!-- perf-7: 随机文章只取最新 20 篇（原 listAll 全表查询，文章上千后每页都慢） -->
-<script th:with="candidatePosts=${postFinder.list({page: 1, size: 20, sort: {'spec.publishTime,desc'}})},
-    allPostList=${candidatePosts.items},
-    randomIndex=${T(java.lang.Math).floor(T(java.lang.Math).random()*#lists.size(allPostList))},
-    postPermalink=${allPostList[randomIndex].status.permalink}"
-        th:if="${not #lists.isEmpty(candidatePosts.items)}"
-        th:inline="javascript"
+<!-- perf-7: 随机文章只取最新 20 篇（原 listAll 全表查询，文章上千后每页都慢）。
+     判空必须放在 th:with 内部：th:if 先于 th:with 执行，同标签 th:with 定义的变量在 th:if 里不存在，
+     用 th:if 判空会恒为假，整个脚本不渲染，toRandomPost 变成未定义（导航/右键菜单/Shift+R 全挂） -->
+<script th:inline="javascript"
+        th:with="allPostList=${postFinder.list({page: 1, size: 20, sort: {'spec.publishTime,desc'}}).items},
+    randomIndex=${allPostList == null || #lists.isEmpty(allPostList) ? 0 : T(java.lang.Math).floor(T(java.lang.Math).random()*#lists.size(allPostList))},
+    postPermalink=${allPostList == null || #lists.isEmpty(allPostList) ? '/' : allPostList[randomIndex].status.permalink}"
 >
     function toRandomPost() {
         // 随机跳转全站的一篇文章
         let permalink = /*[[${postPermalink}]]*/ "/";
-        
+
         // 当前窗口打开
         //window.location.href = permalink;
         pjax.loadUrl(permalink);
@@ -265,7 +265,8 @@
         })
         
         document.addEventListener('pjax:error', (e) => {
-                    if (e.request.status === 404 || e.request.status === 500) {
+                    // 所有 4xx/5xx（含源站临时 502/503）都回退整页跳转，否则 loading 遮罩会一直转
+                    if (e.request.status >= 400) {
                         window.location.href = e.request.responseURL;
                     }
                 }
