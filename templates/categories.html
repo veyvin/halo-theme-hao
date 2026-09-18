@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'category',title = ${'分类' + ' | ' + site.title}, head = ~{::head})}">
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'category',title = #{page.categories.title} + ' | ' + ${site.title}, head = ~{::head})}">
 <th:block th:fragment="head">
 </th:block>
 <th:block th:fragment="content">
 
     <div class="page" id="body-wrap">
         <header class="not-top-img" id="page-header">
-            <nav th:replace="~{modules/nav :: nav(title = '分类')}"></nav>
+            <nav th:replace="~{modules/nav :: nav(title = #{page.categories.title})}"></nav>
         </header>
         <main class="layout hide-aside" id="content-inner">
 
@@ -16,8 +16,8 @@
                 <div th:if="${#strings.equals(theme.config.categories.use, 'default')}" class="category-sections"
                      th:with="allCats=${categoryFinder.listAll()},stats=${siteStatsFinder.getStats()}">
                     <div class="category-stats">
-                        查看不同领域的 <a th:href="@{/categories}" th:text="${#lists.size(allCats)}"></a> 个分类，
-                        共 <a th:href="@{/archives}" th:text="${stats.post}"></a> 篇文章
+                        查看不同领域的 <a th:href="@{${site.routes.categoriesUri}}" th:text="${#lists.size(allCats)}"></a> 个分类，
+                        共 <a th:href="@{${site.routes.archivesUri}}" th:text="${stats.post}"></a> 篇文章
                     </div>
                     <section class="category-section" th:each="categoryItem : ${allCats}">
                         <h2 class="category-section-title">

@@ -1,0 +1,123 @@
+<!-- 热门文章卡片 -->
+<div class="card-widget card-hotpost" id="card-hotpost"
+     th:with="hotPosts=${postFinder.list({page: 1, size: ${theme.config.sidebar.hotpost.count}, sort: {'stats.visit,desc'}})}"
+     th:if="${theme.config.sidebar.hotpost.enable}">
+    <div class="item-headline">
+        <i class="haofont hao-icon-fire-line"></i>
+        <span>热门文章</span>
+        <a class="banner-button secondary" th:href="@{/hot}" target="_blank" rel="external nofollow">更多</a>
+    </div>
+    <div class="hotpost-list">
+        <div class="hotpost-item" th:each="post,iterStat : ${hotPosts.items}">
+            <div class="hotpost-rank">
+                <span th:text="${iterStat.index + 1}"></span>
+            </div>
+            <a class="hotpost-link" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}" target="_blank">
+                <div class="hotpost-cover">
+                    <img th:src="${#strings.isEmpty(post.spec.cover) ? theme.config.layout.postRandomImg : thumbnail.gen(post.spec.cover, 's')}"
+                         th:alt="${post.spec.title}" width="60" height="60">
+                </div>
+                <div class="hotpost-info">
+                    <div class="hotpost-title" th:text="${post.spec.title}"></div>
+                    <div class="hotpost-meta">
+                        <span class="hotpost-visit"><i class="haofont hao-icon-eye-line"></i> <span th:text="${post.stats.visit}"></span></span>
+                        <span class="hotpost-comment"><i class="haofont hao-icon-comment-line"></i> <span th:text="${post.stats.comment}"></span></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <style>
+        #aside-content .card-widget.card-hotpost .hotpost-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-rank {
+            flex: 0 0 24px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--heo-main-op);
+            color: var(--heo-main);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-rank:nth-child(1),
+        #aside-content .card-widget.card-hotpost .hotpost-item:nth-child(1) .hotpost-rank {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #fff;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-rank:nth-child(2),
+        #aside-content .card-widget.card-hotpost .hotpost-item:nth-child(2) .hotpost-rank {
+            background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+            color: #fff;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-rank:nth-child(3),
+        #aside-content .card-widget.card-hotpost .hotpost-item:nth-child(3) .hotpost-rank {
+            background: linear-gradient(135deg, #cd7f32, #b87333);
+            color: #fff;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-link {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            text-decoration: none;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-cover {
+            flex: 0 0 60px;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-link:hover .hotpost-cover img {
+            transform: scale(1.05);
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-info {
+            flex: 1;
+            min-width: 0;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--heo-fontcolor);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 11px;
+            color: var(--heo-secondtext);
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-visit,
+        #aside-content .card-widget.card-hotpost .hotpost-comment {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        #aside-content .card-widget.card-hotpost .hotpost-meta i {
+            font-size: 10px;
+        }
+    </style>
+</div>

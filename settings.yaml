@@ -9,11 +9,11 @@ spec:
       formSchema:
         - $formkit: code
           name: siteTitle
-          label: 站点名称
-          placeholder: 请输入站点名称
+          label: 导航栏站点名称覆盖（可选）
+          placeholder: 留空则使用系统设置中的站点标题
           height: 80px
           language: html
-          help: 支持 HTML 语法
+          help: 仅覆盖导航栏 Logo 文字这一处品牌变体，支持 HTML 语法；留空自动回退到系统设置的站点标题（site.title）
         - $formkit: date
           name: siteStartTime
           label: 建站时间
@@ -39,19 +39,17 @@ spec:
           name: seo
           label: SEO 设置
           value:
-            keywords: ""
-            description: ""
+            enable_metadata: true
+            enable_structured_data: true
           children:
-            - $formkit: textarea
-              name: keywords
-              label: 站点关键词
-              placeholder: "多个关键词用英文逗号分隔，如：AI Agent,开源项目,GitHub Trending,开发工具,技术博客"
-              help: "设置 meta keywords，有助于搜索引擎理解站点主题"
-            - $formkit: textarea
-              name: description
-              label: 站点描述
-              placeholder: "建议 150-220 个字符，简要描述站点内容与特色"
-              help: "设置 meta description，建议长度 150-220 个字符（包括空格）。如未填写，将自动使用站点副标题"
+            - $formkit: checkbox
+              name: enable_metadata
+              label: 输出 canonical 和社交分享标签
+              help: "Halo 已自动注入 description / keywords / favicon，主题不再重复输出；此开关仅控制 canonical、Open Graph、Twitter Card"
+            - $formkit: checkbox
+              name: enable_structured_data
+              label: 输出文章结构化数据
+              help: "文章页输出 BlogPosting JSON-LD；如已安装 SEO 插件提供同类标签请关闭"
 
     - group: nav
       label: 02 · 导航栏

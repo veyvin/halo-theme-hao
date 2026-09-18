@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="${assets_link + '/css/hao-post-tools.css' + theme_version}">
     <script defer th:if="${theme.config.post.readAloudEnable}" th:src="${assets_link + '/js/hao-read.js' + theme_version}"></script>
   </th:block>
-  <script type="application/ld+json" th:inline="javascript">
+  <script th:if="${theme.config.basics.seo.enable_structured_data}" type="application/ld+json" th:inline="javascript">
   {"@context":"https://schema.org","@type":"BlogPosting","headline":[[${post.spec.title}]],"description":[[${post.status.excerpt ?: ''}]],"image":[[${#strings.isEmpty(post.spec.cover) ? '' : post.spec.cover}]],"datePublished":[[${#dates.format(post.spec.publishTime,'yyyy-MM-dd''T''HH:mm:ss')}]],"dateModified":[[${#dates.format(post.status.lastModifyTime,'yyyy-MM-dd''T''HH:mm:ss')}]],"author":{"@type":"Person","name":[[${post.owner.displayName}]]}}
   </script>
 </th:block>

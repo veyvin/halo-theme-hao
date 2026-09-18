@@ -53,6 +53,15 @@ var haoAggSearch = (function () {
   function match(q, s) {
     return String(s || '').toLowerCase().indexOf(q) > -1;
   }
+  // 关键词高亮：对标 zhheo 搜索 em 样式（主题色 + 粗体 + 非斜体）
+  function hl(text, q) {
+    var safe = esc(text);
+    if (!q) return safe;
+    var idx = String(text || '').toLowerCase().indexOf(q);
+    if (idx < 0) return safe;
+    var raw = String(text || '');
+    return esc(raw.slice(0, idx)) + '<em>' + esc(raw.slice(idx, idx + q.length)) + '</em>' + esc(raw.slice(idx + q.length));
+  }
   function render(q) {
     q = (q || '').trim().toLowerCase();
     var hits = el('aggsearch-hits');
@@ -72,20 +81,24 @@ var haoAggSearch = (function () {
       if (showFriend) {
         friendHits.slice(0, 8).forEach(function (f) {
           html += '<div class="aggsearch-row"><span class="aggsearch-tag">友链</span>' +
-            '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">' + esc(f.name) + '</a>' +
+            '<a href="' + esc(f.url) + '" target="_blank" rel="noopener">' + hl(f.name, q) + '</a>' +
             '<span class="aggsearch-desc">' + esc(f.desc) + '</span></div>';
         });
       }
       if (showComment) {
         commentHits.slice(0, 8).forEach(function (c) {
           html += '<div class="aggsearch-row"><span class="aggsearch-tag">评论</span>' +
-            '<span class="aggsearch-text">' + esc(c.text).slice(0, 80) + '</span>' +
+            '<span class="aggsearch-text">' + hl(String(c.text).slice(0, 80), q) + '</span>' +
             '<span class="aggsearch-desc">— ' + esc(c.author) + '</span></div>';
         });
       }
       if (!html) { html = '<div class="aggsearch-empty">没有匹配结果，换个关键词试试</div>'; }
     }
     hits.innerHTML = html;
+    var footerText = el('aggsearch-footer-text');
+    if (footerText) {
+      footerText.textContent = q ? ('在全文搜索中查找“' + q + '”') : '输入关键词后回车进行全文搜索';
+    }
     if (stats) {
       stats.textContent = activeTab === 'post' ? '' :
         ('友链 ' + friendHits.length + ' · 评论 ' + commentHits.length);

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'tag',title = ${'标签' + ': ' + tag.spec.displayName + ' | ' + site.title}, head = ~{::head})}">
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'tag',title = #{page.tags.title} + ': ' + ${tag.spec.displayName} + ' | ' + ${site.title}, head = ~{::head})}">
 <th:block th:fragment="head">
 </th:block>
 <th:block th:fragment="content">
 
     <div class="page" id="body-wrap">
         <header class="not-top-img" id="page-header">
-            <nav th:replace="~{modules/nav :: nav(title = ${'标签'+ ': ' + tag.spec.displayName})}"></nav>
+            <nav th:replace="~{modules/nav :: nav(title = #{page.tags.title} + ': ' + ${tag.spec.displayName})}"></nav>
         </header>
         <main class="layout" id="content-inner">
             <div id="tag">
@@ -22,7 +22,7 @@
                     </a>
                 </div>
                 <!-- 文章 -->
-                <th:block th:replace="~{macro/post-list :: post-list(${'/tags/'+tag.spec.slug})}" />
+                <th:block th:replace="~{macro/post-list :: post-list(${tag.status.permalink})}" />
             </div>
             <!-- sidebar -->
             <div th:replace="~{modules/aside :: aside(${theme.config.sidebar.widgetss.tagWidget})}"></div>

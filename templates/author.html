@@ -8,7 +8,7 @@
     <div class="page" id="body-wrap">
         <!-- 头部导航栏 -->
         <header class="not-top-img" id="page-header">
-            <nav th:replace="~{modules/nav :: nav(title = '作者文章列表')}"></nav>
+            <nav th:replace="~{modules/nav :: nav(title = ${author.spec.displayName})}"></nav>
         </header>
         <main class="layout" id="content-inner" th:classappend="${theme.config.sidebar.location}">
             <div class="recent-posts" id="recent-posts">

@@ -1,40 +1,107 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'music',title = ${singlePage.spec.title + ' | ' + site.title}, head = ~{::head})}">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'music', title = ${singlePage.spec.title + ' | ' + site.title}, head = ~{::head})}">
 <th:block th:fragment="head">
+    <!-- meting-js 会自动注入 APlayer CSS -->
+    <style>
+        /* 兜底：确保 meting-js 加载前页面不闪烁 */
+        body[data-type=music] #anMusic-page .aplayer { opacity: 0; animation: fadeIn 0.5s ease 0.3s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
 </th:block>
 <th:block th:fragment="content">
-
     <div class="page" id="body-wrap">
-        <!-- 头部导航栏 -->
         <header class="not-top-img" id="page-header">
-            <nav th:replace="~{modules/nav :: nav(title = '音乐馆')}"></nav>
+            <nav th:replace="~{modules/nav :: nav(title = #{page.musics.title})}"></nav>
         </header>
+        
+        <!-- 音乐馆主容器 -->
         <main class="layout hide-aside" id="content-inner">
             <div id="page">
                 <div class="music-mask"></div>
-                <h1 class="page-title">音乐馆</h1>
+                
                 <div id="anMusic-page">
-                    <!-- <div id="anMusicBtnGetSong"><i class="anzhiyufont anzhiyu-icon-shuffle"></i></div>
-                    <div id="anMusicRefreshBtn"><i class="anzhiyufont anzhiyu-icon-arrows-rotate"></i></div>
-                    <div id="anMusicSwitching"><i class="anzhiyufont anzhiyu-icon-repeat"></i></div> -->
+                    <!-- 背景模糊层 -->
+                    <div id="anMusic-bg" class="anMusic-bg"></div>
+                    
+                    <!-- 顶部歌曲信息 -->
+                    <div class="anMusic-top">
+                        <div class="anMusic-title">
+                            <span class="page-title">音乐馆</span>
+                            <span class="anMusic-desc">戴上耳机，享受音乐</span>
+                        </div>
+                    </div>
+                    
+                    <!-- APlayer 容器 -->
                     <div id="anMusic-page-meting">
-                        <meting-js th:id="${theme.config.tool.nav_music.id}" th:server="${theme.config.tool.nav_music.server}" type="playlist" mutex="true" preload="auto"
-                                   theme="var(--heo-main)" order="list" list-max-height="calc(100vh - 169px)!important">
+                        <meting-js th:id="${theme.config.tool.nav_music.id}" 
+                                   th:server="${theme.config.tool.nav_music.server}" 
+                                   type="playlist" mutex="true" preload="auto"
+                                   theme="var(--heo-main)" order="list" 
+                                   list-max-height="calc(100vh - 169px)!important">
                         </meting-js>
                     </div>
                 </div>
             </div>
-
-
-            <link rel="stylesheet" th:href="${assets_link + '/libs/aplayer/music.css'}" >
-
-
+            
+            <link rel="stylesheet" th:href="${assets_link + '/libs/aplayer/music.css'}">
         </main>
-        <!-- 底部 -->
+        
         <footer th:replace="~{modules/footer}"/>
     </div>
-
+    
+    <script th:inline="javascript">
+        // 电台模式：封面旋转 + 背景模糊同步
+        document.addEventListener('DOMContentLoaded', function() {
+            const musicPage = document.getElementById('anMusic-page');
+            if (!musicPage) return;
+            
+            const pic = musicPage.querySelector('.aplayer-pic');
+            const bg = document.getElementById('anMusic-bg');
+            
+            // 监听播放状态，控制封面旋转
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const isPlaying = pic.classList.contains('aplayer-status-playing');
+                        if (isPlaying) {
+                            pic.classList.add('playing');
+                        } else {
+                            pic.classList.remove('playing');
+                        }
+                    }
+                });
+            });
+            
+            if (pic) {
+                observer.observe(pic, { attributes: true });
+            }
+            
+            // 同步封面到背景模糊层
+            function syncBackground() {
+                if (!pic || !bg) return;
+                const bgImage = pic.style.backgroundImage;
+                if (bgImage && bgImage !== 'none') {
+                    bg.style.backgroundImage = bgImage;
+                    bg.classList.add('show');
+                }
+            }
+            
+            // 封面加载完成后同步
+            const picObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        syncBackground();
+                    }
+                });
+            });
+            
+            if (pic) {
+                picObserver.observe(pic, { attributes: true });
+                // 初始同步
+                setTimeout(syncBackground, 1000);
+            }
+        });
+    </script>
 </th:block>
-
 </html>

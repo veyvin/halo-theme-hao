@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = '朋友圈 | ' + ${site.title}, head = ~{::head})}">
+    th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = #{page.friends.title} + ' | ' + ${site.title}, head = ~{::head})}">
 
 <th:block th:fragment="head">
     <!-- 分离CSS文件 -->
@@ -11,7 +11,7 @@
     <div class="page" id="body-wrap">
         <!-- 头部导航栏 -->
         <header class="not-top-img" id="page-header">
-            <nav th:replace="~{modules/nav :: nav(title = '朋友圈')}"></nav>
+            <nav th:replace="~{modules/nav :: nav(title = #{page.friends.title})}"></nav>
         </header>
 
         <main class="layout hide-aside" id="content-inner">

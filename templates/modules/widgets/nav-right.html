@@ -33,6 +33,14 @@
         </a>
     </div>
 
+    <!-- 翻译按钮 -->
+    <div class="nav-button" id="translateLink" th:if="${theme.config.style.translate.translateEnable}">
+        <a class="site-page" href="javascript:translateFn.translate();" rel="external nofollow"
+           title="简繁转换" aria-label="简繁转换">
+            <span class="translate-text">繁</span>
+        </a>
+    </div>
+
     <div th:if="${theme.config.nav.right.navLogin}" class="console-button" tabindex="-1"
          th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)}">
         <span class="site-page nav-login">
