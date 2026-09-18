@@ -703,31 +703,4 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
-    customElements.define(
-        "hao-dplayer",
-        class HaoDplayer extends HTMLElement {
-            constructor() {
-                super();
-                this.options = {
-                    src: this.getAttribute("src") || "",
-                    player:
-                        this.getAttribute("player") ||
-                        `/themes/theme-hao/assets/libs/dplayer/dplayer.html?url=`,
-                    width: this.getAttribute("width") || "100%",
-                    height: this.getAttribute("height") || "500px",
-                };
-                this.render();
-            }
-            render() {
-                if (this.options.src)
-                    this.innerHTML = `<iframe allowfullscreen="true" class="hao_vplayer" src="${
-                        this.options.player + this.options.src
-                    }" style="width:${this.options.width};height:${
-                        this.options.height
-                    }"></iframe>`;
-                else this.innerHTML = "视频地址未填写！";
-            }
-        }
-    );
-
 });

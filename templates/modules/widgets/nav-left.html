@@ -44,29 +44,36 @@
         <span th:utext="${#strings.isEmpty(theme.config.basics.siteTitle)} ? ${site.title} : ${theme.config.basics.siteTitle}"></span>
     </a>
     <style type="text/css">
+        /* 「更多项目」通栏胶囊按钮（HEO 风格弹层底部） */
         .back-home-button .back-menu-bottom-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin: 8px 12px 12px;
-            padding: 8px;
-            border-radius: 8px;
-            background: transparent;
-            border: 1px solid var(--heo-main-op, rgba(66, 90, 239, .25));
+            margin: 12px 4px 2px;
+            padding: 9px 12px;
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--heo-fontcolor) 6%, transparent);
+            border: 1px solid var(--heo-card-border);
             color: var(--heo-fontcolor);
-            font-size: 14px;
+            font-size: 15px;
+            transition: 0.3s;
         }
 
         .back-home-button .back-menu-bottom-btn:hover {
-            background: var(--heo-main);
+            background: var(--heo-theme);
+            border-color: transparent;
+            color: var(--heo-fontcolor);
+        }
+
+        [data-theme=light] .back-home-button .back-menu-bottom-btn:hover {
             color: #fff;
         }
 
         .back-home-button .back-menu-bottom-btn-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 6px;
+            width: 22px;
+            height: 22px;
+            border-radius: 8px;
         }
     </style>
 </div>

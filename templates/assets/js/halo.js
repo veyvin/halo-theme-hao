@@ -351,11 +351,6 @@ let halo = {
         document.getElementById("danmuBtn").innerHTML = "<button class=\"hideBtn\" onclick=\"document.getElementById('danmu').classList.remove('hidedanmu')\">显示弹幕</button> <button class=\"hideBtn\" onclick=\"document.getElementById('danmu').classList.add('hidedanmu')\">隐藏弹幕</button>"
     },
 
-    changeMarginLeft(element) {
-        var randomMargin = Math.floor(Math.random() * 901) + 100; // 生成100-1000之间的随机数
-        element.style.marginLeft = randomMargin + 'px';
-    },
-
     getTopSponsors() {
 
         var show_num = GLOBAL_CONFIG.source.power.showNum

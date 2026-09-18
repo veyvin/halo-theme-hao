@@ -569,11 +569,9 @@ function checkUrlAndAddHideBanner() {
     var e = window.location.href;
     if (/\/page\//.test(e)) {
         var t = document.getElementById("recent-top-post-group")
-            , o = document.getElementById("bbTimeList")
-            , c = document.getElementById("climb");
+            , o = document.getElementById("bbTimeList");
         t && (t.classList.add("more-page"),
-        o && o.classList.add("more-page"),
-        c && c.classList.add("more-page"));
+        o && o.classList.add("more-page"));
     }
 }
 
@@ -684,12 +682,6 @@ $(window).on('keydown', function (ev) {
         //响应打开控制台键 shift+A
         if (ev.keyCode == 65) {
             heo.showConsole();
-            return false;
-        }
-
-        //音乐控制 shift+M
-        if (ev.keyCode == 77) {
-            heo.musicToggle();
             return false;
         }
 

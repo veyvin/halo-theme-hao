@@ -60,11 +60,6 @@ window.oncontextmenu = function (event) {
         let $rightMenuDownloadImg = $('#menu-downloadimg');
         let $rightMenuSearch = $('#menu-search');
         let $rightMenuSearchBaidu = $('#menu-searchBaidu');
-        let $rightMenuMusicToggle = $('#menu-music-toggle');
-        let $rightMenuMusicBack = $('#menu-music-back');
-        let $rightMenuMusicForward = $('#menu-music-forward');
-        let $rightMenuMusicPlaylist = $('#menu-music-playlist');
-        let $rightMenuMusicCopyMusicName = $('#menu-music-copyMusicName');
         let href = event.target.href;
         let imgsrc = event.target.currentSrc;
 
@@ -118,23 +113,6 @@ window.oncontextmenu = function (event) {
             $rightMenuPasteText.show();
         } else {
             $rightMenuPasteText.hide();
-        }
-
-        //判断是否是音乐
-        const navMusicEl = document.querySelector("#nav-music");
-        if (navMusicEl && navMusicEl.contains(event.target)) {
-            pluginMode = true;
-            $rightMenuMusicToggle.show();
-            $rightMenuMusicBack.show();
-            $rightMenuMusicForward.show();
-            $rightMenuMusicPlaylist.show();
-            $rightMenuMusicCopyMusicName.show();
-        } else {
-            $rightMenuMusicToggle.hide();
-            $rightMenuMusicBack.hide();
-            $rightMenuMusicForward.hide();
-            $rightMenuMusicPlaylist.hide();
-            $rightMenuMusicCopyMusicName.hide()
         }
 
         // 如果不是扩展模式则隐藏扩展模块
@@ -386,7 +364,6 @@ function addRightMenuClickEvent() {
         rm.hideRightMenu();
     });
     $('.menu-link').on('click', rm.hideRightMenu);
-    $('#menu-darkmode').on('click', rm.switchDarkMode);
     $('#menu-home').on('click', function () {
         window.location.href = window.location.origin;
     });
@@ -398,9 +375,6 @@ function addRightMenuClickEvent() {
     $('#rightmenu-mask').contextmenu(function () {
         rm.hideRightMenu();
         return false;
-    });
-    $('#menu-translate').on('click', function () {
-        rm.hideRightMenu();
     });
     $('#menu-copy').on('click', rm.copyPageUrl);
     $('#menu-pastetext').on('click', rm.pasteText);
@@ -427,12 +401,4 @@ function addRightMenuClickEvent() {
         rm.writeClipImg(domImgSrc);
     });
     $('#menu-searchBaidu').on('click', rm.searchBaidu);
-    //音乐
-    $('#menu-music-toggle').on('click', heo.musicToggle);
-    $('#menu-music-back').on('click', heo.musicSkipBack);
-    $('#menu-music-forward').on('click', heo.musicSkipForward);
-    $('#menu-music-copyMusicName').on('click', function () {
-        rm.rightmenuCopyText(heo.musicGetName());
-        btf.snackbarShow('复制歌曲名称成功', false, 3000);
-    });
 }

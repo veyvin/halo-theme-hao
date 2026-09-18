@@ -25,9 +25,11 @@
         </a>
     </div>
 
-    <!-- 搜索使用搜索插件 -->
-    <div class="nav-button" id="search-button" th:if="${pluginFinder.available('PluginSearchWidget')}">
-        <a class="site-page social-icon search" href="javascript:SearchWidget.open();" rel="external nofollow"
+    <!-- 搜索：聚合搜索面板开启时直调面板（面板内搜索，不弹插件窗口），否则走搜索插件 -->
+    <div class="nav-button" id="search-button" th:if="${pluginFinder.available('PluginSearchWidget') || theme.config.tool.aggSearch.aggSearchEnable}">
+        <a class="site-page social-icon search"
+           th:href="${theme.config.tool.aggSearch.aggSearchEnable} ? 'javascript:haoAggSearch.open();' : 'javascript:SearchWidget.open();'"
+           rel="external nofollow"
            title="站内搜索" aria-label="站内搜索">
             <i class="haofont hao-icon-search--line"></i>
         </a>

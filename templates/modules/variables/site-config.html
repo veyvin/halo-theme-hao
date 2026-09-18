@@ -15,8 +15,6 @@
         isFriendLinksInFooter: [[${theme.config.footer.footer_group.enable_footer_group}]],
         loadingBox: [[${theme.config.other.loadingBoxs.loadingBoxEnable}]],
         loadProgressBar: [[${theme.config.other.loadingBoxs.loadProgressBar}]],
-        navMusicEnable: [[${theme.config.tool.nav_music.nav_musicEnable}]],
-        isMusic: [[${ htmlType == 'music'}]],
         helloText: [[${#strings.listSplit(theme.config.sidebar.profile.helloText, ',')}]],
         profileStyle: [[${theme.config.sidebar.profile.profileStyle}]],
         rightMenuEnable: [[${theme.config.tool.rightMenu.rightMenuEnable}]],
@@ -126,10 +124,6 @@
             },
             footer: {
                 default_enable: [[${theme.config.footer.footerContent.default_enable_group.default_enable}]]
-            },
-            about: {
-                rewardList: [[${theme.config.aboutReward.reward_list}]],
-                rewardAmount: [[${theme.config.aboutReward.rewardNumber}]]
             }
         }
     };

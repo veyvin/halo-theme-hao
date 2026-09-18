@@ -111,22 +111,6 @@
     </div>
   </div>
 
-  <div class="console-card-group-reward" th:if="${theme.config.aboutReward.reward.enable_reward}">
-    <ul class="reward-all console-card">
-      <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
-                                 rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="微信" width="200" height="200"
-              th:src="${theme.config.aboutReward.reward.wxPay}"></a>
-        <div class="post-qr-code-desc">微信</div>
-      </li>
-      <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.alipay}}"
-                                 rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="支付宝" width="200" height="200"
-              th:src="${theme.config.aboutReward.reward.alipay}"></a>
-        <div class="post-qr-code-desc">支付宝</div>
-      </li>
-    </ul>
-  </div>
   <div class="button-group">
     <div class="console-btn-item">
       <a class="darkmode_switchbutton" href="javascript:void(0);" onclick="navFn.switchDarkMode();" rel="external nofollow"
@@ -144,11 +128,6 @@
     <!--<div class="console-btn-item" id="assist-open" onclick="heo.hideConsole()" title="无障碍工具栏"><a-->
     <!--        class="assist-btn"><i class="fa-duotone fa-wheelchair"></i></a>-->
     <!--</div>-->
-    <div th:if="${theme.config.tool.nav_music.nav_musicEnable}" class="console-btn-item" id="consoleMusic" onclick="heo.musicToggle()" title="音乐开关">
-      <a class="music-switch" data-pjax-state="" aria-label="音乐开关">
-        <i class="haofont hao-icon-disc-fill"></i>
-      </a>
-    </div>
   </div>
   <div class="console-mask" href="javascript:void(0);" onclick="heo.hideConsole()" rel="external nofollow">
   </div>

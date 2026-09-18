@@ -67,19 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * 首頁top_img底下的箭頭
-     */
-    const scrollDownInIndex = () => {
-        const $scrollDownEle = document.getElementById('scroll-down')
-        const $homeTop = document.getElementById('home_top')
-        $scrollDownEle && $scrollDownEle.addEventListener('click', function () {
-            $homeTop &&  btf.scrollToDest($homeTop.offsetTop, 300)
-
-        })
-    }
-
-
-    /**
      * justified-gallery 圖庫排版
      * 需要 jQuery
      */
@@ -188,16 +175,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 activeLinkClass: 'active',
                 activeListItemClass: 'active',
                 headingsOffset: -400,
-                scrollSmooth: true,
-                scrollSmoothOffset: -70,
+                scrollSmooth: false,
                 tocScrollOffset: 50,
             });
 
             const $cardTocLayout = document.getElementById('card-toc')
             const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0]
 
-            // toc元素點擊
+            // toc元素點擊：改用原生平滑滚动（合成器驱动，不逐帧跑 JS），对标 zhheo 的顺滑体验
             $cardToc.addEventListener('click', (ele) => {
+                const link = ele.target.closest('.toc-link')
+                if (link) {
+                    ele.preventDefault()
+                    const targetId = decodeURIComponent((link.getAttribute('href') || '').substring(1))
+                    const targetEl = targetId && document.getElementById(targetId)
+                    if (targetEl) btf.scrollToDest(btf.getEleTop(targetEl), 300)
+                }
                 if (window.innerWidth < 900) {
                     $cardTocLayout.classList.remove("open");
                 }
@@ -574,7 +567,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         sidebarFn()
-        GLOBAL_CONFIG.isHome && scrollDownInIndex()
         scrollFn()
         addTableWrap()
         clickFnOfTagHide()

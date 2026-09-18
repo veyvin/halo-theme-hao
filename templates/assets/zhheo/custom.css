@@ -87,8 +87,7 @@ i.haofont.hao-icon-arrow-right.banner-righticon{
     }
 
     #page-header.nav-fixed #nav,
-    #page-header.not-top-img #nav,
-    #page-header.full_page #nav {
+    #page-header.not-top-img #nav {
         background: color-mix(in srgb, var(--heo-card-bg) 82%, transparent) !important;
     }
 
@@ -948,175 +947,6 @@ i.haofont.hao-icon-arrow-right.banner-righticon{
 
 
 
-
-
-/* 音乐天地 */
-#aside-content .item-headline-music {
-    padding-bottom: 0;
-    margin-left: 8px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-size: 1em;
-    font-weight: 700;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: box;
-    display: flex;
-    -webkit-box-align: center;
-    -moz-box-align: center;
-    -o-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center
-}
-
-#aside-content .item-headline-music span {
-    margin-left: 6px
-}
-
-#flip-wrapper-card {
-    -webkit-perspective: 1000;
-    perspective: 1000
-}
-
-#flip-wrapper-card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1
-}
-
-#flip-music {
-    width: 100%;
-    height: 100%;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    transition: cubic-bezier(0, 0, 0, 1.29) .3s
-}
-
-#aside-content #flip-wrapper-card #flip-music .msimg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    background-size: 100%
-}
-
-#aside-content #flip-wrapper-card #flip-music .back.msimg {
-    display: block;
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
-    box-sizing: border-box;
-    background-size: 100%
-}
-
-#flip-wrapper-card:hover #flip-music {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg)
-}
-
-@media screen and (max-width: 768px) {
-    .card-music {
-        height: 520px !important
-    }
-}
-
-.card-music {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    padding: 0 !important;
-    cursor: pointer;
-    border: none !important;
-    height: 405px;
-    margin-top: 0 !important;
-    background: 0 0 !important
-}
-
-/* Steam卡片 */
-#aside-content .item-headline-steam {
-    padding-bottom: 0;
-    margin-left: 8px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-size: 1em;
-    font-weight: 700;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: box;
-    display: flex;
-    -webkit-box-align: center;
-    -moz-box-align: center;
-    -o-box-align: center;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    align-items: center
-}
-
-#aside-content .item-headline-steam span {
-    margin-left: 6px
-}
-
-
-#flip-steam {
-    width: 100%;
-    height: 100%;
-    transition: transform .3s
-}
-
-#flip-steam::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 200%;
-    background: linear-gradient(to right,transparent,#fff,transparent);
-    transform: translateX(-200%);
-    transition: transform .5s linear;
-    z-index: 1
-}
-
-#flip-steam:hover::before {
-    transform: translateX(100%) skewX(-60deg)
-}
-
-#aside-content #flip-wrapper-card #flip-steam .stimg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-size: 100%;
-    z-index: 0
-}
-
-#aside-content #flip-wrapper-card #flip-steam .back.stimg {
-    display: none
-}
-
-@media screen and (max-width: 768px) {
-    .card-steam {
-        height:130px!important
-    }
-}
-
-.card-steam {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    padding: 0!important;
-    cursor: pointer;
-    border: none!important;
-    height: 105px;
-    margin-top: 0!important;
-    background: 0 0!important
-}
-
-/* Steam卡片 */
 
 /* 分类3D */
 #libCategories .card-info p{
@@ -3459,7 +3289,7 @@ p.p.gray,span.p.gray {
     cursor: pointer;
 }
 
-/* P1-6 聚合搜索面板：对标原站 heosearch */
+/* P1-6 聚合搜索面板：对标 blog.zhheo.com heosearch（宽弹窗 + 分区卡片） */
 #hao-aggsearch {
     position: fixed;
     inset: 0;
@@ -3470,26 +3300,22 @@ p.p.gray,span.p.gray {
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
 }
-/* 对标 blog.zhheo.com Algolia 弹窗：12px 圆角 + lightblack 阴影 + slide-in 入场 */
+/* 弹窗：宽幅居中，标题/输入框/Tabs 固定，结果区内部滚动 */
 #hao-aggsearch .aggsearch-dialog {
     position: relative;
-    max-width: 560px;
-    margin: 10vh auto 0;
+    width: min(calc(100vw - 48px), 1400px);
+    margin: 8vh auto 0;
     background: var(--heo-card-bg);
     border: var(--style-border);
-    box-shadow: var(--heo-shadow-lightblack);
+    box-shadow: var(--heo-shadow-black);
     border-radius: 12px;
-    padding: 16px 18px;
-    max-height: 76vh;
+    padding: 20px 24px;
+    max-height: 84vh;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     transition: 0.3s;
     animation: slide-in 0.6s ease 0s 1 normal none running;
-}
-#hao-aggsearch .aggsearch-dialog:hover {
-    border: var(--style-border-hover);
-    box-shadow: var(--heo-shadow-theme);
 }
 #hao-aggsearch .aggsearch-navbar {
     display: flex;
@@ -3497,9 +3323,9 @@ p.p.gray,span.p.gray {
     justify-content: space-between;
 }
 #hao-aggsearch .aggsearch-title {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 700;
-    color: var(--heo-lighttext);
+    color: var(--heo-theme);
     line-height: 1;
 }
 #hao-aggsearch .aggsearch-close {
@@ -3515,83 +3341,242 @@ p.p.gray,span.p.gray {
     color: var(--heo-white);
     background: var(--heo-lighttext);
 }
-/* 搜索框：secondbg 底 + 8px 圆角，placeholder 半透明 */
-#hao-aggsearch .aggsearch-input {
+/* 搜索行：大输入框（聚焦主题色描边）+ 右侧圆形搜索按钮 */
+#hao-aggsearch .aggsearch-input-panel {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
 }
-#hao-aggsearch #aggsearch-input {
+#hao-aggsearch .aggsearch-input {
     flex: 1;
     min-width: 0;
+}
+#hao-aggsearch #aggsearch-input {
+    width: 100%;
+    height: 46px;
     border: var(--style-border);
     background: var(--heo-secondbg);
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: 12px;
+    padding: 0 16px;
     font-size: 15px;
     color: var(--heo-fontcolor);
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 #hao-aggsearch #aggsearch-input::placeholder {
     opacity: 0.6;
 }
 #hao-aggsearch #aggsearch-input:focus {
-    border: var(--style-border-hover);
+    border-color: var(--heo-theme);
+    box-shadow: 0 0 0 2px var(--heo-theme-op);
 }
 #hao-aggsearch #aggsearch-btn {
     flex: none;
-    border: none;
-    background: var(--heo-main);
-    color: #fff;
-    border-radius: 8px;
-    width: 44px;
+    width: 46px;
+    height: 46px;
+    border: var(--style-border);
+    background: var(--heo-secondbg);
+    color: var(--heo-secondtext);
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    font-size: 18px;
+    transition: all 0.2s ease;
 }
 #hao-aggsearch #aggsearch-btn:hover {
-    transform: scale(1.05);
+    background: var(--heo-theme);
+    border-color: transparent;
+    color: var(--heo-white);
 }
-/* Tabs：分段控制器样式 */
+/* Tabs：胶囊按钮，激活为主题色 */
 #hao-aggsearch .aggsearch-tabs {
     display: flex;
-    gap: 4px;
-    padding: 3px;
-    background: var(--heo-secondbg);
-    border-radius: 10px;
-    font-size: 13px;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 14px;
 }
 #hao-aggsearch .aggsearch-tab {
-    flex: 1;
+    padding: 7px 18px;
     text-align: center;
     cursor: pointer;
-    padding: 6px 10px;
-    border-radius: 8px;
+    background: var(--heo-secondbg);
+    border: var(--style-border);
+    border-radius: 999px;
     color: var(--heo-secondtext);
     transition: all 0.2s ease;
 }
 #hao-aggsearch .aggsearch-tab:hover {
-    color: var(--heo-fontcolor);
+    color: var(--heo-theme);
+    border-color: var(--heo-theme);
 }
 #hao-aggsearch .aggsearch-tab.active {
-    background: var(--heo-main);
+    background: var(--heo-theme);
+    border-color: transparent;
     color: var(--heo-white);
-    box-shadow: 0 2px 8px var(--heo-theme-op);
 }
-/* 结果列表：卡片行 + 悬停高亮 */
+/* 结果区：弹窗内滚动 */
 #hao-aggsearch .aggsearch-results {
+    flex: 1;
     overflow-y: auto;
+    min-height: 200px;
+    padding-right: 4px;
+}
+#hao-aggsearch .aggsearch-results::-webkit-scrollbar {
+    width: 6px;
+}
+#hao-aggsearch .aggsearch-results::-webkit-scrollbar-thumb {
+    background: var(--heo-secondtext);
+    border-radius: 4px;
+    opacity: 0.3;
+}
+/* 分区标题 + 更多 */
+#hao-aggsearch .aggsearch-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px 0 10px;
+}
+#hao-aggsearch .aggsearch-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--heo-lighttext);
+}
+#hao-aggsearch .aggsearch-more {
+    font-size: 13px;
+    color: var(--heo-secondtext);
+    transition: color 0.2s ease;
+}
+#hao-aggsearch .aggsearch-more:hover {
+    color: var(--heo-theme);
+}
+/* 关键词高亮：对标 zhheo em 样式（主题色 + 粗体 + 非斜体） */
+#hao-aggsearch mark,
+#hao-aggsearch em {
+    background: transparent;
+    color: var(--heo-theme);
+    font-style: normal;
+    font-weight: 700;
+}
+/* 友链卡片：头像 + 名称 + 描述 */
+#hao-aggsearch .aggsearch-friend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 10px;
+}
+#hao-aggsearch .aggsearch-friend-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--heo-secondbg);
+    border: var(--style-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+#hao-aggsearch .aggsearch-friend-card:hover {
+    border: var(--style-border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--heo-shadow-theme);
+}
+#hao-aggsearch .aggsearch-friend-avatar {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+#hao-aggsearch .aggsearch-friend-avatar-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--heo-theme-op);
+    color: var(--heo-theme);
+    font-size: 18px;
+    font-weight: 700;
+}
+#hao-aggsearch .aggsearch-friend-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-height: 60px;
+    gap: 2px;
+    min-width: 0;
 }
-#hao-aggsearch .aggsearch-hint {
+#hao-aggsearch .aggsearch-friend-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--heo-fontcolor);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#hao-aggsearch .aggsearch-friend-desc {
     font-size: 12px;
     color: var(--heo-secondtext);
-    opacity: 0.8;
-    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+#hao-aggsearch .aggsearch-friend-card:hover .aggsearch-friend-name {
+    color: var(--heo-theme);
+}
+/* 文章卡片：封面 + 两行标题，对标 zhheo 搜索卡片 */
+#hao-aggsearch .aggsearch-post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 10px;
+}
+#hao-aggsearch .aggsearch-post-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    background: var(--heo-secondbg);
+    border: var(--style-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+#hao-aggsearch .aggsearch-post-card:hover {
+    border: var(--style-border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--heo-shadow-theme);
+}
+#hao-aggsearch .aggsearch-post-cover-wrap {
+    display: block;
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    overflow: hidden;
+}
+#hao-aggsearch .aggsearch-post-cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+#hao-aggsearch .aggsearch-post-card:hover .aggsearch-post-cover {
+    transform: scale(1.06);
+}
+#hao-aggsearch .aggsearch-post-cover-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--heo-main), var(--heo-theme));
+    color: var(--heo-white);
+    font-size: 28px;
+    font-weight: 700;
+}
+#hao-aggsearch .aggsearch-post-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--heo-fontcolor);
+}
+#hao-aggsearch .aggsearch-post-card:hover .aggsearch-post-title {
+    color: var(--heo-theme);
+}
+/* 评论结果行 */
 #hao-aggsearch .aggsearch-row {
     display: flex;
     align-items: baseline;
@@ -3603,26 +3588,6 @@ p.p.gray,span.p.gray {
 }
 #hao-aggsearch .aggsearch-row:hover {
     background: var(--heo-main-op);
-}
-#hao-aggsearch .aggsearch-row a {
-    color: var(--heo-fontcolor);
-    font-weight: 700;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5;
-}
-#hao-aggsearch .aggsearch-row a:hover {
-    color: var(--heo-lighttext);
-}
-/* 关键词高亮：对标 zhheo em 样式 */
-#hao-aggsearch .aggsearch-row em,
-#hao-aggsearch .aggsearch-text em {
-    color: var(--heo-theme);
-    font-style: normal;
-    font-weight: 700;
 }
 #hao-aggsearch .aggsearch-tag {
     flex: none;
@@ -3645,49 +3610,55 @@ p.p.gray,span.p.gray {
     white-space: nowrap;
     color: var(--heo-fontcolor);
 }
+/* 加载中 */
+#hao-aggsearch .aggsearch-loading {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 40px 0;
+}
+#hao-aggsearch .aggsearch-loading i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--heo-theme);
+    opacity: 0.25;
+    animation: aggsearch-bounce 1.2s ease-in-out infinite;
+}
+#hao-aggsearch .aggsearch-loading i:nth-child(2) {
+    animation-delay: 0.15s;
+}
+#hao-aggsearch .aggsearch-loading i:nth-child(3) {
+    animation-delay: 0.3s;
+}
+@keyframes aggsearch-bounce {
+    0%, 80%, 100% {
+        opacity: 0.25;
+        transform: translateY(0);
+    }
+    40% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+}
 #hao-aggsearch .aggsearch-empty {
-    padding: 24px 0;
+    padding: 40px 0;
     text-align: center;
     color: var(--heo-secondtext);
     font-size: 14px;
 }
-#hao-aggsearch #aggsearch-stats {
-    font-size: 12px;
-    color: var(--heo-secondtext);
-    margin-top: 4px;
-    text-align: right;
-}
-/* 底部全文搜索入口：对标 zhheo search-heoGPT-tips */
-#hao-aggsearch .aggsearch-footer-tip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: var(--heo-secondbg);
-    color: var(--heo-secondtext);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: var(--style-border);
-}
-#hao-aggsearch .aggsearch-footer-tip:hover {
-    border: var(--style-border-hover);
-    color: var(--heo-fontcolor);
-}
-#hao-aggsearch .aggsearch-footer-tip .aggsearch-tip-badge {
-    margin-left: auto;
-    flex: none;
-    font-size: 11px;
-    background: var(--heo-main);
-    color: var(--heo-white);
-    border-radius: 6px;
-    padding: 1px 8px;
-}
 @media screen and (max-width: 768px) {
     #hao-aggsearch .aggsearch-dialog {
-        margin: 8vh 12px 0;
-        max-height: 82vh;
+        width: calc(100vw - 24px);
+        margin: 4vh auto 0;
+        max-height: 88vh;
+        padding: 16px;
+    }
+    #hao-aggsearch .aggsearch-friend-grid {
+        grid-template-columns: 1fr;
+    }
+    #hao-aggsearch .aggsearch-post-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -3926,11 +3897,6 @@ p.p.gray,span.p.gray {
         color: var(--heo-fontcolor);
         opacity: 0.6;
         font-weight: 400;
-    }
-
-    /* 当有首屏大图时隐藏移动端头部 */
-    .full_page + .mobile-home-header {
-        display: none;
     }
 }
 
@@ -4371,4 +4337,88 @@ p.p.gray,span.p.gray {
 }
 #aside-content .card-widget.card-hotpost .hotpost-meta i {
     font-size: 9px;
+}
+
+/* ==================== 四叶草弹出菜单：HEO 风格 ==================== */
+/* 仅作用于导航栏左侧四叶草按钮的弹层，不影响侧边栏 / 快捷入口中的同名结构 */
+.back-home-button .back-menu-list-groups {
+    width: 500px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 10px 12px 12px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--heo-theme) 30%, var(--heo-card-border));
+    background: color-mix(in srgb, var(--heo-card-bg) 88%, #000);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    scrollbar-width: thin;
+}
+
+[data-theme=light] .back-home-button .back-menu-list-groups {
+    background: color-mix(in srgb, var(--heo-card-bg) 96%, transparent);
+    box-shadow: var(--heo-shadow-border);
+}
+
+.back-home-button .back-menu-list-groups:hover {
+    border: 1px solid color-mix(in srgb, var(--heo-theme) 55%, transparent);
+}
+
+.back-home-button .back-menu-list-groups::-webkit-scrollbar {
+    width: 6px;
+}
+
+.back-home-button .back-menu-list-groups::-webkit-scrollbar-thumb {
+    background: var(--heo-gray-op);
+    border-radius: 6px;
+}
+
+/* 分组标题：小号灰字，不随悬停变色 */
+.back-home-button .back-menu-list-group .back-menu-list-title {
+    margin: 14px 4px 6px 10px;
+    font-size: 13px;
+    color: var(--heo-secondtext);
+}
+
+.back-home-button .back-menu-list-group:hover .back-menu-list-title {
+    color: var(--heo-secondtext);
+}
+
+/* 双列网格排布 */
+.back-home-button .back-menu-list-groups .back-menu-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 10px;
+    width: 100%;
+}
+
+.back-home-button .back-menu-list .back-menu-item {
+    width: auto;
+    margin: 0;
+    padding: 7px 12px;
+    border-radius: 999px;
+}
+
+.back-home-button .back-menu-list .back-menu-item .back-menu-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+}
+
+.back-home-button .back-menu-list .back-menu-item .back-menu-item-text {
+    font-size: 16px;
+}
+
+/* 悬停高亮：主题色胶囊，文字保持亮色（与截图一致） */
+.back-home-button .back-menu-list-groups .back-menu-list .back-menu-item:hover {
+    background: var(--heo-theme) !important;
+    transform: none !important;
+}
+
+.back-home-button .back-menu-list-groups .back-menu-list .back-menu-item:hover .back-menu-item-text {
+    color: var(--heo-fontcolor);
+}
+
+[data-theme=light] .back-home-button .back-menu-list-groups .back-menu-list .back-menu-item:hover .back-menu-item-text {
+    color: #fff;
 }

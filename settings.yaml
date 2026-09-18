@@ -127,93 +127,8 @@ spec:
 
                   label: 中控台按钮
     - group: top
-      label: 03 · 首页首屏与 Banner
+      label: 03 · 全局背景
       formSchema:
-        - $formkit: group
-          name: above
-          label: 首页第一屏
-          help: 开启后会在页面的最上方新增一个第一屏
-          value:
-            enable_above: false
-            typed:
-            enable_typed_random:
-            enable_above_video:
-            index_img:
-            phone_index_img:
-            index_video:
-          children:
-            - $formkit: switch
-              name: enable_above
-              key: enable_above
-              id: enable_above
-              label: 启用第一屏
-              help: 开启后在首页最上方显示全屏背景图和打字机效果
-            - $formkit: array
-              name: typed
-              key: typed
-              id: typed
-              if: $get(enable_above).value
-              label: 打字机显示的文字
-              help: 第一屏打字机轮播的文案，建议 3-6 条短句
-              value: []
-              children:
-                - $formkit: text
-                  name: text
-                  label: 轮播文案
-                  placeholder: 例如：分享设计与科技生活
-                  help: 打字机轮播的一条短句，建议 3-6 条、每条 15 字以内
-              itemLabels:
-                - type: text
-                  label: $value.text
-            - $formkit: switch
-              label: 随机文字
-              if: $get(enable_above).value
-              name: enable_typed_random
-              key: enable_typed_random
-              id: enable_typed_random
-              value: false
-              help: 如果配置了自定义文字，优先展示自定义文字
-            - $formkit: switch
-              if: $get(enable_above).value
-              label: 使用视频背景
-              name: enable_above_video
-              key: enable_above_video
-              id: enable_above_video
-              value: false
-              help: 开启后第一屏使用动态视频壁纸，关闭则使用下方设置的静态背景图
-            - $formkit: attachment
-              name: index_video
-              key: index_video
-              id: index_video
-              if: $get(enable_above).value  &&  $get(enable_above_video).value
-              label: 动态壁纸
-              placeholder: 请填写动态壁纸地址
-              value: ""
-              help: 第一屏视频背景，mp4 格式；移动端流量较大时建议仍用静态图
-              width: 15rem
-              aspectRatio: 16/9
-            - $formkit: attachment
-              name: index_img
-              key: index_img
-              id: index_img
-              if: $get(enable_above).value  &&  $get(enable_above_video).value == false
-              label: PC背景图
-              help: 第一屏桌面端背景，建议 1920x1080 以上横图
-              width: "15rem"
-              aspectRatio: "16/9"
-              placeholder: 请填写背景图地址
-              value: https://www.dmoe.cc/random.php
-            - $formkit: attachment
-              name: phone_index_img
-              key: phone_index_img
-              id: phone_index_img
-              if: $get(enable_above).value  &&  $get(enable_above_video).value == false
-              label: 移动端背景图
-              help: 第一屏移动端背景，建议 1080x1920 竖图
-              placeholder: 请填写移动端背景图地址
-              width: "15rem"
-              aspectRatio: "16/9"
-              value: https://imgapi.kouseki.cn/random?sort=mp
         - $formkit: group
           name: global_background
           label: 全局背景设置
@@ -262,28 +177,6 @@ spec:
           label: 瞬间说说
           value: true
           help: 在首页顶部显示瞬间说说模块，需要安装 Halo 瞬间插件
-        - $formkit: group
-          name: climb
-          label: 宠物挂件
-          help: 在页面边缘显示攀爬动画图片，需要开启顶部 Banner
-          value:
-            climbEnable: false
-            climbImg: https://imgapi.yyds.pink/random?sort=animals
-          children:
-            - $formkit: switch
-              name: climbEnable
-              key: climbEnable
-              id: climbEnable
-              label: 启用宠物挂件
-              help: 在页面边缘显示攀爬动画，适合配合顶部 Banner 使用
-            - $formkit: url
-              name: climbImg
-              key: climbImg
-              id: climbImg
-              if: $get(climbEnable).value
-              label: 挂件图片
-              placeholder: 请输入图片地址，例如 https://imgapi.yyds.pink/random?sort=animals
-              help: 随机图地址：https://imgapi.yyds.pink/random?sort=animals
         - $formkit: switch
           name: recentTop
           id: recentTop
@@ -936,10 +829,6 @@ spec:
                       label: 公众号
                     - value: "power"
                       label: 爱发电赞助
-                    - value: "steam"
-                      label: Steam卡片
-                    - value: "music"
-                      label: 音乐卡片
                     - value: "friend-link"
                       label: 通讯录
                     - value: "recent-posts"
@@ -1003,10 +892,6 @@ spec:
                       label: 公众号
                     - value: "power"
                       label: 爱发电赞助
-                    - value: "steam"
-                      label: Steam卡片
-                    - value: "music"
-                      label: 音乐卡片
                     - value: "friend-link"
                       label: 通讯录
                     - value: "recent-posts"
@@ -1070,10 +955,6 @@ spec:
                       label: 公众号
                     - value: "power"
                       label: 爱发电赞助
-                    - value: "steam"
-                      label: Steam卡片
-                    - value: "music"
-                      label: 音乐卡片
                     - value: "friend-link"
                       label: 通讯录
                     - value: "recent-posts"
@@ -1134,10 +1015,6 @@ spec:
                       label: 公众号
                     - value: "power"
                       label: 爱发电赞助
-                    - value: "steam"
-                      label: Steam卡片
-                    - value: "music"
-                      label: 音乐卡片
                     - value: "friend-link"
                       label: 通讯录
                     - value: "recent-posts"
@@ -1199,10 +1076,6 @@ spec:
                       label: 公众号
                     - value: "power"
                       label: 爱发电赞助
-                    - value: "steam"
-                      label: Steam卡片
-                    - value: "music"
-                      label: 音乐卡片
                     - value: "friend-link"
                       label: 通讯录
                     - value: "recent-posts"
@@ -1402,60 +1275,6 @@ spec:
               label: 赞助用户名
               help: 你的爱发电用户名，可在爱发电主页链接中查看，例如 carolcoral
               placeholder: 例如 carolcoral
-        - $formkit: group
-          name: music
-          label: 音乐卡片
-          help: 文档请看：https://githubfast.com/zonemeen/netease-recent-profile
-          value:
-            musicUrl: /music
-            lightMsimg: https://card-music.yyds.pink/?id=xxxxx&theme=card&themeColor=e60026&mode=light&size=300&show_random=1
-            lightBackMsimg: https://card-music.yyds.pink/?id=xxxxx&size=60&type=1&mode=light&title=%E6%9C%80%E8%BF%91%E5%B8%B8%E5%90%AC%E6%A6%9C%E5%8D%95&number=6
-            darkMsimg: https://card-music.yyds.pink/?id=xxxxx&theme=card&themeColor=e60026&mode=dark&size=300&show_random=1
-            darkBackMsimg: https://card-music.yyds.pink/?id=xxxxx&size=60%E2%80%A6F%91%E5%B8%B8%E5%90%AC%E6%A6%9C%E5%8D%95&number=6
-          children:
-            - $formkit: url
-              name: musicUrl
-              label: 跳转地址
-              help: 点击音乐卡片时跳转的地址，例如 /music
-              placeholder: 例如 /music
-            - $formkit: textarea
-              name: lightMsimg
-              label: 浅色模式卡面
-              help: 文档见分组说明，需先替换 id=你的网易云 UID
-              placeholder: 粘贴 card-music 生成的浅色卡片链接
-            - $formkit: textarea
-              name: lightBackMsimg
-              label: 浅色模式背面
-              help: 翻转后展示的榜单图
-              placeholder: 粘贴最近常听榜单（浅色）链接
-            - $formkit: textarea
-              name: darkMsimg
-              label: 深色模式卡面
-              help: 深色模式下的卡面
-              placeholder: 粘贴 card-music 生成的深色卡片链接
-            - $formkit: textarea
-              name: darkBackMsimg
-              label: 深色模式背面
-              help: 深色模式下的榜单图
-              placeholder: 粘贴最近常听榜单（深色）链接
-        - $formkit: group
-          name: steam
-          label: Steam卡片
-          help: 文档请看：https://githubfast.com/yuyinws/steam-card
-          value:
-            steamUrl: /
-            cardSteam: https://card.yuy1n.io/card/xxxxxx/gradient1,badge,bg-game-1111460,games,screenshots,badges
-          children:
-            - $formkit: url
-              name: steamUrl
-              label: 跳转地址
-              help: 点击 Steam 卡片时跳转的地址
-              placeholder: 例如 /
-            - $formkit: textarea
-              name: cardSteam
-              label: Steam 卡片链接
-              help: 文档见分组说明，需替换为你的 Steam ID
-              placeholder: 粘贴 steam-card 生成的卡片链接
         - $formkit: number
           name: recentPost
           label: 最新/热门文章数量
@@ -2206,128 +2025,6 @@ spec:
               placeholder: 例如：来自 困困鱼 最新设计与科技的文章
               help: 了解更多板块的描述文字，简要介绍站点内容
               key: footer_footer_bar_description
-        - $formkit: group
-          name: social_media
-          label: 社交媒体
-          value:
-            socialMediaLeft:
-            centerImg: https://liuzhihang.com/upload/logo.png
-            socialMediaRight:
-          children:
-            - $formkit: attachment
-              name: centerImg
-              label: 中间 Logo
-              placeholder: 请填写 logo 图片地址
-              value: https://liuzhihang.com/upload/logo.png
-              help: 页脚中央 Logo，建议正方形透明底 PNG
-              width: 15rem
-              aspectRatio: 1/1
-            - $formkit: array
-              name: socialMediaLeft
-              label: 左侧社交媒体
-              help: 页脚 Logo 左侧的社交媒体图标列表
-              value: []
-              itemLabels:
-                - type: text
-                  label: $value.name
-                - type: text
-                  label: $value.url
-              children:
-                - $formkit: toggle
-                  name: option_social_data
-                  label: 图标类型
-                  value: icon
-                  help: 选择手动填写图标代码，或使用 Iconify 选择器
-                  render-type: text
-                  size: 72
-                  gap: 8
-                  options:
-                    - value: icon
-                      label: 自定义代码
-                      render: 代码
-                    - value: custom
-                      label: Iconify
-                      render: Iconify
-                - $formkit: textarea
-                  name: icon
-                  key: icon
-                  if: $value.option_social_data == 'icon'
-                  help: 可填写 SVG 代码、iconfont class，或完整的 img 标签
-                  label: 图标
-                  placeholder: 例如 <svg>...</svg> 或完整 img 标签
-                  validation: "required"
-                - $formkit: iconify
-                  if: $value.option_social_data == 'custom'
-                  name: icon
-                  key: custom_icon
-                  label: Iconify 图标
-                  help: 从 Iconify 图标库中选择社交媒体图标
-                  format: svg # svg / dataurl / url / name
-                - $formkit: text
-                  name: name
-                  label: 名称
-                  placeholder: 例如 GitHub / 微博
-                  help: 鼠标悬停时显示的名称
-                  validation: "required"
-                - $formkit: text
-                  name: url
-                  label: 链接
-                  placeholder: 例如 https://github.com/username
-                  help: 点击图标后跳转的地址
-                  validation: "required"
-            - $formkit: array
-              name: socialMediaRight
-              label: 右侧社交媒体
-              help: 页脚 Logo 右侧的社交媒体图标列表
-              value: []
-              itemLabels:
-                - type: text
-                  label: $value.name
-                - type: text
-                  label: $value.url
-              children:
-                - $formkit: toggle
-                  name: option_social_data
-                  label: 图标类型
-                  value: icon
-                  help: 选择手动填写图标代码，或使用 Iconify 选择器
-                  render-type: text
-                  size: 72
-                  gap: 8
-                  options:
-                    - value: icon
-                      label: 自定义代码
-                      render: 代码
-                    - value: custom
-                      label: Iconify
-                      render: Iconify
-                - $formkit: textarea
-                  if: $value.option_social_data == 'icon'
-                  name: icon
-                  key: icon
-                  help: 可填写 SVG 代码、iconfont class，或完整的 img 标签
-                  label: 图标
-                  placeholder: 例如 <svg>...</svg> 或完整 img 标签
-                  validation: "required"
-                - $formkit: iconify
-                  if: $value.option_social_data == 'custom'
-                  name: icon
-                  key: custom_icon
-                  label: Iconify 图标
-                  help: 从 Iconify 图标库中选择社交媒体图标
-                  format: svg # svg / dataurl / url / name
-                - $formkit: text
-                  name: name
-                  label: 名称
-                  placeholder: 例如 GitHub / 微博
-                  help: 鼠标悬停时显示的名称
-                  validation: "required"
-                - $formkit: text
-                  name: url
-                  label: 链接
-                  placeholder: 例如 https://github.com/username
-                  help: 点击图标后跳转的地址
-                  validation: "required"
         - $formkit: switch
           name: menu_enable
           id: menu_enable
@@ -2925,7 +2622,13 @@ spec:
               key: aggSearchEnable
               label: 聚合搜索面板
               value: true
-              help: 点击搜索按钮先弹出主题聚合面板（综合/文章/友链/评论），文章走搜索插件，友链评论走站内数据前端过滤，对标原站 heosearch
+              help: 点击搜索按钮弹出聚合面板（综合/文章/友链/评论），文章走 Halo 核心索引搜索并在面板内展示封面卡片，回车即搜、不再弹搜索插件窗口
+            - $formkit: text
+              name: linksUri
+              key: linksUri
+              label: 友链页地址
+              placeholder: 例如 /links
+              help: 聚合搜索友链分区「更多」跳转地址，留空则不显示该入口
             - $formkit: number
               name: friendCount
               key: friendCount
@@ -2944,50 +2647,6 @@ spec:
               max: 100
               step: 1
               help: 聚合搜索评论 Tab 的候选数量
-        - $formkit: group
-          name: nav_music
-          label: 音乐
-          value:
-            nav_musicEnable: false
-          children:
-            - $formkit: switch
-              label: 左下角音乐
-              name: nav_musicEnable
-              id: nav_musicEnable
-              key: nav_musicEnable
-              help: 在左下角显示音乐播放控件，需在下方填写歌单信息
-            - $formkit: text
-              name: id
-              label: 歌单 ID
-              help: 从音乐 App 分享链接中获取的歌单数字 ID
-              value: "xxxxxx"
-              if: $get(nav_musicEnable).value
-              key: tool_nav_music_id
-              placeholder: 例如：12345678
-            - $formkit: text
-              name: server
-              label: 音乐平台
-              help: netease=网易云 tencent=QQ音乐 kugou=酷狗
-              value: "tencent"
-              if: $get(nav_musicEnable).value
-              key: tool_nav_music_server
-              placeholder: 例如：netease / tencent
-            - $formkit: url
-              name: all_playlist
-              label: 播放列表地址
-              help: 右键菜单查看全部歌曲时的歌单页地址
-              value: https://y.qq.com/n/ryqq/playlist/xxxxx
-              if: $get(nav_musicEnable).value
-              key: tool_nav_music_all_playlist
-              placeholder: 例如：https://y.qq.com/n/ryqq/playlist/xxx
-            - $formkit: url
-              name: meting_api
-              label: 解析 API
-              value: https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r
-              if: $get(nav_musicEnable).value
-              key: tool_nav_music_meting_api
-              placeholder: 默认即可，高级用户可自建 Meting API
-              help: 音乐直链解析接口，默认官方公共接口
         - $formkit: group
           name: snackbar
           label: 右下角弹窗
@@ -3037,200 +2696,8 @@ spec:
               placeholder: 例如：本站如何保护你的隐私
 
               help: 弹窗按钮文字
-
-    - group: aboutReward
-      label: 12 · 页面-打赏
-      formSchema:
-        - $formkit: switch
-          name: aboutRewardEnable
-          id: aboutRewardEnable
-          key: aboutRewardEnable
-          label: 启用打赏区
-          help: 在关于页底部显示赞赏名单与打赏按钮
-          value: true
-        - $formkit: text
-          key: aboutReward-title
-          id: aboutReward-title
-          if: $get(aboutRewardEnable).value
-          name: title
-          label: 打赏区标题
-          placeholder: 例如：赞赏名单
-          value: 赞赏名单
-          help: 赞赏名单模块标题
-        - $formkit: text
-          key: aboutReward-content
-          id: aboutReward-content
-          if: $get(aboutRewardEnable).value
-          name: content
-          label: 打赏区寄语
-          placeholder: 例如：感谢每一位支持的朋友
-          value: 感谢赞赏的人，因为你们，让我感受到写博客这件事情能够给你们创造价值。这会让我在这条路上走得更远。
-          help: 标题下方的感谢语
-        - $formkit: group
-          key: aboutReward-reward
-          id: aboutReward-reward
-          if: $get(aboutRewardEnable).value
-          name: reward
-          label: 打赏按钮
-          value:
-            enable_reward:
-            name:
-            wxPay:
-            alipay:
-            enable_reward_wz: false
-            reward_md_url: "/about"
-          children:
-            - $formkit: url
-              name: reward_md_url
-              label: 名单地址
-              placeholder: 例如 /about
-              help: 赞赏名单页面的地址，例如 /about
-            - $formkit: switch
-              name: enable_reward_wz
-              label: 文章页面打赏
-              help: 在文章页底部显示打赏按钮
-            - $formkit: switch
-              name: enable_reward
-              label: 关于页面打赏
-              value: false
-              help: 在关于页底部显示打赏按钮
-            - $formkit: text
-              name: name
-              label: 按钮标题
-              placeholder: 例如：赞赏作者
-              value: 赞赏作者
-              help: 打赏按钮的显示文字
-            - $formkit: attachment
-              name: wxPay
-              label: 微信收款码
-              help: 微信二维码图片链接
-              width: "15rem"
-              placeholder: 请填写微信二维码图片链接
-              aspectRatio: 1/1
-            - $formkit: attachment
-              name: alipay
-              label: 支付宝收款码
-              help: 支付宝二维码图片链接
-              width: "15rem"
-              placeholder: 请填写支付宝二维码图片链接
-              aspectRatio: 1/1
-        - $formkit: number
-          if: $get(aboutRewardEnable).value
-          name: rewardNumber
-          label: 标记金额
-          placeholder: 请输入标记金额，大于等于该值自动标记
-          value: 10
-          min: 0
-          help: 打赏金额大于等于此值时自动标记为高亮，例如 10
-          key: aboutReward_rewardNumber
-        - $formkit: array
-          if: $get(aboutRewardEnable).value
-          name: reward_list
-          label: 打赏名单
-          value: []
-          itemLabels:
-            - type: image
-              label: $value.avatar
-            - type: text
-              label: $value.name
-            - type: text
-              label: $value.amount
-          children:
-            - $formkit: text
-              name: name
-              label: 名称
-              placeholder: 例如：张三
-              help: 打赏者昵称
-            - $formkit: text
-              name: amount
-              label: 金额
-              placeholder: 例如：66.00
-              help: 打赏金额，达到标记金额会自动高亮
-            - $formkit: date
-              name: datatime
-              label: 时间
-              placeholder: 选择打赏日期
-              help: 打赏日期，用于名单排序展示
-            - $formkit: attachment
-              name: avatar
-              label: 打赏者头像
-              placeholder: 请输入头像地址
-
-              help: 建议正方形头像
-              width: 8rem
-              aspectRatio: 1/1
-          key: aboutReward_reward_list
-    - group: link
-      label: 13 · 页面-朋友圈
-      formSchema:
-        - $formkit: url
-          name: fmomentsApiUrl
-          value: /apis/api.friend.moony.la/v1alpha1/friendposts
-          label: 朋友圈数据 API
-          placeholder: 例如 /apis/api.friend.moony.la/v1alpha1/friendposts
-          help: 朋友圈页的数据接口地址，留空则使用内置默认地址
-        - $formkit: text
-          name: fmomentsPageSize
-          label: 友链每页数量
-          help: "填写每页（滚动加载）展示的友链数量"
-          value: 12
-          placeholder: 例如 12
-
-
-    - group: photos
-      label: 14 · 页面-图库
-      formSchema:
-        - $formkit: toggle
-          name: photosStyle
-          id: photosStyle
-          key: photosStyle
-          label: 样式
-          value: default
-          help: 默认顶部宽幅 Banner 加照片墙；样式一分组标题加照片墙，无 Banner
-          render-type: image
-          size: 120
-          gap: 12
-          options:
-            - value: default
-              label: 默认
-              render: /themes/theme-hao/assets/images/settings/photos-default.svg
-            - value: one
-              label: 样式一
-              render: /themes/theme-hao/assets/images/settings/photos-one.svg
-        - $formkit: text
-          name: topLink
-          key: topLink
-          if: $get(photosStyle).value == 'default'
-          label: 返回地址 (填写图库分组地址)
-          value: "/album"
-          help: 点击图库页返回按钮时跳转的地址，填写图库分组页地址，例如 /album
-          placeholder: 例如 /album
-        - $formkit: text
-          if: $get(photosStyle).value == 'default'
-          name: detail
-          label: 描述
-          value: 每一张照片都是一次美好的记忆。
-          help: 图库页横幅下方的描述文案
-          placeholder: 例如：每一张照片都是一次美好的记忆。
-          key: photos_detail
-        - $formkit: switch
-          name: tagEnable
-          label: 图片标签
-          value: false
-          help: 图片左上角标签
-        - $formkit: attachment
-          name: backgroundImg
-          key: backgroundImg
-          id: backgroundImg
-          label: 背景图
-          width: "15rem"
-          aspectRatio: "16/9"
-          value: https://liuzhihang.com/upload/moments.png
-          placeholder: 请输入图片地址
-
-          help: 图库页顶部横幅背景，建议 1920x480 横图
     - group: moment
-      label: 15 · 页面-瞬间
+      label: 12 · 页面-瞬间
       formSchema:
         - $formkit: attachment
           name: backgroundImg
@@ -3272,38 +2739,8 @@ spec:
           placeholder: 例如 https://github.com/halo-sigs/plugin-moments
           help: 点击横幅按钮后跳转的地址
 
-    - group: equipment
-      label: 16 · 页面-装备
-      formSchema:
-        - $formkit: attachment
-          name: backgroundImg
-          label: 背景图
-          width: "15rem"
-          aspectRatio: "16/9"
-          value: https://liuzhihang.com/upload/moments.png
-          placeholder: 请输入图片地址，例如 https://example.com/equipment.png
-          help: 装备页顶部横幅背景，建议 1920x480 横图；装备清单由「装备」插件维护
-        - $formkit: text
-          name: smallTitle
-          label: 小标题
-          value: 好物
-          placeholder: 例如：好物
-          help: 横幅上方的小字标题
-        - $formkit: text
-          name: bigTitle
-          label: 大标题
-          value: 实物装备推荐
-          placeholder: 例如：实物装备推荐
-          help: 横幅主标题
-        - $formkit: text
-          name: detail
-          label: 描述
-          value: 跟我一起享受科技带来的乐趣
-          placeholder: 例如：跟我一起享受科技带来的乐趣
-          help: 横幅下方的简介文案
-
     - group: categories
-      label: 17 · 页面-分类
+      label: 13 · 页面-分类
       formSchema:
         - $formkit: toggle
           name: use
@@ -3332,7 +2769,7 @@ spec:
           key: categories_listNum
 
     - group: other
-      label: 18 · 高级与其他
+      label: 14 · 高级与其他
       formSchema:
         - $formkit: group
           name: staticResource
@@ -3503,7 +2940,7 @@ spec:
         - $formkit: switch
           name: bubbleEnable
           label: 页面卡片顶部气泡升起效果
-          help: 在友链鱼塘、瞬间、待办清单、我的装备等页面的卡片顶部显示气泡上升动画
+          help: 在友链鱼塘、瞬间、待办清单等页面的卡片顶部显示气泡上升动画
           value: false
         - $formkit: switch
           name: scrollbarLinearGradientEnable
@@ -3581,7 +3018,7 @@ spec:
                   help: 可以与开始时间相同，表示一个小时内的问候
               key: other_greeting_setting
     - group: hot
-      label: 19 · 页面-热榜
+      label: 15 · 页面-热榜
       formSchema:
         - $formkit: number
           name: listNum

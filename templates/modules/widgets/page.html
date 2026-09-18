@@ -11,7 +11,7 @@
 
         <!-- 页码按钮 -->
         <th:block th:if="${pageInfo.page > 3}">
-            <a class="page-number" th:href="${paths}" th:text="1" onclick="scrollToPost()"></a>
+            <a class="page-number" th:href="${paths}" th:text="1"></a>
             <span class="space" th:if="${pageInfo.page != 4}">…</span>
         </th:block>
 
@@ -20,30 +20,26 @@
             <a class="page-number" th:unless="${pageInfo.page == index}"
                th:if="${index > 0 && index <= pageInfo.totalPages}"
                th:href="${#strings.equals(index, '1') ? paths + _param : path+'/page/'+index  + _param}"
-               th:text="${index}"
-               onclick="scrollToPost()"></a>
+               th:text="${index}"></a>
         </th:block>
 
         <th:block th:if="${pageInfo.totalPages - pageInfo.page > 2}">
             <span class="space" th:if="${pageInfo.totalPages - pageInfo.page != 3}">…</span>
             <a class="page-number"
                th:href="${path+'/page/'+pageInfo.totalPages+_param}"
-               th:text="${pageInfo.totalPages}"
-               onclick="scrollToPost()"></a>
+               th:text="${pageInfo.totalPages}"></a>
         </th:block>
         <!-- 翻页按钮 -->
         <a class="extend prev" rel="prev"
            th:if="${pageInfo.hasPrevious}"
-           th:href="${pageInfo.prevUrl}"
-           onclick="scrollToPost()">
+           th:href="${pageInfo.prevUrl}">
             <i class="haofont hao-icon-chevron-left fa-fw"></i>
             <div class="pagination_tips_prev">上页</div>
         </a>
 
         <a class="extend next"
            rel="next" th:if="${pageInfo.hasNext}"
-           th:href="${pageInfo.nextUrl}"
-           onclick="scrollToPost()">
+           th:href="${pageInfo.nextUrl}">
             <div class="pagination_tips_next">下页</div>
             <i class="haofont hao-icon-chevron-right fa-fw"></i>
         </a>
@@ -54,20 +50,6 @@
             <a id="toPageButton" onclick="heo.toPage();" aria-label="跳转到指定页面" title="跳转到指定页面"><i class="haofont hao-icon-angles-right"></i>
             </a>
         </div>
-
-        <script th:if="${theme.config.top.above.enable_above}">
-            function scrollToPost() {
-                if (document.querySelector(".pl-container")) {
-                    setTimeout(() => {
-                        btf.scrollToDest(window.innerHeight, 500);
-                    }, 1000)
-                }
-            }
-        </script>
-        <script th:unless="${theme.config.top.above.enable_above}">
-            function scrollToPost() {
-            }
-        </script>
 
     </div>
 </nav>

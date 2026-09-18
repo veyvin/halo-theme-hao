@@ -243,10 +243,9 @@
         <!-- 初始化脚本 -->
         <script data-pjax th:inline="javascript">
             // 朋友圈配置
-            // 从主题设置获取
             window.fmomentsConfig = {
-                apiUrl: /*[[${theme.config.link.fmomentsApiUrl}]]*/ '/apis/api.friend.moony.la/v1alpha1/friendposts',
-                pageSize: /*[[${theme.config.link.fmomentsPageSize}]]*/ 12,
+                apiUrl: '/apis/api.friend.moony.la/v1alpha1/friendposts',
+                pageSize: 12,
                 errorImg: /*[[${theme.config.other.error_404.background}]]*/ '/assets/images/404.gif'
             };
 
