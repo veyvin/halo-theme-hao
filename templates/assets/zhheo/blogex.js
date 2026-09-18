@@ -865,3 +865,30 @@ if (document.readyState !== 'loading') {
         if (!document.hidden) { originTitle = document.title; }
     });
 })();
+
+// ==================== 站名弹出菜单：点击左侧四叶草图标展开/收起 ====================
+;(function () {
+    function closeAll(except) {
+        document.querySelectorAll('.back-home-button').forEach(function (btn) {
+            if (btn !== except) {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.back-home-button');
+        if (!btn) { closeAll(); return; }
+        // 点在弹层内部的链接上：交给导航，不翻转状态
+        var panel = btn.querySelector('.back-menu-list-groups');
+        if (panel && panel.contains(e.target)) return;
+        var open = !btn.classList.contains('active');
+        closeAll();
+        btn.classList.toggle('active', open);
+        btn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAll();
+    });
+    document.addEventListener('pjax:complete', function () { closeAll(); });
+})();

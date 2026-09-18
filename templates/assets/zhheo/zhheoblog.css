@@ -5287,6 +5287,16 @@ html {
     color: var(--heo-card-bg)
 }
 
+/* 点击展开（JS 切换 active），按钮同步高亮 */
+.back-home-button.active {
+    background: var(--heo-main);
+    color: var(--heo-white)
+}
+
+.page .back-home-button.active {
+    color: var(--heo-card-bg)
+}
+
 .back-menu-list-groups .back-menu-list {
     display: flex;
     flex-direction: row;
@@ -5307,10 +5317,10 @@ html {
 .back-menu-list-groups .back-menu-list .back-menu-item {
     display: flex;
     align-items: center;
-    margin: 4px 8px;
-    padding: 4px 8px !important;
+    margin: 2px 4px;
+    padding: 8px 10px !important;
     transition: 0.3s;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .back-menu-list-groups .back-menu-list .back-menu-item:hover {
@@ -5353,8 +5363,9 @@ html {
     transform-origin: top left;
     left: 1.5rem;
     background-color: var(--heo-maskbgdeep);
-    border-radius: 12px;
+    border-radius: 16px;
     border: var(--style-border);
+    padding: 4px 6px 10px;
     flex-direction: column;
     font-size: 12px;
     color: var(--heo-secondtext);
@@ -5379,7 +5390,7 @@ html {
     color: var(--heo-lighttext);
 }
 
-.back-home-button:hover .back-menu-list-groups {
+.back-home-button.active .back-menu-list-groups {
     display: flex;
     opacity: 1;
     transition: 0.3s;
@@ -5399,7 +5410,7 @@ html {
         left: 0;
     }
 
-    .back-home-button:hover .back-menu-list-groups {
+    .back-home-button.active .back-menu-list-groups {
         padding-bottom: 8px;
         box-shadow: var(--heo-shadow-border);
         left: 0;
@@ -6296,12 +6307,14 @@ img.footer_mini_logo:hover {
     background-color: var(--heo-maskbgdeep);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
+    transform: translateZ(0);
     color: var(--heo-fontcolor);
     border-radius: 12px;
     z-index: 99994;
     border: var(--style-border);
     user-select: none;
     box-shadow: var(--heo-shadow-black);
+    transition: border 0.3s;
 }
 
 #rightMenu:hover {
@@ -6315,7 +6328,7 @@ img.footer_mini_logo:hover {
 }
 
 #rightMenu .rightMenu-line {
-    border-top: 2px dashed var(--heo-theme-op);
+    border-top: 1px dashed var(--heo-theme-op);
 }
 
 #rightMenu .rightMenu-group.rightMenu-small {
@@ -6354,7 +6367,6 @@ img.footer_mini_logo:hover {
     line-height: 1.5rem;
     width: 1.5rem;
     padding: 0 0.25rem;
-    font-size: 0.9rem;
 }
 
 #rightMenu .rightMenu-line .rightMenu-item i {
@@ -6369,17 +6381,19 @@ img.footer_mini_logo:hover {
     width: 30px;
     height: 30px;
     line-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #rightmenu-mask {
     position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background: none;
     top: 0;
     left: 0;
     display: none;
-    z-index: 101;
     margin: 0 !important;
     z-index: 99993;
 }

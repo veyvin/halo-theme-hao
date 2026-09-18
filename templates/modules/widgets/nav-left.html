@@ -4,7 +4,7 @@
     <th:block th:if="${not #strings.isEmpty(theme.config.nav.leftMenu) && theme.config.nav.menus.pc_leftMenu}"
               th:with="leftMenu = ${menuFinder.getByName(theme.config.nav.leftMenu)}">
         <!-- 菜单栏左侧按钮，没有配置时，则不展示-->
-        <div class="back-home-button" tabindex="-1"
+        <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false"
              th:if="${not #lists.isEmpty(leftMenu)}">
 
             <i class="back-home-button-icon haofont hao-icon-apps-fill" style="font-size: 1rem"></i>
@@ -52,7 +52,8 @@
             margin: 8px 12px 12px;
             padding: 8px;
             border-radius: 8px;
-            background: var(--heo-main-op, rgba(66, 90, 239, .1));
+            background: transparent;
+            border: 1px solid var(--heo-main-op, rgba(66, 90, 239, .25));
             color: var(--heo-fontcolor);
             font-size: 14px;
         }
