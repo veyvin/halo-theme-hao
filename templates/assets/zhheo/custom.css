@@ -2380,14 +2380,12 @@ details.folding-tag[red]>summary {
     --pseudo-hover: #ff7242;
 }
 
-/* 深色模式切换过渡效果 */
-.theme-transition {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* 确保所有元素都应用过渡效果 */
-.theme-transition * {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+/* 深色模式切换过渡效果：只过渡根节点与正文的底色/文字色。
+   不要对 * 加过渡——切换时全部元素的五种属性同时动画，数千节点
+   同步重算重绘会造成明显卡顿。 */
+.theme-transition,
+.theme-transition body {
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 [data-theme=dark] div.btns {
