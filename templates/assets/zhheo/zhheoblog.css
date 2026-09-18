@@ -2091,10 +2091,6 @@ blockquote footer cite::before {
     }
 }
 
-/* 目录卡片内边距：参考 zhheo */
-#card-toc {
-    padding: 0.5rem 0.5rem !important;
-}
 
 @media screen and (max-width: 1200px) {
     #aside-content #card-toc {
@@ -2185,66 +2181,27 @@ blockquote footer cite::before {
 }
 
 #aside-content #card-toc .toc-content .toc-link {
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 8px;
-    border-left: 0 solid transparent;
-    border-radius: 12px;
-    color: var(--heo-secondtext);
-    cursor: default;
-    transition: all 0.3s ease;
-    line-height: 24px;
-}
-
-#aside-content #card-toc .toc-content .toc-link:not(.active) {
-    opacity: 0.6;
-    cursor: pointer;
-    filter: blur(1px);
-    transition: all 0.3s ease;
-}
-
-#aside-content #card-toc:hover .toc-content .toc-link:not(.active) {
-    filter: blur(0);
-    opacity: 1;
-}
-
-#aside-content #card-toc .toc-content a.toc-link:hover:not(.active) {
-    color: var(--heo-lighttext);
-    background: var(--heo-main-op);
-    border-radius: 8px;
+    display: block;
+    padding-left: 0.3rem;
+    border-left: 3px solid transparent;
+    color: var(--toc-link-color);
+    transition: all 0.2s ease-in-out 0s;
 }
 
 #aside-content #card-toc .toc-content .toc-link.active {
-    line-height: 24px;
-    padding: 8px;
-    border-radius: 12px;
-    border-left-color: var(--heo-hovertext);
-    background-color: var(--heo-card-bg);
-    color: var(--heo-lighttext);
-    font-weight: 700;
-    font-size: 20px;
-    position: relative;
+    border-left-color: rgb(0, 97, 204);
+    background: rgb(0, 121, 255);
+    color: rgb(255, 255, 255);
 }
 
-/* 暗色模式目录适配：参考 zhheo */
-[data-theme=dark] #aside-content #card-toc .toc-content .toc-link {
-    color: var(--heo-secondtext);
-}
-
-[data-theme=dark] #aside-content #card-toc .toc-content .toc-link:not(.active) {
-    opacity: 0.6;
-    filter: blur(1px);
-}
-
-[data-theme=dark] #aside-content #card-toc .toc-content .toc-link.active {
-    color: var(--heo-white);
-    background: var(--heo-theme-op);
-}
-
-[data-theme=dark] #aside-content #card-toc:hover .toc-content .toc-link:not(.active) {
-    filter: blur(0);
-    opacity: 1;
+#aside-content #card-toc .toc-content::before {
+    position: absolute;
+    top: 0.6rem;
+    right: 1.2rem;
+    color: #a9a9a9;
+    content: attr(progress-percentage);
+    font-style: italic;
+    font-size: 1.2rem
 }
 
 #aside-content :only-child > .card-widget {
