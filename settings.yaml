@@ -2328,7 +2328,15 @@ spec:
                   placeholder: 例如 https://github.com/username
                   help: 点击图标后跳转的地址
                   validation: "required"
+        - $formkit: switch
+          name: menu_enable
+          id: menu_enable
+          key: menu_enable
+          label: 启用相关链接
+          help: 在页脚上方显示所选菜单组（如 首页/工具/关于/文档 导航条）
+          value: false
         - $formkit: menuRadio
+          if: $get(menu_enable).value
           name: menu
           label: 相关链接
           help: 默认只有主菜单，可前往【外观】—>【菜单】新建菜单组
