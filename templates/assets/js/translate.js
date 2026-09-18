@@ -61,13 +61,16 @@
             isTraditional: () => core.getTargetEncoding() === 1
         };
 
-        // 初始化：页面加载时应用保存的语言设置
+        // 初始化：更新按钮文字，并应用已保存的语言选择
         function initTranslate() {
-            const btn = document.getElementById("translateLink");
             const rmBtn = document.getElementById("menu-translate");
-            if (btn) btn.innerHTML = core.getTargetEncoding() === 1 ? core.getMsgToSimplifiedChinese() : core.getMsgToTraditionalChinese();
+            document.querySelectorAll("#translateLink").forEach(btn => {
+                btn.innerHTML = core.getTargetEncoding() === 1 ? core.getMsgToSimplifiedChinese() : core.getMsgToTraditionalChinese();
+            });
             if (rmBtn) rmBtn.innerHTML = core.getTargetEncoding() === 1 ? core.getRightMenuMsgToSimplifiedChinese() : core.getRightMenuMsgToTraditionalChinese();
             document.documentElement.lang = core.getTargetEncoding() === 1 ? "zh-TW" : "zh-CN";
+            // 用户选过繁体时，页面内容自动转换（pjax 换页后新内容是简体源码，需重转）
+            if (core.getTargetEncoding() === 1) core.translateBody();
         }
 
         // 页面加载时初始化
