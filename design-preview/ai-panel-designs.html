@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI 助手面板设计稿</title>
+<link rel="stylesheet" href="../templates/assets/icon/iconfont.css">
+<style>
+  :root {
+    --heo-theme: #425AEF;
+    --heo-theme-op: #4259ef23;
+    --heo-main: #425AEF;
+    --heo-main-op: #4259ef23;
+    --heo-main-op-deep: #4259efdd;
+    --heo-logo-color: linear-gradient(215deg, #4584ff 0%, #cf0db9 100%);
+    --heo-fontcolor: #363636;
+    --heo-secondtext: rgba(60, 60, 67, 0.8);
+    --heo-secondbg: #f7f7f9;
+    --heo-card-bg: #fff;
+    --heo-card-border: #e3e8f7;
+    --heo-shadow-main: 0 8px 12px -3px var(--heo-main-op);
+    --heo-shadow-border: 0 8px 16px -4px #2c2d300c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #eef1f8;
+    padding: 36px 40px 44px;
+    width: 1680px;
+  }
+  .page-title { font-size: 26px; font-weight: 800; color: #222; margin-bottom: 6px; }
+  .page-sub { font-size: 14px; color: #777; margin-bottom: 28px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .cell { background: #f7f9fe; border-radius: 18px; padding: 22px 26px 26px; position: relative; overflow: hidden; }
+  .cell::before { /* 模拟文章页背景纹理 */
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(66,90,239,.07), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(207,13,185,.05), transparent 40%);
+    pointer-events: none;
+  }
+  .cell-label { position: relative; z-index: 1; display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+  .cell-label .name { font-size: 18px; font-weight: 800; color: #222; }
+  .cell-label .tag { font-size: 12px; padding: 2px 10px; border-radius: 99px; background: var(--heo-main-op); color: var(--heo-main); font-weight: 700; }
+  .cell-label .desc { font-size: 12.5px; color: #888; }
+  .stage { position: relative; z-index: 1; display: flex; justify-content: center; }
+
+  kbd {
+    border: 1px solid var(--heo-card-border); border-bottom-width: 2px; border-radius: 5px;
+    padding: 0 5px; font-size: 10px; line-height: 16px; font-family: inherit;
+    background: var(--heo-secondbg); color: var(--heo-fontcolor);
+  }
+
+  /* ============ 方案 A · 清爽浅色卡片 ============ */
+  .pA {
+    width: 330px; background: var(--heo-card-bg); border: 1px solid var(--heo-card-border);
+    border-radius: 16px; box-shadow: var(--heo-shadow-border), 0 18px 50px rgba(0,0,0,.10); overflow: hidden;
+  }
+  .pA .h { display: flex; align-items: center; justify-content: space-between; padding: 15px 16px 13px; }
+  .pA .h-left { display: flex; align-items: center; gap: 11px; }
+  .pA .logo { width: 36px; height: 36px; border-radius: 11px; background: var(--heo-logo-color); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 5px 12px -2px rgba(69,132,255,.45); }
+  .pA .tt { font-size: 15.5px; font-weight: 800; color: var(--heo-fontcolor); line-height: 1.3; }
+  .pA .st { font-size: 11px; font-weight: 400; color: var(--heo-secondtext); }
+  .pA .close { width: 28px; height: 28px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    color: var(--heo-secondtext); font-size: 13px; transition: .2s; cursor: pointer; }
+  .pA .close:hover { color: var(--heo-main); background: var(--heo-main-op); }
+  .pA .b { padding: 0 12px 13px; }
+  .pA .sec { font-size: 11px; font-weight: 700; color: #aab; padding: 10px 6px 6px; letter-spacing: .5px; }
+  .pA .item { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 11px; cursor: pointer; transition: .2s; }
+  .pA .item:hover { background: var(--heo-secondbg); }
+  .pA .ic { width: 32px; height: 32px; border-radius: 9px; background: var(--heo-main-op); color: var(--heo-main);
+    display: flex; align-items: center; justify-content: center; font-size: 14px; flex: none; transition: .2s; }
+  .pA .item:hover .ic { background: var(--heo-main); color: #fff; transform: scale(1.04); }
+  .pA .tx { font-size: 13.5px; font-weight: 700; color: var(--heo-fontcolor); line-height: 1.35; }
+  .pA .tx b { display: block; font-size: 11px; font-weight: 400; color: var(--heo-secondtext); margin-top: 1px; }
+  .pA .find { display: flex; gap: 8px; padding: 2px 2px 0; }
+  .pA .find input { flex: 1; height: 38px; border: 1.5px solid var(--heo-card-border); border-radius: 11px; padding: 0 13px;
+    font-size: 13px; background: #fff; color: var(--heo-fontcolor); outline: none; }
+  .pA .find input:focus { border-color: var(--heo-main); box-shadow: 0 0 0 3px var(--heo-main-op); }
+  .pA .find button { width: 38px; height: 38px; border: none; border-radius: 11px; background: var(--heo-main); color: #fff;
+    font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--heo-shadow-main); }
+  .pA .keys { display: flex; flex-wrap: wrap; gap: 4px 5px; margin: 10px 6px 0; padding-top: 10px;
+    border-top: 1px solid var(--heo-card-border); font-size: 11px; color: var(--heo-secondtext); }
+
+  /* ============ 方案 B · 深色玻璃 ============ */
+  .cell.dark { background: #17181f; }
+  .cell.dark::before { background: radial-gradient(circle at 80% 10%, rgba(66,90,239,.22), transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(207,13,185,.18), transparent 45%); }
+  .cell.dark .cell-label .name { color: #f2f3f8; }
+  .cell.dark .cell-label .desc { color: #8b8fa3; }
+  .cell.dark .cell-label .tag { background: rgba(96,120,255,.2); color: #93a6ff; }
+  .pB {
+    width: 330px; border-radius: 18px; overflow: hidden; color: #e8eaf2;
+    background: rgba(30, 32, 44, 0.82); backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,.09);
+    box-shadow: 0 24px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .pB .glow { height: 3px; background: linear-gradient(90deg, #4584ff, #cf0db9, #ffc848); }
+  .pB .h { display: flex; align-items: center; justify-content: space-between; padding: 15px 16px 12px; }
+  .pB .h-left { display: flex; align-items: center; gap: 11px; }
+  .pB .logo { width: 36px; height: 36px; border-radius: 11px; background: linear-gradient(135deg, #4584ff, #8a4dff);
+    display: flex; align-items: center; justify-content: center; font-size: 17px; color: #fff;
+    box-shadow: 0 0 18px rgba(96,120,255,.55); }
+  .pB .tt { font-size: 15.5px; font-weight: 800; }
+  .pB .st { font-size: 11px; color: #8b8fa3; font-weight: 400; }
+  .pB .close { width: 28px; height: 28px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    color: #8b8fa3; font-size: 13px; cursor: pointer; }
+  .pB .b { padding: 2px 12px 14px; }
+  .pB .sec { font-size: 11px; font-weight: 700; color: #6f7488; padding: 9px 6px 6px; letter-spacing: 1px; }
+  .pB .item { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 12px; cursor: pointer;
+    border: 1px solid transparent; transition: .2s; }
+  .pB .item:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); }
+  .pB .ic { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex: none; background: rgba(96,120,255,.16); color: #93a6ff; }
+  .pB .item:nth-child(4) .ic { background: rgba(255,200,72,.14); color: #ffc848; }
+  .pB .tx { font-size: 13.5px; font-weight: 700; line-height: 1.35; }
+  .pB .tx b { display: block; font-size: 11px; font-weight: 400; color: #8b8fa3; margin-top: 1px; }
+  .pB .find { display: flex; gap: 8px; padding: 2px 2px 0; }
+  .pB .find input { flex: 1; height: 38px; border: 1px solid rgba(255,255,255,.12); border-radius: 11px; padding: 0 13px;
+    font-size: 13px; background: rgba(0,0,0,.25); color: #e8eaf2; outline: none; }
+  .pB .find input::placeholder { color: #6f7488; }
+  .pB .find button { width: 38px; height: 38px; border: none; border-radius: 11px; color: #fff; font-size: 15px; cursor: pointer;
+    background: linear-gradient(135deg, #4584ff, #8a4dff); box-shadow: 0 4px 14px rgba(96,120,255,.4);
+    display: flex; align-items: center; justify-content: center; }
+  .pB .keys { display: flex; flex-wrap: wrap; gap: 4px 5px; margin: 10px 6px 0; padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,.08); font-size: 11px; color: #8b8fa3; }
+  .pB .keys kbd { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); color: #cfd3e0; }
+
+  /* ============ 方案 C · 命令面板 ============ */
+  .pC {
+    width: 400px; background: var(--heo-card-bg); border: 1px solid var(--heo-card-border); border-radius: 14px;
+    box-shadow: var(--heo-shadow-border), 0 24px 60px rgba(0,0,0,.14); overflow: hidden;
+  }
+  .pC .search { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--heo-card-border); }
+  .pC .search i { font-size: 16px; color: var(--heo-main); }
+  .pC .search input { flex: 1; border: none; outline: none; font-size: 15px; color: var(--heo-fontcolor); background: transparent; }
+  .pC .search input::placeholder { color: #b6bac9; }
+  .pC .search .esc { font-size: 10.5px; color: var(--heo-secondtext); border: 1px solid var(--heo-card-border);
+    border-radius: 5px; padding: 1px 6px; background: var(--heo-secondbg); }
+  .pC .list { padding: 8px; }
+  .pC .sec { font-size: 10.5px; font-weight: 800; color: #aab; letter-spacing: 1.2px; padding: 8px 10px 5px; }
+  .pC .row { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: 9px; cursor: pointer; transition: .15s; }
+  .pC .row:hover, .pC .row.sel { background: var(--heo-main-op); }
+  .pC .row .ic { width: 26px; height: 26px; border-radius: 7px; background: var(--heo-secondbg); color: var(--heo-main);
+    display: flex; align-items: center; justify-content: center; font-size: 12.5px; flex: none; }
+  .pC .row:hover .ic, .pC .row.sel .ic { background: #fff; }
+  .pC .row .tx { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--heo-fontcolor); }
+  .pC .row .tx small { font-weight: 400; color: var(--heo-secondtext); margin-left: 8px; font-size: 11.5px; }
+  .pC .row kbd { font-size: 10px; }
+  .pC .foot { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px;
+    border-top: 1px solid var(--heo-card-border); background: var(--heo-secondbg); font-size: 11px; color: var(--heo-secondtext); }
+  .pC .foot .dot { display: inline-flex; align-items: center; gap: 5px; }
+  .pC .foot b { color: var(--heo-main); font-weight: 700; }
+
+  /* ============ 方案 D · 对话式助手 ============ */
+  .pD { width: 340px; border-radius: 20px; overflow: hidden; background: var(--heo-card-bg);
+    box-shadow: var(--heo-shadow-border), 0 22px 60px rgba(0,0,0,.13); border: 1px solid var(--heo-card-border); }
+  .pD .hero { background: var(--heo-logo-color); padding: 18px 18px 42px; color: #fff; position: relative; }
+  .pD .hero .top { display: flex; align-items: center; justify-content: space-between; }
+  .pD .hero .brand { display: flex; align-items: center; gap: 10px; font-size: 15.5px; font-weight: 800; }
+  .pD .hero .brand .av { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.22);
+    display: flex; align-items: center; justify-content: center; font-size: 16px; backdrop-filter: blur(4px); }
+  .pD .hero .close { width: 26px; height: 26px; border-radius: 8px; background: rgba(255,255,255,.18); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
+  .pD .chat { padding: 0 14px; margin-top: -28px; }
+  .pD .bubble { background: #fff; border: 1px solid var(--heo-card-border); border-radius: 14px; padding: 13px 15px;
+    font-size: 13px; color: var(--heo-fontcolor); line-height: 1.65; box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+  .pD .bubble b { color: var(--heo-main); }
+  .pD .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 14px 4px; }
+  .pD .chip { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; cursor: pointer;
+    background: var(--heo-secondbg); border: 1px solid var(--heo-card-border); font-size: 12.5px; font-weight: 700;
+    color: var(--heo-fontcolor); transition: .2s; }
+  .pD .chip i { font-size: 14px; color: var(--heo-main); }
+  .pD .chip:hover { border-color: var(--heo-main); background: var(--heo-main-op); transform: translateY(-1px); }
+  .pD .findrow { display: flex; gap: 8px; padding: 10px 14px 0; }
+  .pD .findrow input { flex: 1; height: 40px; border: 1.5px solid var(--heo-card-border); border-radius: 99px; padding: 0 16px;
+    font-size: 13px; outline: none; color: var(--heo-fontcolor); }
+  .pD .findrow input:focus { border-color: var(--heo-main); box-shadow: 0 0 0 3px var(--heo-main-op); }
+  .pD .findrow button { height: 40px; padding: 0 16px; border: none; border-radius: 99px; background: var(--heo-main); color: #fff;
+    font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: var(--heo-shadow-main); }
+  .pD .keys { display: flex; flex-wrap: wrap; gap: 4px 5px; margin: 12px 14px 0; padding: 10px 0 14px;
+    border-top: 1px dashed var(--heo-card-border); font-size: 11px; color: var(--heo-secondtext); }
+</style>
+</head>
+<body>
+  <div class="page-title">AI 助手面板 · 设计方案对比</div>
+  <div class="page-sub">同一功能集（AI 摘要 / 页内查找 / 朗读选中 / 快捷键）的四种视觉方向 · 使用主题真实图标与配色变量渲染</div>
+  <div class="grid">
+
+    <!-- 方案 A -->
+    <div class="cell">
+      <div class="cell-label"><span class="name">方案 A · 清爽浅色</span><span class="tag">贴近现有主题</span><span class="desc">弱边框分组列表，悬停轻量高亮</span></div>
+      <div class="stage">
+        <div class="pA">
+          <div class="h">
+            <div class="h-left">
+              <div class="logo"><i class="haofont hao-icon-message"></i></div>
+              <div><div class="tt">AI 助手</div><div class="st">阅读辅助工具</div></div>
+            </div>
+            <div class="close"><i class="haofont hao-icon-xmark"></i></div>
+          </div>
+          <div class="b">
+            <div class="sec">摘要</div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-bolt"></i></span><span class="tx">查看 AI 摘要<b>定位到本文摘要</b></span></div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-copy"></i></span><span class="tx">复制摘要<b>复制摘要全文</b></span></div>
+            <div class="sec">查找</div>
+            <div class="find"><input placeholder="输入关键词，正文内查找"><button><i class="haofont hao-icon-search--line"></i></button></div>
+            <div class="item" style="margin-top:6px"><span class="ic"><i class="haofont hao-icon-circle-xmark"></i></span><span class="tx">清除标记<b>清除正文查找高亮</b></span></div>
+            <div class="sec">朗读</div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-play"></i></span><span class="tx">朗读选中<b>选中正文后朗读</b></span></div>
+            <div class="keys"><i class="haofont hao-icon-keyboard"></i><kbd>Shift</kbd>+<kbd>T</kbd> 朗读 <kbd>Shift</kbd>+<kbd>C</kbd> 助手 <kbd>Shift</kbd>+<kbd>D</kbd> 深浅色 <kbd>Shift</kbd>+<kbd>H</kbd> 首页</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案 B -->
+    <div class="cell dark">
+      <div class="cell-label"><span class="name">方案 B · 深色玻璃</span><span class="tag">科技感</span><span class="desc">毛玻璃 + 渐变描边，深色模式主角</span></div>
+      <div class="stage">
+        <div class="pB">
+          <div class="glow"></div>
+          <div class="h">
+            <div class="h-left">
+              <div class="logo"><i class="haofont hao-icon-message"></i></div>
+              <div><div class="tt">AI 助手</div><div class="st">阅读辅助工具</div></div>
+            </div>
+            <div class="close"><i class="haofont hao-icon-xmark"></i></div>
+          </div>
+          <div class="b">
+            <div class="sec">摘要</div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-bolt"></i></span><span class="tx">查看 AI 摘要<b>定位到本文摘要</b></span></div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-copy"></i></span><span class="tx">复制摘要<b>复制摘要全文</b></span></div>
+            <div class="sec">查找</div>
+            <div class="find"><input placeholder="输入关键词，正文内查找"><button><i class="haofont hao-icon-search--line"></i></button></div>
+            <div class="item" style="margin-top:6px"><span class="ic"><i class="haofont hao-icon-circle-xmark"></i></span><span class="tx">清除标记<b>清除正文查找高亮</b></span></div>
+            <div class="sec">朗读</div>
+            <div class="item"><span class="ic"><i class="haofont hao-icon-play"></i></span><span class="tx">朗读选中<b>选中正文后朗读</b></span></div>
+            <div class="keys"><i class="haofont hao-icon-keyboard"></i><kbd>Shift</kbd>+<kbd>T</kbd> 朗读 <kbd>Shift</kbd>+<kbd>C</kbd> 助手 <kbd>Shift</kbd>+<kbd>D</kbd> 深浅色 <kbd>Shift</kbd>+<kbd>H</kbd> 首页</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案 C -->
+    <div class="cell">
+      <div class="cell-label"><span class="name">方案 C · 命令面板</span><span class="tag">效率型</span><span class="desc">Raycast 风格，搜索为主角，键盘友好</span></div>
+      <div class="stage">
+        <div class="pC">
+          <div class="search">
+            <i class="haofont hao-icon-search--line"></i>
+            <input placeholder="查找正文内容，或输入命令…">
+            <span class="esc">ESC</span>
+          </div>
+          <div class="list">
+            <div class="sec">摘要</div>
+            <div class="row sel"><span class="ic"><i class="haofont hao-icon-bolt"></i></span><span class="tx">查看 AI 摘要<small>定位到本文摘要</small></span><kbd>↵</kbd></div>
+            <div class="row"><span class="ic"><i class="haofont hao-icon-copy"></i></span><span class="tx">复制摘要<small>复制摘要全文</small></span></div>
+            <div class="sec">工具</div>
+            <div class="row"><span class="ic"><i class="haofont hao-icon-circle-xmark"></i></span><span class="tx">清除查找标记<small>还原正文高亮</small></span></div>
+            <div class="row"><span class="ic"><i class="haofont hao-icon-play"></i></span><span class="tx">朗读选中文字<small>语音播报选区</small></span><kbd>Shift</kbd>+<kbd>T</kbd></div>
+          </div>
+          <div class="foot">
+            <span class="dot"><b>AI 助手</b> · 阅读辅助</span>
+            <span class="dot"><kbd>↑</kbd><kbd>↓</kbd> 选择 <kbd>↵</kbd> 执行</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 方案 D -->
+    <div class="cell">
+      <div class="cell-label"><span class="name">方案 D · 对话式助手</span><span class="tag">亲和力</span><span class="desc">渐变头图 + 欢迎气泡 + 功能胶囊</span></div>
+      <div class="stage">
+        <div class="pD">
+          <div class="hero">
+            <div class="top">
+              <div class="brand"><span class="av"><i class="haofont hao-icon-message"></i></span> AI 助手</div>
+              <div class="close"><i class="haofont hao-icon-xmark"></i></div>
+            </div>
+          </div>
+          <div class="chat">
+            <div class="bubble">嗨，我是本文的<b>阅读助手</b> ～<br>可以帮你定位摘要、在正文里查找关键词、朗读你选中的段落。想从哪里开始？</div>
+          </div>
+          <div class="chips">
+            <div class="chip"><i class="haofont hao-icon-bolt"></i>查看摘要</div>
+            <div class="chip"><i class="haofont hao-icon-copy"></i>复制摘要</div>
+            <div class="chip"><i class="haofont hao-icon-play"></i>朗读选中</div>
+            <div class="chip"><i class="haofont hao-icon-circle-xmark"></i>清除标记</div>
+          </div>
+          <div class="findrow">
+            <input placeholder="在正文中查找…">
+            <button><i class="haofont hao-icon-search--line"></i>查找</button>
+          </div>
+          <div class="keys"><i class="haofont hao-icon-keyboard"></i><kbd>Shift</kbd>+<kbd>T</kbd> 朗读 <kbd>Shift</kbd>+<kbd>C</kbd> 助手 <kbd>Shift</kbd>+<kbd>D</kbd> 深浅色 <kbd>Shift</kbd>+<kbd>H</kbd> 首页</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

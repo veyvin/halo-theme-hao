@@ -117,6 +117,10 @@ i.haofont.hao-icon-arrow-right.banner-righticon{
     #page-header #nav .site-page,
     #page-header #nav .back-home-button {
         border-radius: 999px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    #page-header #nav .back-home-button:hover {
+        transform: translateY(-1px);
     }
 
     #page-header #nav #nav-right .nav-button a,
@@ -4399,6 +4403,7 @@ p.p.gray,span.p.gray {
     margin: 0;
     padding: 7px 12px;
     border-radius: 999px;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .back-home-button .back-menu-list .back-menu-item .back-menu-item-icon {
@@ -4413,6 +4418,11 @@ p.p.gray,span.p.gray {
 
 /* 悬停高亮：主题色胶囊，文字保持亮色（与截图一致） */
 .back-home-button .back-menu-list-groups .back-menu-list .back-menu-item:hover {
+    background: var(--heo-theme) !important;
+    transform: none !important;
+}
+
+.back-home-button .back-menu-list-groups .back-menu-list .back-menu-item.active {
     background: var(--heo-theme) !important;
     transform: none !important;
 }
