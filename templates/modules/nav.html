@@ -6,7 +6,7 @@
         <div id="page-name-mask">
             <div id="page-name" >
                 <a id="page-name-text" onclick="btf.scrollToDest(0,500)"
-                   th:text="${#strings.isEmpty(title) ? site.title : title}"></a>
+                   th:text="${#strings.isEmpty(title) ? site.title : (#strings.length(title) > 20 ? #strings.substring(title, 0, 20) + '...' : title)}"></a>
             </div>
         </div>
 
