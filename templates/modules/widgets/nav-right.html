@@ -35,14 +35,6 @@
         </a>
     </div>
 
-    <!-- 翻译按钮 -->
-    <div class="nav-button" id="translateLink" th:if="${theme.config.style.translate.translateEnable}">
-        <a class="site-page" href="javascript:translateFn.translate();" rel="external nofollow"
-           title="简繁转换" aria-label="简繁转换">
-            <span class="translate-text">繁</span>
-        </a>
-    </div>
-
     <div th:if="${theme.config.nav.right.navLogin}" class="console-button" tabindex="-1"
          th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)}">
         <span class="site-page nav-login">
@@ -71,13 +63,6 @@
             </div>
         </div>
     </div>
-    <div class="nav-button" id="postChatNav-button" th:if="${theme.config.post.aiAssistantEnable}">
-        <a class="site-page social-icon" href="javascript:haoAiToggle();" rel="external nofollow"
-           title="AI 智能对话" aria-label="AI 智能对话">
-            <i class="haofont hao-icon-message" style="font-size: 1.1rem;"></i>
-        </a>
-    </div>
-
     <div th:if="${theme.config.nav.right.console.consoleEnable}" class="nav-button" id="nav-console">
         <a class="console_switchbutton" href="javascript:void(0);" onclick="heo.toggleConsole()" rel="external nofollow"
            title="中控台" aria-label="中控台">

@@ -80,28 +80,52 @@ var haoAi = (function () {
     window.speechSynthesis.speak(u);
     snack('正在朗读选中内容');
   }
+  // pjax 换页不替换 head 链接：面板打开前确保样式已加载（仅在实际使用时补挂）
+  function ensureCss() {
+    if (document.querySelector('link[href*="hao-post-tools.css"]')) return;
+    var s = document.querySelector('script[src*="hao-ai.js"]');
+    if (!s || !s.src) return;
+    var href = s.src.replace(/\/js\/hao-ai\.js(\?.*)?$/, '/css/hao-post-tools.css$1');
+    if (href === s.src) return;
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = href;
+    document.head.appendChild(l);
+  }
+  // 功能项卡片：图标 + 主标题 + 副标题
+  function itemHtml(id, icon, title, sub) {
+    return '<button type="button" class="hao-ai-item" id="' + id + '">' +
+      '<span class="hao-ai-ic"><i class="haofont hao-icon-' + icon + '"></i></span>' +
+      '<span class="hao-ai-tx">' + title + '<b>' + sub + '</b></span></button>';
+  }
   function ensure() {
+    ensureCss();
     if (panel) { return panel; }
     panel = document.createElement('div');
     panel.id = 'hao-ai-panel';
     panel.innerHTML =
-      '<div class="hao-ai-h"><span><i class="haofont hao-icon-message"></i> AI 助手</span>' +
-      '<button type="button" id="hao-ai-close" title="关闭">✕</button></div>' +
+      '<div class="hao-ai-h">' +
+        '<span class="hao-ai-h-left">' +
+          '<span class="hao-ai-logo"><i class="haofont hao-icon-message"></i></span>' +
+          '<span class="hao-ai-tt">AI 助手<span class="hao-ai-st">阅读辅助工具</span></span>' +
+        '</span>' +
+        '<button type="button" id="hao-ai-close" title="关闭"><i class="haofont hao-icon-xmark"></i></button>' +
+      '</div>' +
       '<div class="hao-ai-b">' +
-      '<div class="hao-ai-row">' +
-      '<button type="button" class="hao-ai-btn" id="hao-ai-goto">查看 AI 摘要</button>' +
-      '<button type="button" class="hao-ai-btn" id="hao-ai-copy">复制摘要</button>' +
-      '</div>' +
-      '<div class="hao-ai-find">' +
-      '<input id="hao-ai-find-input" type="text" placeholder="页内查找关键词">' +
-      '<button type="button" class="hao-ai-btn" id="hao-ai-find">查找</button>' +
-      '</div>' +
-      '<div class="hao-ai-row">' +
-      '<button type="button" class="hao-ai-btn" id="hao-ai-readsel">朗读选中</button>' +
-      '<button type="button" class="hao-ai-btn" id="hao-ai-clear">清除标记</button>' +
-      '</div>' +
-      '<div class="hao-ai-keys">快捷键 <kbd>Shift+T</kbd> 朗读 <kbd>Shift+P</kbd> 陪读 <kbd>Shift+C</kbd> 助手 ' +
-      '<kbd>Shift+A</kbd> 中控台 <kbd>Shift+M</kbd> 音乐 <kbd>Shift+D</kbd> 深浅色 <kbd>Shift+H</kbd> 首页 <kbd>Shift+L</kbd> 友链</div>' +
+        '<div class="hao-ai-sec">摘要</div>' +
+        itemHtml('hao-ai-goto', 'bolt', '查看 AI 摘要', '定位到本文摘要') +
+        itemHtml('hao-ai-copy', 'copy', '复制摘要', '复制摘要全文') +
+        '<div class="hao-ai-sec">查找</div>' +
+        '<div class="hao-ai-find">' +
+          '<input id="hao-ai-find-input" type="text" placeholder="输入关键词，正文内查找">' +
+          '<button type="button" class="hao-ai-btn" id="hao-ai-find" title="查找"><i class="haofont hao-icon-search--line"></i></button>' +
+        '</div>' +
+        itemHtml('hao-ai-clear', 'circle-xmark', '清除标记', '清除正文查找高亮') +
+        '<div class="hao-ai-sec">朗读</div>' +
+        itemHtml('hao-ai-readsel', 'play', '朗读选中', '选中正文后朗读') +
+        '<div class="hao-ai-keys"><i class="haofont hao-icon-keyboard"></i>' +
+        '<kbd>Shift</kbd>+<kbd>T</kbd> 朗读 <kbd>Shift</kbd>+<kbd>P</kbd> 陪读 <kbd>Shift</kbd>+<kbd>C</kbd> 助手 ' +
+        '<kbd>Shift</kbd>+<kbd>A</kbd> 中控台 <kbd>Shift</kbd>+<kbd>M</kbd> 音乐 <kbd>Shift</kbd>+<kbd>D</kbd> 深浅色 <kbd>Shift</kbd>+<kbd>H</kbd> 首页 <kbd>Shift</kbd>+<kbd>L</kbd> 友链</div>' +
       '</div>';
     document.body.appendChild(panel);
     document.querySelector('#hao-ai-close').addEventListener('click', toggle);
@@ -117,10 +141,22 @@ var haoAi = (function () {
     });
     document.querySelector('#hao-ai-readsel').addEventListener('click', readSelection);
     document.querySelector('#hao-ai-clear').addEventListener('click', function () { clearMarks(); snack('已清除'); });
+    // 点击面板外部关闭
+    document.addEventListener('mousedown', function (e) {
+      if (!panel.classList.contains('show')) return;
+      if (panel.contains(e.target)) return;
+      // 排除右侧悬浮栏按钮（点它是 toggle，避免双触发关闭）
+      var btn = document.querySelector('#hao-ai-btn');
+      if (btn && btn.contains(e.target)) return;
+      close();
+    });
     return panel;
   }
   function toggle() {
     ensure().classList.toggle('show');
+  }
+  function close() {
+    if (panel) { panel.classList.remove('show'); }
   }
   if (typeof document !== 'undefined') {
     document.addEventListener('pjax:send', function () {
@@ -128,7 +164,7 @@ var haoAi = (function () {
       if (panel) { panel.classList.remove('show'); }
     });
   }
-  return { toggle: toggle };
+  return { toggle: toggle, close: close };
 })();
 
 function haoAiToggle() { haoAi.toggle(); }

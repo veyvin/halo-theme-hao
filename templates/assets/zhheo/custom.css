@@ -3299,10 +3299,12 @@ p.p.gray,span.p.gray {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
 }
 /* 弹窗：宽幅居中，标题/输入框/Tabs 固定，结果区内部滚动 */
 #hao-aggsearch .aggsearch-dialog {
     position: relative;
+    z-index: 2;
     width: min(calc(100vw - 48px), 1400px);
     margin: 8vh auto 0;
     background: var(--heo-card-bg);

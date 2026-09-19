@@ -344,6 +344,8 @@ var haoAggSearch = (function () {
         open();
       });
     }
+    // pjax 导航时关闭面板，避免残留遮挡新页面
+    document.addEventListener('pjax:send', function () { close(); });
   }
 
   if (typeof document !== 'undefined') {
