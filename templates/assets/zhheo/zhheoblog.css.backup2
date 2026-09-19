@@ -4493,38 +4493,35 @@ html {
         box-shadow: var(--heo-shadow-main);
     }
     #nav #page-name-text {
-            display: block;
-            font-weight: bold;
-            padding: 4px 8px;
-            opacity: 0;
-            transition: 0.1s;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            text-align: center;
-            line-height: 40px;
-            cursor: pointer;
-            top: 0;
-            font-size: 0.9rem;
-            animation-timing-function: ease-in;
-            -webkit-animation-timing-function: ease-in;
-        }
+        display: block;
+        font-weight: bold;
+        padding: 4px 8px;
+        opacity: 0;
+        transition: 0.1s;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        text-align: center;
+        cursor: pointer;
+        top: 0;
+        font-size: 0.9rem;
+        animation-timing-function: ease-in;
+        -webkit-animation-timing-function: ease-in;
+    }
     #nav #page-name-text:hover {
         color: var(--heo-main) !important;
         background: var(--heo-none);
         box-shadow: none;
     }
     #page-header.nav-fixed #nav #page-name-text {
-            display: block;
-            opacity: 1;
-            transition: 0.3s;
-            line-height: 1;
-            border-radius: 100px;
-            min-width: 100px;
-            text-align: center;
-            line-height: 40px;
-        }
+        display: block;
+        opacity: 1;
+        transition: 0.3s;
+        line-height: 1;
+        border-radius: 100px;
+        min-width: 100px;
+    }
     #page-header.nav-fixed #nav #page-name-text:hover:after {
         opacity: 1;
         line-height: 36px;
@@ -4538,11 +4535,9 @@ html {
         top: -60px;
     }
     #page-header.nav-fixed.nav-visible #nav #page-name-text {
-            display: block;
-            transition: 0.15s;
-            text-align: center;
-            line-height: 40px;
-        }
+        display: block;
+        transition: 0.15s;
+    }
     #page-header.nav-fixed.nav-visible #nav div.menus_items {
         opacity: 1;
         transition: 0.15s;
@@ -4550,15 +4545,16 @@ html {
         top: 0px;
     }
     #page-name {
-            display: block;
-            border-radius: 12px;
-            height: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-            margin-top: 62px;
-            animation-timing-function: ease-out;
-            -webkit-animation-timing-function: ease-out;
-        }
+        align-items: center;
+        display: block;
+        border-radius: 12px;
+        height: 40px;
+        max-width: 600px;
+        margin: 0 auto;
+        margin-top: 62px;
+        animation-timing-function: ease-out;
+        -webkit-animation-timing-function: ease-out;
+    }
     #page-header.nav-fixed #nav #menus {
         z-index: 100;
     }
