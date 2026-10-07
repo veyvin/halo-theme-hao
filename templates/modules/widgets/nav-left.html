@@ -1,62 +1,117 @@
 <!-- 导航栏左侧：四叶草弹出菜单（对齐 blog.zhheo.com） -->
-<div id="blog_name">
+<div id="blog_name"
+     th:with="apps=${theme.config.nav.appsPanel},
+              appsSource=${apps != null and apps.source != null ? apps.source : 'menu'},
+              appsColumns=${apps != null and apps.columns != null ? apps.columns : '2'},
+              appsWidth=${apps != null and apps.panelWidth != null ? apps.panelWidth : 420},
+              appsGroups=${apps != null ? apps.groups : null},
+              useCustom=${appsSource == 'custom' and appsGroups != null and !#lists.isEmpty(appsGroups)},
+              leftMenuName=${theme.config.nav.leftMenu}">
 
-    <th:block th:if="${not #strings.isEmpty(theme.config.nav.leftMenu) && theme.config.nav.menus.pc_leftMenu}"
-              th:with="leftMenu = ${menuFinder.getByName(theme.config.nav.leftMenu)}">
+    <th:block th:with="showMenu=${!useCustom and not #strings.isEmpty(leftMenuName)}"
+              th:if="${theme.config.nav.menus.pc_leftMenu and (useCustom or showMenu)}">
+
         <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false" aria-haspopup="true"
-             th:if="${not #lists.isEmpty(leftMenu)}"
-             title="快捷入口">
+             title="快捷入口"
+             th:style="|--apps-panel-width: ${appsWidth}px; --apps-panel-cols: ${appsColumns};|">
 
             <i class="back-home-button-icon haofont hao-icon-apps-fill" aria-hidden="true"></i>
 
-            <div class="back-menu-list-groups">
-                <!-- 有子菜单：分组标题 + 双列入口（Heo：博客 / 应用 / 服务…） -->
-                <div class="back-menu-list-group" th:each="menuItem : ${leftMenu.menuItems}"
-                     th:if="${not #lists.isEmpty(menuItem.children)}">
-                    <div class="back-menu-list-title" th:text="${menuItem.status.displayName}"></div>
-                    <div class="back-menu-list">
-                        <a class="back-menu-item" rel="external nofollow"
-                           th:each="childMenu : ${menuItem.children}"
-                           th:with="icon=${#annotations.getOrDefault(childMenu, 'icon', '')}"
-                           th:target="${childMenu.spec.target?.value}"
-                           th:href="@{${childMenu.status.href}}"
-                           th:title="${'访问' + childMenu.status.displayName}">
-                            <th:block th:if="${!#strings.isEmpty(icon)}">
-                                <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
-                                     class="back-menu-item-icon" width="24" height="24"
-                                     th:alt="${childMenu.status.displayName + '图标'}"
-                                     th:src="${icon}">
-                                <svg th:if="${#strings.startsWith(icon, '#')}" class="back-menu-item-icon ali_icon" aria-hidden="true">
-                                    <use th:href="${icon}"></use>
-                                </svg>
-                                <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
-                                   class="back-menu-item-icon"
-                                   th:classappend="${icon}" aria-hidden="true"></i>
-                            </th:block>
-                            <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
-                        </a>
-                    </div>
-                </div>
+            <div class="back-menu-list-groups" th:classappend="${'cols-' + appsColumns}">
 
-                <!-- 无子菜单：底部通栏按钮（Heo：「更多我的项目」） -->
-                <th:block th:each="menuItem : ${leftMenu.menuItems}" th:if="${#lists.isEmpty(menuItem.children)}">
-                    <a class="back-menu-bottom-btn" rel="external nofollow"
-                       th:with="icon=${#annotations.getOrDefault(menuItem, 'icon', '')}"
-                       th:target="${menuItem.spec.target?.value}"
-                       th:href="@{${menuItem.status.href}}"
-                       th:title="${menuItem.status.displayName}">
-                        <th:block th:if="${!#strings.isEmpty(icon)}">
-                            <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
-                                 class="back-menu-bottom-btn-icon" width="24" height="24"
-                                 th:alt="${menuItem.status.displayName}"
-                                 th:src="${icon}">
-                            <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
-                               class="back-menu-bottom-btn-icon"
-                               th:classappend="${icon}" aria-hidden="true"></i>
-                        </th:block>
-                        <span class="back-menu-bottom-btn-text" th:text="${menuItem.status.displayName}"></span>
-                    </a>
+                <!-- ========== 主题配置：分组 + 入口 ========== -->
+                <th:block th:if="${useCustom}">
+                    <div class="back-menu-list-group" th:each="group : ${appsGroups}"
+                         th:if="${group.items != null and !#lists.isEmpty(group.items)}">
+                        <div class="back-menu-list-title" th:text="${group.title}"></div>
+                        <div class="back-menu-list">
+                            <a class="back-menu-item" rel="external nofollow"
+                               th:each="item : ${group.items}"
+                               th:href="@{${item.url}}"
+                               th:target="${item.target != null ? item.target : '_self'}"
+                               th:title="${'访问' + item.title}">
+                                <img th:if="${item.icon != null and !#strings.isEmpty(item.icon)}"
+                                     class="back-menu-item-icon" width="28" height="28"
+                                     th:alt="${item.title + '图标'}"
+                                     th:src="${item.icon}">
+                                <span class="back-menu-item-text" th:text="${item.title}"></span>
+                            </a>
+                        </div>
+                    </div>
                 </th:block>
+
+                <!-- ========== 外观菜单（含：custom 未配置时回退） ========== -->
+                <th:block th:if="${!useCustom and showMenu}"
+                          th:with="leftMenu=${menuFinder.getByName(leftMenuName)}">
+                    <th:block th:if="${leftMenu != null and not #lists.isEmpty(leftMenu.menuItems)}">
+
+                        <!-- 有子项：分组（Heo：博客 / 应用 / 服务） -->
+                        <div class="back-menu-list-group" th:each="menuItem : ${leftMenu.menuItems}"
+                             th:if="${not #lists.isEmpty(menuItem.children)}">
+                            <div class="back-menu-list-title" th:text="${menuItem.status.displayName}"></div>
+                            <div class="back-menu-list">
+                                <a class="back-menu-item" rel="external nofollow"
+                                   th:each="childMenu : ${menuItem.children}"
+                                   th:with="icon=${#annotations.getOrDefault(childMenu, 'icon', '')}"
+                                   th:target="${childMenu.spec.target?.value}"
+                                   th:href="@{${childMenu.status.href}}"
+                                   th:title="${'访问' + childMenu.status.displayName}">
+                                    <th:block th:if="${!#strings.isEmpty(icon)}">
+                                        <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
+                                             class="back-menu-item-icon" width="28" height="28"
+                                             th:alt="${childMenu.status.displayName + '图标'}"
+                                             th:src="${icon}">
+                                        <svg th:if="${#strings.startsWith(icon, '#')}" class="back-menu-item-icon ali_icon" aria-hidden="true">
+                                            <use th:href="${icon}"></use>
+                                        </svg>
+                                        <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
+                                           class="back-menu-item-icon"
+                                           th:classappend="${icon}" aria-hidden="true"></i>
+                                    </th:block>
+                                    <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 无子项：双列入口（不再用细通栏胶囊） -->
+                        <div class="back-menu-list-group back-menu-list-group-flat">
+                            <div class="back-menu-list">
+                                <th:block th:each="menuItem : ${leftMenu.menuItems}">
+                                    <a class="back-menu-item" rel="external nofollow"
+                                       th:if="${#lists.isEmpty(menuItem.children)}"
+                                       th:with="icon=${#annotations.getOrDefault(menuItem, 'icon', '')}"
+                                       th:target="${menuItem.spec.target?.value}"
+                                       th:href="@{${menuItem.status.href}}"
+                                       th:title="${menuItem.status.displayName}">
+                                        <th:block th:if="${!#strings.isEmpty(icon)}">
+                                            <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
+                                                 class="back-menu-item-icon" width="28" height="28"
+                                                 th:alt="${menuItem.status.displayName}"
+                                                 th:src="${icon}">
+                                            <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
+                                               class="back-menu-item-icon"
+                                               th:classappend="${icon}" aria-hidden="true"></i>
+                                        </th:block>
+                                        <span class="back-menu-item-text" th:text="${menuItem.status.displayName}"></span>
+                                    </a>
+                                </th:block>
+                            </div>
+                        </div>
+                    </th:block>
+                </th:block>
+
+                <!-- 底部通栏（主题配置） -->
+                <a class="back-menu-bottom-btn" rel="external nofollow"
+                   th:if="${apps != null and apps.bottomEnable == true and apps.bottomTitle != null and !#strings.isEmpty(apps.bottomTitle)}"
+                   th:href="@{${apps.bottomUrl != null ? apps.bottomUrl : '/'}}"
+                   th:target="${apps.bottomTarget != null ? apps.bottomTarget : '_blank'}"
+                   th:title="${apps.bottomTitle}">
+                    <img th:if="${apps.bottomIcon != null and !#strings.isEmpty(apps.bottomIcon)}"
+                         class="back-menu-bottom-btn-icon" width="24" height="24"
+                         th:alt="${apps.bottomTitle}"
+                         th:src="${apps.bottomIcon}">
+                    <span class="back-menu-bottom-btn-text" th:text="${apps.bottomTitle}"></span>
+                </a>
             </div>
         </div>
     </th:block>

@@ -4378,10 +4378,8 @@ p.p.gray,span.p.gray {
 }
 
 /* ==================== 四叶草弹出菜单：对齐 blog.zhheo.com ==================== */
-/* 胶囊导航下保证弹层不被裁剪，动画/尺寸以 zhheoblog.css 为准 */
 #page-header #nav .back-home-button .back-menu-list-groups {
-    max-width: calc(100vw - 32px);
-    scrollbar-width: thin;
+    max-width: min(var(--apps-panel-width, 420px), calc(100vw - 32px));
 }
 
 #page-header #nav .back-home-button .back-menu-list-groups::-webkit-scrollbar {
@@ -4391,4 +4389,9 @@ p.p.gray,span.p.gray {
 #page-header #nav .back-home-button .back-menu-list-groups::-webkit-scrollbar-thumb {
     background: var(--heo-gray-op);
     border-radius: 6px;
+}
+
+/* 保证有入口时扁平分组不被空标题撑开 */
+#page-header #nav .back-home-button .back-menu-list-group-flat .back-menu-list:not(:has(.back-menu-item)) {
+    display: none;
 }

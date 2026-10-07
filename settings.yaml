@@ -80,13 +80,152 @@ spec:
               name: enable_ali_iconfont_symbol_header
               label: 阿里巴巴 IconFont Symbol
               help: '开启后，可以使用阿里 IconFont 的 Symbol 彩色图标。语法为 #icon-xxx，例如 #icon-shouye'
+        - $formkit: group
+          name: appsPanel
+          id: appsPanel
+          key: appsPanel
+          if: $get(pc_leftMenu).value
+          label: 四叶草弹出面板
+          help: 对齐 blog.zhheo.com 的 apps 面板；推荐用「主题配置」直接维护图标/标题/链接，无需改菜单结构
+          value:
+            source: menu
+            columns: "2"
+            panelWidth: 420
+            groups: []
+            bottomEnable: false
+            bottomTitle: 更多我的项目
+            bottomIcon: ""
+            bottomUrl: "/"
+            bottomTarget: _blank
+          children:
+            - $formkit: radio
+              name: source
+              id: appsPanelSource
+              key: appsPanelSource
+              label: 数据来源
+              value: menu
+              options:
+                - label: 主题配置（推荐，可配图标/标题/链接）
+                  value: custom
+                - label: 外观菜单
+                  value: menu
+              help: 选「主题配置」后在下方添加分组与入口；选「外观菜单」则用下方菜单组
+            - $formkit: radio
+              name: columns
+              id: appsPanelColumns
+              label: 排版列数
+              value: "2"
+              options:
+                - label: 双列（Heo 默认）
+                  value: "2"
+                - label: 单列
+                  value: "1"
+              help: 面板内入口的列数排版
+            - $formkit: number
+              name: panelWidth
+              label: 面板宽度 (px)
+              value: 420
+              min: 300
+              max: 560
+              step: 10
+              help: Heo 风格建议 400–440；过小会像细胶囊
+            - $formkit: array
+              name: groups
+              id: appsPanelGroups
+              key: appsPanelGroups
+              if: $get(appsPanelSource).value === 'custom'
+              label: 分组与入口
+              help: 每个分组对应面板中的小标题（博客/应用/服务…），其下添加入口（图标/标题/链接）
+              value: []
+              itemLabels:
+                - type: text
+                  label: $value.title
+              children:
+                - $formkit: text
+                  name: title
+                  label: 分组标题
+                  placeholder: 例如：博客 / 应用 / 服务
+                  validation: required
+                  value: ""
+                - $formkit: array
+                  name: items
+                  label: 入口列表
+                  value: []
+                  itemLabels:
+                    - type: text
+                      label: $value.title
+                    - type: text
+                      label: $value.url
+                  children:
+                    - $formkit: text
+                      name: title
+                      label: 标题
+                      placeholder: 例如：主页
+                      validation: required
+                      value: ""
+                    - $formkit: attachment
+                      name: icon
+                      label: 图标
+                      placeholder: 上传或选择图标图片
+                      width: 4rem
+                      aspectRatio: "1/1"
+                      help: 建议正方形 PNG/WebP，与 Heo 一样用彩色圆形图标
+                    - $formkit: url
+                      name: url
+                      label: 链接
+                      placeholder: 例如：/ 或 https://example.com
+                      validation: required
+                      value: "/"
+                    - $formkit: select
+                      name: target
+                      label: 打开方式
+                      value: _self
+                      options:
+                        - label: 当前窗口
+                          value: _self
+                        - label: 新窗口
+                          value: _blank
+            - $formkit: switch
+              name: bottomEnable
+              id: appsPanelBottomEnable
+              label: 显示底部通栏按钮
+              value: false
+              help: 如 Heo 的「更多我的项目」
+            - $formkit: text
+              name: bottomTitle
+              if: $get(appsPanelBottomEnable).value
+              label: 底部按钮标题
+              value: 更多我的项目
+              placeholder: 更多我的项目
+            - $formkit: attachment
+              name: bottomIcon
+              if: $get(appsPanelBottomEnable).value
+              label: 底部按钮图标
+              width: 4rem
+              aspectRatio: "1/1"
+            - $formkit: url
+              name: bottomUrl
+              if: $get(appsPanelBottomEnable).value
+              label: 底部按钮链接
+              value: "/"
+              placeholder: https://example.com
+            - $formkit: select
+              name: bottomTarget
+              if: $get(appsPanelBottomEnable).value
+              label: 底部按钮打开方式
+              value: _blank
+              options:
+                - label: 当前窗口
+                  value: _self
+                - label: 新窗口
+                  value: _blank
         - $formkit: menuRadio
           name: leftMenu
           key: leftMenu
           id: leftMenu
           if: $get(pc_leftMenu).value
-          label: 四叶草弹出菜单
-          help: '前往【外观 → 菜单】新建并选择。有子项的一级=分组（博客/应用/服务），子项填注解图标（推荐图片 URL）；无子项的一级=底部通栏按钮（如「更多我的项目」）'
+          label: 外观菜单组
+          help: '数据来源选「外观菜单」时生效；有子项的一级=分组，无子项按双列入口展示。主题配置为空时也会回退到此菜单'
           value: ""
         - $formkit: group
           name: right
