@@ -15,8 +15,17 @@
 
         <!-- 移动端首页头部信息 -->
         <div class="mobile-home-header">
-            <div class="mobile-home-title">[[${site.title}]]</div>
-            <div class="mobile-home-subtitle" th:unless="${#strings.isEmpty(site.subtitle)}">[[${site.subtitle}]]</div>
+            <div class="mobile-home-header-inner">
+                <img class="mobile-home-avatar" width="44" height="44"
+                     th:with="logoUrl=${#strings.isEmpty(site.logo) ? assets_link + '/images/hao-logo.jpg' : site.logo}"
+                     th:src="${logoUrl}" th:alt="${site.title}">
+                <div class="mobile-home-text">
+                    <div class="mobile-home-title"
+                         th:utext="${#strings.isEmpty(theme.config.basics.siteTitle) ? site.title : theme.config.basics.siteTitle}"></div>
+                    <div class="mobile-home-subtitle" th:unless="${#strings.isEmpty(site.subtitle)}"
+                         th:text="${site.subtitle}"></div>
+                </div>
+            </div>
         </div>
         <div id="home_top">
             <!-- 每日说说 -->
