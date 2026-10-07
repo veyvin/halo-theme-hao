@@ -66,12 +66,12 @@ spec:
             - $formkit: switch
               name: pc_leftMenu
               id: pc_leftMenu
-              label: PC 端左侧菜单
-              help: 在导航栏左侧显示菜单组，可在「外观 → 菜单」中配置
+              label: PC 端左侧四叶草菜单
+              help: 导航栏左侧 apps 图标，点击弹出快捷入口面板（动画与布局对齐张洪 Heo）
             - $formkit: switch
               name: phone_leftMenu
-              label: 移动端左侧菜单
-              help: 在移动端导航栏左侧显示菜单按钮
+              label: 移动端侧栏快捷菜单
+              help: 在移动端侧边栏展示同一套左侧菜单分组
             - $formkit: switch
               name: phone_menu
               label: 移动端主菜单
@@ -85,8 +85,8 @@ spec:
           key: leftMenu
           id: leftMenu
           if: $get(pc_leftMenu).value
-          label: 站点名左侧菜单
-          help: 默认只有主菜单，可前往【外观】—>【菜单】新建菜单组
+          label: 四叶草弹出菜单
+          help: '前往【外观 → 菜单】新建并选择。有子项的一级=分组（博客/应用/服务），子项填注解图标（推荐图片 URL）；无子项的一级=底部通栏按钮（如「更多我的项目」）'
           value: ""
         - $formkit: group
           name: right

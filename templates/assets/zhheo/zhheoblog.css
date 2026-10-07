@@ -4275,7 +4275,9 @@ html {
     line-height: 35px;
     padding: 0 12px;
 }
+/* 四叶草按钮 + 弹出面板（对齐 blog.zhheo.com） */
 .back-home-button {
+    position: relative;
     display: flex;
     width: 35px;
     height: 35px;
@@ -4284,9 +4286,13 @@ html {
     justify-content: center;
     margin-right: 4px;
     transition: 0.3s;
-    border-radius: 8px;
+    border-radius: 999px;
     color: var(--heo-white);
-    border-radius: 40px;
+    cursor: pointer;
+}
+.back-home-button-icon {
+    font-size: 1.25rem;
+    line-height: 1;
 }
 .page .back-home-button {
     color: var(--heo-fontcolor)
@@ -4317,7 +4323,6 @@ html {
     background: var(--heo-lighttext);
     color: var(--heo-card-bg)
 }
-/* 点击展开（JS 切换 active），按钮同步高亮 */
 .back-home-button.active {
     background: var(--heo-main);
     color: var(--heo-white)
@@ -4343,10 +4348,14 @@ html {
 .back-menu-list-groups .back-menu-list .back-menu-item {
     display: flex;
     align-items: center;
-    margin: 2px 4px;
-    padding: 8px 10px !important;
+    margin: 6px 8px;
+    padding: 6px 8px !important;
     transition: 0.3s;
-    border-radius: 10px;
+    border-radius: 8px;
+    gap: 8px;
+}
+#nav .back-menu-list-groups .back-menu-list .back-menu-item {
+    border-radius: 99px;
 }
 .back-menu-list-groups .back-menu-list .back-menu-item:hover {
     background: var(--heo-lighttext) !important;
@@ -4357,16 +4366,25 @@ html {
     height: 24px;
     border-radius: 8px;
     background: var(--heo-none);
+    flex-shrink: 0;
+}
+.back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-icon.haofont,
+.back-menu-list-groups .back-menu-list .back-menu-item i.back-menu-item-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
 }
 .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-text {
-    font-size: 16px;
-    margin-left: 0.5rem;
+    font-size: 14px;
+    line-height: 1;
     color: var(--heo-fontcolor);
-}
-@media screen and (max-width: 768px) {
-    .back-menu-list-groups .back-menu-list .back-menu-item .back-menu-item-text {
-        font-size: 14px
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: 0.3s;
 }
 .back-menu-list-groups .back-menu-list .back-menu-item:hover .back-menu-item-text {
     color: var(--heo-card-bg);
@@ -4375,25 +4393,39 @@ html {
     display: flex;
     flex-direction: column;
 }
+/* 收起：缩小 + 透明；展开：scale(1) + blur（Heo 同款） */
 .back-home-button .back-menu-list-groups {
     position: absolute;
     top: 45px;
-    transform: scale(.8);
-    transform-origin: top left;
-    left: 1.5rem;
-    background-color: var(--heo-maskbgdeep);
-    border-radius: 16px;
-    border: var(--style-border);
-    padding: 4px 6px 10px;
+    left: 0;
+    z-index: 120;
+    display: flex;
     flex-direction: column;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 6px 10px;
+    background-color: var(--heo-card-bg);
+    border-radius: 12px;
+    border: var(--style-border);
     font-size: 12px;
     color: var(--heo-secondtext);
     box-shadow: var(--heo-shadow-border);
-    transition: .1s;
+    transform: scale(0.8);
+    transform-origin: top left;
     opacity: 0;
     pointer-events: none;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px)
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: opacity 0.1s ease, transform 0.1s ease, top 0.1s ease;
+}
+.back-home-button .back-menu-list-groups::before {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    content: "";
 }
 .back-home-button .back-menu-list-groups:hover {
     border: var(--style-border-hover);
@@ -4408,14 +4440,53 @@ html {
 .back-home-button.active .back-menu-list-groups {
     display: flex;
     opacity: 1;
-    transition: 0.3s;
     top: 55px;
+    left: 0;
     pointer-events: auto;
-    left: 1.5rem;
     transform: scale(1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, top 0.3s ease, backdrop-filter 0.3s ease;
 }
 .back-home-button .back-menu-list .back-menu-item {
     width: 150px;
+}
+/* 底部通栏（如「更多我的项目」） */
+a.back-menu-bottom-btn {
+    margin: 4px 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1;
+    height: 36px;
+    padding: 0 12px;
+    background: var(--heo-card-bg);
+    border: var(--style-border-always);
+    border-radius: 99px;
+    color: var(--heo-fontcolor);
+    transition: 0.3s;
+}
+#nav a.back-menu-bottom-btn {
+    border-radius: 99px;
+}
+a.back-menu-bottom-btn:hover {
+    background: var(--heo-lighttext);
+}
+a.back-menu-bottom-btn:hover .back-menu-bottom-btn-text {
+    color: var(--heo-card-bg);
+}
+.back-menu-bottom-btn-text {
+    color: var(--heo-fontcolor);
+    transition: 0.3s;
+}
+.back-menu-bottom-btn img,
+.back-menu-bottom-btn-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    flex-shrink: 0;
 }
 @media screen and (max-width: 768px) {
     .back-home-button .back-menu-list-groups {

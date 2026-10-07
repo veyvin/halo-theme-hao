@@ -13,27 +13,34 @@
         <th:block th:if="${not #strings.isEmpty(theme.config.nav.leftMenu) && theme.config.nav.menus.phone_leftMenu}"
                   th:with="leftMenu = ${menuFinder.getByName(theme.config.nav.leftMenu)}">
             <div class="back-menu-list-groups">
-                <div class="back-menu-list-group" th:each="menuItem : ${leftMenu.menuItems}">
-
-                    <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
-                        <!-- 菜单必须有子项才会展示 -->
-                        <div class="back-menu-list-title" th:text="${menuItem.status.displayName}"></div>
-                        <div class="back-menu-list">
-                            <th:block th:each="childMenu : ${menuItem.children}">
-                                <a class="back-menu-item" rel="external nofollow"
-                                   target="_blank" th:href="@{${childMenu.status.href}}">
-                                    <!-- icon -->
-                                    <img th:if="${!#strings.isEmpty(#annotations.getOrDefault(childMenu, 'icon', ''))}"
-                                         class="back-menu-item-icon" width="20" height="20" alt="菜单图标"
-                                         th:src="${#annotations.getOrDefault(childMenu, 'icon', '')}">
-                                    <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
-                                </a>
+                <div class="back-menu-list-group" th:each="menuItem : ${leftMenu.menuItems}"
+                     th:if="${not #lists.isEmpty(menuItem.children)}">
+                    <div class="back-menu-list-title" th:text="${menuItem.status.displayName}"></div>
+                    <div class="back-menu-list">
+                        <a class="back-menu-item" rel="external nofollow"
+                           th:each="childMenu : ${menuItem.children}"
+                           th:with="icon=${#annotations.getOrDefault(childMenu, 'icon', '')}"
+                           th:target="${childMenu.spec.target?.value}"
+                           th:href="@{${childMenu.status.href}}">
+                            <th:block th:if="${!#strings.isEmpty(icon)}">
+                                <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
+                                     class="back-menu-item-icon" width="24" height="24" alt="菜单图标"
+                                     th:src="${icon}">
+                                <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
+                                   class="back-menu-item-icon" th:classappend="${icon}" aria-hidden="true"></i>
                             </th:block>
-                        </div>
-
-                    </th:block>
+                            <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
+                        </a>
+                    </div>
                 </div>
-
+                <th:block th:each="menuItem : ${leftMenu.menuItems}" th:if="${#lists.isEmpty(menuItem.children)}">
+                    <a class="back-menu-bottom-btn" rel="external nofollow"
+                       th:target="${menuItem.spec.target?.value}"
+                       th:href="@{${menuItem.status.href}}"
+                       th:title="${menuItem.status.displayName}">
+                        <span class="back-menu-bottom-btn-text" th:text="${menuItem.status.displayName}"></span>
+                    </a>
+                </th:block>
             </div>
         </th:block>
         <th:block th:if="${not #lists.isEmpty(menuFinder.getPrimary().menuItems) && theme.config.nav.menus.phone_menu}"

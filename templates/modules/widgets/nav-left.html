@@ -1,79 +1,68 @@
-<!-- 导航栏左侧 -->
-<div id="blog_name" >
+<!-- 导航栏左侧：四叶草弹出菜单（对齐 blog.zhheo.com） -->
+<div id="blog_name">
 
     <th:block th:if="${not #strings.isEmpty(theme.config.nav.leftMenu) && theme.config.nav.menus.pc_leftMenu}"
               th:with="leftMenu = ${menuFinder.getByName(theme.config.nav.leftMenu)}">
-        <!-- 菜单栏左侧按钮，没有配置时，则不展示-->
-        <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false"
-             th:if="${not #lists.isEmpty(leftMenu)}">
+        <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false" aria-haspopup="true"
+             th:if="${not #lists.isEmpty(leftMenu)}"
+             title="快捷入口">
 
-            <i class="back-home-button-icon haofont hao-icon-apps-fill" style="font-size: 1rem"></i>
+            <i class="back-home-button-icon haofont hao-icon-apps-fill" aria-hidden="true"></i>
+
             <div class="back-menu-list-groups">
+                <!-- 有子菜单：分组标题 + 双列入口（Heo：博客 / 应用 / 服务…） -->
                 <div class="back-menu-list-group" th:each="menuItem : ${leftMenu.menuItems}"
                      th:if="${not #lists.isEmpty(menuItem.children)}">
                     <div class="back-menu-list-title" th:text="${menuItem.status.displayName}"></div>
                     <div class="back-menu-list">
-                        <th:block th:each="childMenu : ${menuItem.children}">
-                            <a class="back-menu-item" rel="external nofollow"
-                               th:target="${childMenu.spec.target?.value}" th:href="@{${childMenu.status.href}}">
-                                <!-- icon 预留 -->
-                                <img th:if="${!#strings.isEmpty(#annotations.getOrDefault(childMenu, 'icon', ''))}"
-                                     class="back-menu-item-icon" width="20" height="20" alt="菜单图标"
-                                     th:src="${#annotations.getOrDefault(childMenu, 'icon', '')}">
-                                <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
-                            </a>
-                        </th:block>
+                        <a class="back-menu-item" rel="external nofollow"
+                           th:each="childMenu : ${menuItem.children}"
+                           th:with="icon=${#annotations.getOrDefault(childMenu, 'icon', '')}"
+                           th:target="${childMenu.spec.target?.value}"
+                           th:href="@{${childMenu.status.href}}"
+                           th:title="${'访问' + childMenu.status.displayName}">
+                            <th:block th:if="${!#strings.isEmpty(icon)}">
+                                <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
+                                     class="back-menu-item-icon" width="24" height="24"
+                                     th:alt="${childMenu.status.displayName + '图标'}"
+                                     th:src="${icon}">
+                                <svg th:if="${#strings.startsWith(icon, '#')}" class="back-menu-item-icon ali_icon" aria-hidden="true">
+                                    <use th:href="${icon}"></use>
+                                </svg>
+                                <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
+                                   class="back-menu-item-icon"
+                                   th:classappend="${icon}" aria-hidden="true"></i>
+                            </th:block>
+                            <span class="back-menu-item-text" th:text="${childMenu.status.displayName}"></span>
+                        </a>
                     </div>
                 </div>
+
+                <!-- 无子菜单：底部通栏按钮（Heo：「更多我的项目」） -->
                 <th:block th:each="menuItem : ${leftMenu.menuItems}" th:if="${#lists.isEmpty(menuItem.children)}">
                     <a class="back-menu-bottom-btn" rel="external nofollow"
-                       th:target="${menuItem.spec.target?.value}" th:href="@{${menuItem.status.href}}"
+                       th:with="icon=${#annotations.getOrDefault(menuItem, 'icon', '')}"
+                       th:target="${menuItem.spec.target?.value}"
+                       th:href="@{${menuItem.status.href}}"
                        th:title="${menuItem.status.displayName}">
-                        <img th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
-                             class="back-menu-bottom-btn-icon" width="20" height="20" alt="菜单图标"
-                             th:src="${#annotations.getOrDefault(menuItem, 'icon', '')}">
+                        <th:block th:if="${!#strings.isEmpty(icon)}">
+                            <img th:if="${#strings.startsWith(icon, 'http') or #strings.startsWith(icon, '/') or #strings.startsWith(icon, 'data:')}"
+                                 class="back-menu-bottom-btn-icon" width="24" height="24"
+                                 th:alt="${menuItem.status.displayName}"
+                                 th:src="${icon}">
+                            <i th:if="${!#strings.startsWith(icon, 'http') and !#strings.startsWith(icon, '/') and !#strings.startsWith(icon, 'data:') and !#strings.startsWith(icon, '#')}"
+                               class="back-menu-bottom-btn-icon"
+                               th:classappend="${icon}" aria-hidden="true"></i>
+                        </th:block>
                         <span class="back-menu-bottom-btn-text" th:text="${menuItem.status.displayName}"></span>
                     </a>
                 </th:block>
             </div>
         </div>
     </th:block>
+
     <!-- 返回主页 -->
-    <!-- 这里可以指定使用什么作为图标，默认使用站点名称 -->
     <a href="/" id="site-name" title="返回博客主页">
         <span th:utext="${#strings.isEmpty(theme.config.basics.siteTitle)} ? ${site.title} : ${theme.config.basics.siteTitle}"></span>
     </a>
-    <style type="text/css">
-        /* 「更多项目」通栏胶囊按钮（HEO 风格弹层底部） */
-        .back-home-button .back-menu-bottom-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 12px 4px 2px;
-            padding: 9px 12px;
-            border-radius: 999px;
-            background: color-mix(in srgb, var(--heo-fontcolor) 6%, transparent);
-            border: 1px solid var(--heo-card-border);
-            color: var(--heo-fontcolor);
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        .back-home-button .back-menu-bottom-btn:hover {
-            background: var(--heo-theme);
-            border-color: transparent;
-            color: var(--heo-fontcolor);
-        }
-
-        [data-theme=light] .back-home-button .back-menu-bottom-btn:hover {
-            color: #fff;
-        }
-
-        .back-home-button .back-menu-bottom-btn-icon {
-            width: 22px;
-            height: 22px;
-            border-radius: 8px;
-        }
-    </style>
 </div>
