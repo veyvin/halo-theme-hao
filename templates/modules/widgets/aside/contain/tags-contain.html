@@ -1,6 +1,5 @@
-<!-- 标签：tagQuantity 为 null/0 表示全部，避免 list(1,null/0) 抛错截断页面 -->
-<th:block th:with="tagLimit=${theme.config.sidebar != null ? theme.config.sidebar.tagQuantity : 0},
-                   tags=${tagLimit != null and tagLimit > 0 ? tagFinder.list(1, tagLimit) : tagFinder.listAll()}">
+<!-- 标签：与 bar/tag 一致用 list(1,30)，避免 tagQuantity 为 null/0 时抛错截断页面 -->
+<th:block th:with="tags=${tagFinder.list(1,30)}">
 
     <div class="item-headline"></div>
     <div class="card-tag-cloud">
@@ -8,7 +7,7 @@
            th:each="tag : ${tags}"
            th:href="@{${tag.status.permalink}}"
            th:title="${tag.spec.displayName}">
-            [[${tag.spec.displayName}]]<sup th:text="${tag.status.visiblePostCount}"></sup>
+            <th:block th:text="${tag.spec.displayName}"></th:block><sup th:text="${tag.status.visiblePostCount}"></sup>
         </a>
     </div>
     <script th:if="${theme.config.other.tagRandomColorEnable}">
