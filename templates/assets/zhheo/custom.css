@@ -80,10 +80,41 @@ i.haofont.hao-icon-arrow-right.banner-righticon{
 
     #nav #menus {
         min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        /* 隐藏态裁剪菜单，避免 top:-60px 滑出胶囊外 */
+        overflow: hidden;
     }
 
     #nav .menus_items {
         justify-content: center;
+    }
+
+    /*
+     * 胶囊导航与 HEO 原版「菜单 top:-60px 滑出 / 标题滑入」冲突：
+     * #page-header overflow:visible + 悬浮胶囊不会裁剪，上滚切换时菜单会露在导航外。
+     * 改为在导航内用透明度切换，并始终保持 top:0。
+     */
+    #page-header.nav-fixed #nav div.menus_items {
+        top: 0 !important;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        transform: translateY(-6px);
+    }
+
+    #page-header.nav-fixed.nav-visible #nav div.menus_items {
+        top: 0 !important;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+    }
+
+    /* 菜单显示时允许子菜单下拉溢出 */
+    #page-header.nav-fixed.nav-visible #nav #menus {
+        overflow: visible;
     }
 
     #page-header.nav-fixed #nav,
