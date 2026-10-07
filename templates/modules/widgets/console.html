@@ -69,9 +69,11 @@
           <div class="author-content-item-tips">标签</div>
           <span class="author-content-item-title">寻找感兴趣的领域</span>
         </div>
-        <div class="card-tag-cloud" th:with="tags = ${tagFinder.list(1,theme.config.sidebar.tagQuantity)}">
+        <div class="card-tag-cloud"
+             th:with="tagLimit=${theme.config.sidebar != null ? theme.config.sidebar.tagQuantity : 0},
+                      tags=${tagLimit != null and tagLimit > 0 ? tagFinder.list(1, tagLimit) : tagFinder.listAll()}">
           <a style="font-size:1em;color:#d3d3d3"
-             th:each="tag,iterStat : ${tags}"
+             th:each="tag : ${tags}"
              th:href="@{${tag.status.permalink}}">
             [[${tag.spec.displayName}]]<sup th:text="${tag.status.visiblePostCount}"></sup>
           </a>

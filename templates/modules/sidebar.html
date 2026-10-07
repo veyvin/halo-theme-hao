@@ -74,14 +74,16 @@
             </div>
         </th:block>
         <span class="sidebar-menu-item-title">标签</span>
+        <!-- tagQuantity 为 null/0 时用 listAll，避免 list(1,null/0) 抛错截断 HTML 导致白屏 -->
         <div class="card-widget card-tags card-archives card-webinfo card-allinfo"
-             th:with="tags = ${tagFinder.list(1,theme.config.sidebar.tagQuantity)}">
+             th:with="tagLimit=${theme.config.sidebar != null ? theme.config.sidebar.tagQuantity : 0},
+                      tags=${tagLimit != null and tagLimit > 0 ? tagFinder.list(1, tagLimit) : tagFinder.listAll()}">
             <div class="item-headline"></div>
             <div class="card-tag-cloud">
-                <a class="tag-item" style="font-size:1em" th:each="tag,iterStat : ${tags}"
+                <a class="tag-item" style="font-size:1em"
+                   th:each="tag : ${tags}"
                    th:href="@{${tag.status.permalink}}"
                    th:title="${tag.spec.displayName}">
-                    <!-- 角标 -->
                     [[${tag.spec.displayName}]]<sup th:text="${tag.status.visiblePostCount}"></sup>
                 </a>
             </div>
