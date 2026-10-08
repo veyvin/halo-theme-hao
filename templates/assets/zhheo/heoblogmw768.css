@@ -1,33 +1,25 @@
 /* ==========================================================================
-   移动端样式 —— 对齐 blog.zhheo.com 的 heoblogmw768.css 做法
+   移动端样式 —— 对齐 blog.zhheo.com
    --------------------------------------------------------------------------
-   1) 独立样式表 + media 断点，且置于 zhheoblog.css / custom.css 之后加载，
-      使移动端规则拥有最终决定权，桌面端完全不受影响；
-   2) 只保留经 headless Chrome 实测「确实改变了计算样式」的规则，
-      避免与 custom.css 中的 !important / 高优先级选择器相互覆盖而变成死代码；
-   3) 自定义.css 已把文章卡片做成双列网格（grid-template-columns: repeat(2,1fr) !important），
-      这是本主题刻意的设计，故移动端沿用双列，只做细节对齐，不改列数。
+   置于 zhheoblog.css / custom.css 之后加载，移动端规则拥有最终决定权；
+   2026-10-08 重构：文章卡片改为单列大卡片（原双列网格），对齐 zhheo.com。
    ========================================================================== */
 
 /* ---------------- 首页文章卡片 ---------------- */
 
-/* 封面图跟随卡片圆角（基础样式是 24px 顶部圆角，会溢出 14px 圆角的卡片） */
+/* 封面图跟随卡片圆角 */
 #recent-posts > .recent-post-item .post_cover img.post_bg {
     border-radius: 0 !important;
 }
 
-/* 正文区固定高度，多余内容裁切，保证各卡片信息行对齐 */
+/* 信息区高度自适应（单列大卡片，不再固定裁切） */
 #recent-posts > .recent-post-item > .recent-post-info {
-    height: 150px;
+    height: auto !important;
 }
 
-/* 时间脱离文档流、贴到卡片右上角，不再与标题/摘要抢行 */
+/* 时间回到正常文档流（不再绝对定位到右上角） */
 #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap time {
-    position: absolute;
-    top: auto;
-    bottom: auto;
-    left: auto;
-    right: 0;
+    position: static !important;
 }
 
 /* ---------------- 首页轮播：淡入淡出堆叠 → 横向 scroll-snap 卡片 ---------------- */
@@ -40,7 +32,7 @@
 .home-center-content {
     height: auto;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 18px;
 }
 
 .home-center-left {
@@ -58,7 +50,7 @@
     min-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
-    border-radius: 12px;
+    border-radius: 18px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
