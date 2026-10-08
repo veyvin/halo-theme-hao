@@ -1,17 +1,18 @@
-<!-- 标签 -->
-
-<th:block  >
-
-    <div  class="item-headline"><a class="card-more-btn" th:href="@{${site.routes.archivesUri}}" title="查看更多" data-pjax-state=""></a></div>
-    <ul  class="card-archive-list"
-         th:with="archives = ${postFinder.archives(1,0)}, archivesQuantity = ${#conversions.convert(theme.config.sidebar.archivesQuantity, 'java.lang.Integer')}">
+<!-- 归档列表：archives 页大小不能为 0 -->
+<th:block>
+    <div class="item-headline"><a class="card-more-btn" th:href="@{${site.routes.archivesUri}}" title="查看更多" data-pjax-state=""></a></div>
+    <ul class="card-archive-list"
+        th:with="rawQty=${theme.config.sidebar.archivesQuantity},
+                 archivesQuantity=${rawQty != null and #conversions.convert(rawQty, 'java.lang.Integer') > 0 ? #conversions.convert(rawQty, 'java.lang.Integer') : 8},
+                 archives=${postFinder.archives(1, archivesQuantity)}">
         <th:block th:each="archive,archiveStat : ${archives.items}">
             <li class="card-archive-list-item"
-                th:each="month,monthIndex  : ${archive.months}"
-            ><a
-                    class="card-archive-list-link" th:href="@{'/archives/'+${archive.year}+'/'+${month.month}}"
-                    data-pjax-state=""><span
-                    class="card-archive-list-date">[[${(month.month=='01') ? '一月' :
+                th:each="month,monthIndex : ${archive.months}">
+                <a class="card-archive-list-link"
+                   th:href="@{'/archives/'+${archive.year}+'/'+${month.month}}"
+                   data-pjax-state="">
+                    <span class="card-archive-list-date">
+                        [[${(month.month=='01') ? '一月' :
                             (month.month == '02') ? "二月"  :
                             (month.month == '03') ? "三月" :
                             (month.month == '04') ? "四月" :
@@ -23,14 +24,14 @@
                             (month.month == '10') ? "十月" :
                             (month.month == '11') ? "十一月" :
                                           "十二月"}]] [[${archive.year}]]
-
-                        </span>
-                <div class="card-archive-list-count-group"><span
-                        class="card-archive-list-count">[[${month.posts.size()}]]</span><span
-                        class="card-archive-list-count-unit">篇</span></div>
-            </a>
+                    </span>
+                    <div class="card-archive-list-count-group">
+                        <span class="card-archive-list-count"
+                              th:text="${month.posts != null ? #lists.size(month.posts) : 0}"></span>
+                        <span class="card-archive-list-count-unit">篇</span>
+                    </div>
+                </a>
             </li>
         </th:block>
     </ul>
-
 </th:block>

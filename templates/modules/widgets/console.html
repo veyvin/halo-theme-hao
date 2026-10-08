@@ -69,7 +69,7 @@
           <div class="author-content-item-tips">标签</div>
           <span class="author-content-item-title">寻找感兴趣的领域</span>
         </div>
-        <div class="card-tag-cloud" th:with="tags=${tagFinder.list(1,30)}">
+        <div class="card-tag-cloud" th:with="tags=${tagFinder.list(1,20)}">
           <a style="font-size:1em;color:#d3d3d3"
              th:each="tag : ${tags}"
              th:href="@{${tag.status.permalink}}">
@@ -80,9 +80,11 @@
       <!-- 底部展示时间归档 -->
       <div class="console-card history" onclick="heo.hideConsole()">
         <div class="item-headline"><i class="fas fa-archive"></i><span>文章</span></div>
-        <ul class="card-archive-list" th:with="archives = ${postFinder.archives(1,0)}">
+        <!-- archives 第二参数为页大小，0 会异常；只取近年份，避免加载过多 posts 截断响应 -->
+        <ul class="card-archive-list" th:with="archives = ${postFinder.archives(1, 8)}">
           <th:block th:each="archive : ${archives.items}">
-            <li class="card-archive-list-item" th:each="month,monthStat : ${archive.months}">
+            <li class="card-archive-list-item" th:each="month,monthStat : ${archive.months}"
+                th:if="${monthStat.index < 12}">
               <a class="card-archive-list-link" th:href="@{'/archives/'+${archive.year}+'/'+${month.month}}"
                  data-pjax-state="load"><span
                       class="card-archive-list-date">
@@ -100,7 +102,8 @@
                                           "十二月"}]] [[${archive.year}]]
                 </span>
                 <div class="card-archive-list-count-group"><span
-                        class="card-archive-list-count">[[${month.posts.size()}]]</span>
+                        class="card-archive-list-count"
+                        th:text="${month.posts != null ? #lists.size(month.posts) : 0}"></span>
                   <span class="card-archive-list-count-unit">篇</span>
                 </div>
               </a>

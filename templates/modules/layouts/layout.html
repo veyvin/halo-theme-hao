@@ -97,13 +97,13 @@
 
 </script>
 
+<!-- 正文必须先于中控台/侧栏输出：后两者查询失败时会截断 HTML，否则整页白屏 -->
+<th:block th:replace="${content}"></th:block>
+
 <!-- 控制台 -->
 <div th:replace="~{modules/widgets/console}"/>
 
 <div th:replace="~{modules/sidebar}"/>
-
-<!-- 内容 -->
-<th:block th:replace="${content}"></th:block>
 
 
 <!-- todo 右下角悬浮操作按钮 -->
