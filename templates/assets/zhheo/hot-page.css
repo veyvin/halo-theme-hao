@@ -42,6 +42,33 @@
     border-top: none;
 }
 
+/* ---------- 紧凑页头 ----------
+   替代 macro/author-content 的大图横幅：不依赖封面图，
+   文字直接用主题前景色/次要色，浅色与深色模式下都清晰。 */
+.hot-page-header {
+    padding: 26px 24px 20px;
+    border-bottom: var(--style-border);
+    background: var(--heo-card-bg);
+}
+
+.hot-page-title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    color: var(--heo-fontcolor);
+    word-break: break-word;
+}
+
+.hot-page-subtitle {
+    margin: 8px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--heo-secondtext);
+    word-break: break-word;
+}
+
 /* ---------- 工具栏 / 筛选胶囊 ---------- */
 .hot-page-toolbar {
     display: flex;
@@ -121,6 +148,7 @@
 }
 
 .hot-page-item {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 18px;
@@ -132,6 +160,30 @@
 
 .hot-page-item:hover {
     background: var(--heo-secondbg);
+}
+
+/* 行容器是 div（因为分类名本身是 <a>，而 <a> 不能嵌套 <a>），
+   用一个覆盖整行的透明热区保证「整行可点」，同时把分类链接提到上层。 */
+.hot-page-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.hot-page-item-title {
+    position: relative;
+    z-index: 2;
+}
+
+.hot-page-item-meta a {
+    position: relative;
+    z-index: 2;
+}
+
+.hot-page-item-arrow {
+    position: relative;
+    z-index: 2;
 }
 
 .hot-page-list .hot-page-item:last-child {
@@ -266,6 +318,19 @@
    移动端（对齐参考站 heoblogmw768.css 中的 hot-page-* 规则）
    ========================================================================== */
 @media screen and (max-width: 768px) {
+    .hot-page-header {
+        padding: 16px 12px 14px;
+    }
+
+    .hot-page-title {
+        font-size: 20px;
+    }
+
+    .hot-page-subtitle {
+        margin-top: 6px;
+        font-size: 13px;
+    }
+
     .hot-page-section {
         padding: 0;
     }

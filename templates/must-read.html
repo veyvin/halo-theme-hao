@@ -13,41 +13,46 @@
 
         <main class="layout hide-aside" id="content-inner"
               th:with="mrLimit=${theme.config.mustRead != null and theme.config.mustRead.listNum != null and theme.config.mustRead.listNum > 0 ? theme.config.mustRead.listNum : 20},
-                       mrSort=${theme.config.mustRead != null and theme.config.mustRead.sort == 'comment' ? 'stats.comment,desc' : (theme.config.mustRead != null and theme.config.mustRead.sort == 'upvote' ? 'stats.upvote,desc' : 'stats.visit,desc')},
                        limit=${mrLimit},
                        poolSize=${mrLimit * 5},
                        showCover=${theme.config.mustRead == null or theme.config.mustRead.showCover == null or theme.config.mustRead.showCover},
-                       mustReadPosts=${postFinder.list({page: 1, size: poolSize, sort: {mrSort}})}">
+                       mrMetric=${theme.config.mustRead != null and theme.config.mustRead.sort == 'comment' ? 'comment' : (theme.config.mustRead != null and theme.config.mustRead.sort == 'upvote' ? 'upvote' : 'visit')},
+                       mrDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '值得反复阅读的精选内容。' : singlePage.spec.excerpt.raw},
+                       mustReadPosts=${postFinder.list({page: 1, size: poolSize, sort: {'spec.publishTime,desc'}})}">
             <div id="page">
-
-                <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
-                        smallTitle = '必看精选',
-                        bigTitle = ${singlePage.spec.title},
-                        detail = ${singlePage.spec.excerpt.raw},
-                        buttonUrl = '',
-                        buttonTitle = '')}"></div>
 
                 <!-- 组件样式：与 /hot/ 共用 -->
                 <link rel="stylesheet" th:href="${assets_link + '/zhheo/hot-page.css' + theme_version}">
 
                 <div id="must-read-page" class="hot-page-shell">
 
-                    <!-- ============ 工具栏：排序指标 + 分类 ============ -->
+                    <!-- ============ 页头 ============
+                         参考站 /must-read/ 主区没有大图横幅，只有一行紧凑标题。
+                         这里用主题色文字代替 author-content，避免无封面时的大片空白与低对比度。 -->
+                    <header class="hot-page-header">
+                        <h1 class="hot-page-title" th:text="${singlePage.spec.title}"></h1>
+                        <p class="hot-page-subtitle" th:text="${mrDesc}"></p>
+                    </header>
+
+                    <!-- ============ 工具栏：排序指标 ============ -->
                     <div class="hot-page-section hot-page-section-toolbar">
                         <div class="hot-page-toolbar">
                             <div class="hot-page-metrics" role="tablist" aria-label="精选排序依据">
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-metric="upvote" aria-pressed="false">最多点赞</button>
+                                        data-metric="visit" th:classappend="${mrMetric == 'visit' ? 'is-active' : ''}"
+                                        aria-pressed="false">最多阅读</button>
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-metric="comment" aria-pressed="false">最多评论</button>
-                                <button class="hot-period-btn is-active" type="button" role="tab"
-                                        data-metric="visit" aria-pressed="true">最多阅读</button>
+                                        data-metric="upvote" th:classappend="${mrMetric == 'upvote' ? 'is-active' : ''}"
+                                        aria-pressed="false">最多点赞</button>
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-metric="comment" th:classappend="${mrMetric == 'comment' ? 'is-active' : ''}"
+                                        aria-pressed="false">最多评论</button>
                             </div>
-                            <span class="hot-page-meta"
-                                  th:text="${#numbers.formatInteger(limit)} + ' 篇'"></span>
+                            <span class="hot-page-meta" th:text="${limit} + ' 篇'"></span>
                         </div>
                     </div>
 
+                    <!-- ============ 工具栏：分类筛选 ============ -->
                     <div class="hot-page-section hot-page-section-toolbar"
                          th:if="${not #lists.isEmpty(categoryFinder.listAll())}">
                         <div class="hot-page-toolbar">
@@ -63,19 +68,18 @@
                         </div>
                     </div>
 
-                    <!-- ============ 列表 ============ -->
+                    <!-- ============ 列表 ============
+                         行容器用 div：分类名本身是链接，a 标签不可嵌套。 -->
                     <div class="hot-page-section hot-page-section-list">
                         <div class="hot-page-list" id="must-read-page-list">
 
-                            <a class="hot-page-item"
-                               th:each="post,iter : ${mustReadPosts.items}"
-                               th:href="@{${post.status.permalink}}"
-                               th:title="${post.spec.title}"
-                               th:attr="data-upvote=${post.stats.upvote},
-                                        data-comment=${post.stats.comment},
-                                        data-visit=${post.stats.visit},
-                                        data-categories=${#strings.listJoin(post.spec.categories, ',')},
-                                        data-rank=${iter.count}">
+                            <div class="hot-page-item"
+                                 th:each="post,iter : ${mustReadPosts.items}"
+                                 th:attr="data-upvote=${post.stats.upvote},
+                                          data-comment=${post.stats.comment},
+                                          data-visit=${post.stats.visit},
+                                          data-categories=${#strings.listJoin(post.spec.categories, ',')},
+                                          data-rank=${iter.count}">
 
                                 <span class="hot-page-thumb"
                                       th:classappend="${#strings.isEmpty(post.spec.cover)} ? ' is-fallback' : ''"
@@ -93,17 +97,20 @@
                                 </span>
 
                                 <span class="hot-page-item-main">
-                                    <span class="hot-page-item-title" th:text="${post.spec.title}"></span>
+                                    <a class="hot-page-item-title"
+                                       th:href="@{${post.status.permalink}}"
+                                       th:title="${post.spec.title}"
+                                       th:text="${post.spec.title}"></a>
                                     <span class="hot-page-item-meta">
                                         <span class="hot-page-item-visitors"
-                                              th:text="${#numbers.formatInteger(post.stats.upvote, 1, 'COMMA')} + ' 赞'"></span>
-                                        <span>·</span>
-                                        <span th:text="${#numbers.formatInteger(post.stats.comment, 1, 'COMMA')} + ' 评论'"></span>
-                                        <span>·</span>
+                                              th:text="${post.stats.upvote} + ' 赞'"></span>
+                                        <span aria-hidden="true">·</span>
+                                        <span th:text="${post.stats.comment} + ' 评论'"></span>
+                                        <span aria-hidden="true">·</span>
                                         <time th:datetime="${post.spec.publishTime}"
                                               th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
                                         <th:block th:if="${not #lists.isEmpty(post.categories)}">
-                                            <span>·</span>
+                                            <span aria-hidden="true">·</span>
                                             <a th:each="category : ${post.categories}"
                                                th:href="@{${category.status.permalink}}"
                                                th:text="${category.spec.displayName}"></a>
@@ -112,7 +119,7 @@
                                 </span>
 
                                 <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
-                            </a>
+                            </div>
 
                             <div class="hot-page-state" id="must-read-empty" hidden>该分类下还没有精选文章</div>
                         </div>
@@ -121,8 +128,8 @@
                 </div>
 
                 <script th:inline="javascript">
-                    /* 分类筛选 + 排序指标切换：服务端渲染候选池，前端重排并重新编号。
-                       Halo 目前没有「按注解筛选文章」的 Finder，分类筛选是最通用的精选维度。 */
+                    /* 分类筛选 + 排序指标切换：服务端按配置指标渲染候选池，
+                       浏览器端按分类过滤、按所选指标重排并重新编号。 */
                     (function () {
                         var root = document.getElementById('must-read-page');
                         if (!root) return;
@@ -132,45 +139,41 @@
                         var catBtns = document.querySelectorAll('#must-read-cats .hot-period-btn');
                         var limit = [[${limit}]];
 
-                        var metric = 'visit';
+                        var metric = '[[${mrMetric}]]';
                         var category = '';
 
-                        function metricValue(el) {
-                            return parseInt(el.getAttribute('data-' + metric) || '0', 10);
-                        }
-
                         function render() {
-                            var items = Array.prototype.slice.call(list.querySelectorAll('.hot-page-item'));
+                            var rows = Array.prototype.slice.call(list.querySelectorAll('.hot-page-item'));
 
-                            items.sort(function (a, b) {
-                                if (category) {
-                                    var inA = (a.getAttribute('data-categories') || '').split(',').indexOf(category) > -1;
-                                    var inB = (b.getAttribute('data-categories') || '').split(',').indexOf(category) > -1;
-                                    if (inA !== inB) return inA ? -1 : 1;
-                                }
-                                return metricValue(b) - metricValue(a);
+                            rows.sort(function (a, b) {
+                                var av = parseInt(a.getAttribute('data-' + metric) || '0', 10);
+                                var bv = parseInt(b.getAttribute('data-' + metric) || '0', 10);
+                                return bv - av;
                             });
 
                             var shown = 0;
-                            items.forEach(function (el) {
+                            rows.forEach(function (el) {
                                 var cats = (el.getAttribute('data-categories') || '').split(',');
                                 var pass = !category || cats.indexOf(category) > -1;
                                 if (pass && shown < limit) {
                                     el.hidden = false;
                                     el.parentNode.appendChild(el);
                                     shown++;
-                                    var fb = el.querySelector('.hot-page-thumb-fallback');
-                                    if (fb) {
-                                        var rank = shown;
-                                        fb.textContent = rank;
-                                        fb.className = 'hot-page-thumb-fallback rank-' + (rank <= 3 ? rank : 4);
-                                    }
                                 } else {
                                     el.hidden = true;
                                 }
                             });
 
-                            if (empty) empty.hidden = shown > 0;
+                            var vis = list.querySelectorAll('.hot-page-item:not([hidden])');
+                            Array.prototype.forEach.call(vis, function (el, i) {
+                                var f = el.querySelector('.hot-page-thumb-fallback');
+                                if (!f) return;
+                                var n = i + 1;
+                                f.textContent = n;
+                                f.className = 'hot-page-thumb-fallback rank-' + (n <= 3 ? n : 4);
+                            });
+
+                            if (empty) empty.hidden = vis.length > 0;
                         }
 
                         metricBtns.forEach(function (btn) {

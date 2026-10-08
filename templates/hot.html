@@ -13,22 +13,24 @@
 
         <main class="layout hide-aside" id="content-inner"
               th:with="hotLimit=${theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20},
-                       hotPoolSize=${hotLimit * 5},
+                       hotPoolSize=${(theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20) * 5},
                        showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
-                       hotPosts=${postFinder.list({page: 1, size: hotPoolSize, sort: {'stats.visit,desc'}})}">
+                       hotDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
+                       hotPosts=${postFinder.list({page: 1, size: hotPoolSize, sort: {'spec.publishTime,desc'}})}">
             <div id="page">
-
-                <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
-                        smallTitle = '热度排行',
-                        bigTitle = ${singlePage.spec.title},
-                        detail = ${singlePage.spec.excerpt.raw},
-                        buttonUrl = '',
-                        buttonTitle = '')}"></div>
 
                 <!-- 组件样式：/hot/ 与 /must-read/ 共用 -->
                 <link rel="stylesheet" th:href="${assets_link + '/zhheo/hot-page.css' + theme_version}">
 
                 <div id="hot-page" class="hot-page-shell">
+
+                    <!-- ============ 页头 ============
+                         参考站 /hot/ 主区没有大图横幅，只有一行紧凑标题。
+                         这里用主题色文字代替 author-content，避免无封面时的大片空白与低对比度。 -->
+                    <header class="hot-page-header">
+                        <h1 class="hot-page-title" th:text="${singlePage.spec.title}"></h1>
+                        <p class="hot-page-subtitle" th:text="${hotDesc}"></p>
+                    </header>
 
                     <!-- ============ 工具栏：时间范围 ============ -->
                     <div class="hot-page-section hot-page-section-toolbar">
@@ -36,31 +38,29 @@
                             <div class="hot-page-periods" role="tablist" aria-label="热门时间范围">
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-window="1" aria-pressed="false">当日</button>
-                                <button class="hot-period-btn is-active" type="button" role="tab"
-                                        data-window="30" aria-pressed="true">最近一个月</button>
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-window="365" aria-pressed="false">最近一年</button>
+                                        data-window="30" aria-pressed="false">最近一个月</button>
+                                <button class="hot-period-btn is-active" type="button" role="tab"
+                                        data-window="365" aria-pressed="true">最近一年</button>
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-window="0" aria-pressed="false">全部</button>
                             </div>
-                            <span class="hot-page-meta"
-                                  th:text="${#numbers.formatInteger(hotLimit)} + ' 篇'"></span>
+                            <span class="hot-page-meta" th:text="${hotLimit} + ' 篇'"></span>
                         </div>
                     </div>
 
-                    <!-- ============ 列表 ============ -->
+                    <!-- ============ 列表 ============
+                         注意：行容器必须用 div，不能用 a 标签。
+                         分类名本身也是链接，而 HTML5 不允许 a 标签互相嵌套，
+                         解析器会提前闭合外层 a 标签，把子元素全部提升成列表的直接子节点。 -->
                     <div class="hot-page-section hot-page-section-list">
-                        <div class="hot-page-list" id="hot-page-list"
-                             th:with="limit=${hotLimit},
-                                      postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme.config.layout.postRandomImg+'&' : theme.config.layout.postRandomImg+'?'}">
+                        <div class="hot-page-list" id="hot-page-list">
 
-                            <a class="hot-page-item"
-                               th:each="post,iter : ${hotPosts.items}"
-                               th:href="@{${post.status.permalink}}"
-                               th:title="${post.spec.title}"
-                               th:attr="data-visit=${post.stats.visit},
-                                        data-published=${post.spec.publishTime.toEpochMilli()},
-                                        data-rank=${iter.count}">
+                            <div class="hot-page-item"
+                                 th:each="post,iter : ${hotPosts.items}"
+                                 th:attr="data-visit=${post.stats.visit},
+                                          data-published=${post.spec.publishTime.toEpochMilli()},
+                                          data-rank=${iter.count}">
 
                                 <span class="hot-page-thumb"
                                       th:classappend="${#strings.isEmpty(post.spec.cover)} ? ' is-fallback' : ''"
@@ -78,15 +78,18 @@
                                 </span>
 
                                 <span class="hot-page-item-main">
-                                    <span class="hot-page-item-title" th:text="${post.spec.title}"></span>
+                                    <a class="hot-page-item-title"
+                                       th:href="@{${post.status.permalink}}"
+                                       th:title="${post.spec.title}"
+                                       th:text="${post.spec.title}"></a>
                                     <span class="hot-page-item-meta">
                                         <span class="hot-page-item-visitors"
-                                              th:text="${#numbers.formatInteger(post.stats.visit, 1, 'COMMA')} + ' 热度'"></span>
-                                        <span>·</span>
+                                              th:text="${post.stats.visit} + ' 热度'"></span>
+                                        <span aria-hidden="true">·</span>
                                         <time th:datetime="${post.spec.publishTime}"
                                               th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
                                         <th:block th:if="${not #lists.isEmpty(post.categories)}">
-                                            <span>·</span>
+                                            <span aria-hidden="true">·</span>
                                             <a th:each="category : ${post.categories}"
                                                th:href="@{${category.status.permalink}}"
                                                th:text="${category.spec.displayName}"></a>
@@ -95,7 +98,7 @@
                                 </span>
 
                                 <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
-                            </a>
+                            </div>
 
                             <div class="hot-page-state" id="hot-page-empty" hidden>该时间范围内还没有热门文章</div>
                         </div>
@@ -104,9 +107,9 @@
                 </div>
 
                 <script th:inline="javascript">
-                    /* 轻量筛选：Halo 没有「按访问时间区间」的查询能力，
-                       因此服务端一次性渲染候选池（按访问量降序），
-                       这里按发布时间窗口过滤并重新编号，与参考站交互一致。 */
+                    /* Halo 的 Finder 无法按「访问时间区间」查询，因此：
+                       服务端按发布时间倒序渲染候选池，浏览器端按发布时间窗口过滤、
+                       再按访问量重排并重新编号。交互与参考站一致。 */
                     (function () {
                         var root = document.getElementById('hot-page');
                         if (!root) return;
@@ -116,28 +119,44 @@
                         var limit = [[${hotLimit}]];
                         var DAY = 86400000;
 
+                        function paint(rank) {
+                            var fb = document.querySelector('.hot-page-item:not([hidden]) .hot-page-thumb-fallback');
+                            /* 逐个更新可见项的排名角标 */
+                            var shown = document.querySelectorAll('.hot-page-item:not([hidden])');
+                            shown.forEach(function (el, i) {
+                                var f = el.querySelector('.hot-page-thumb-fallback');
+                                if (!f) return;
+                                var n = i + 1;
+                                f.textContent = n;
+                                f.className = 'hot-page-thumb-fallback rank-' + (n <= 3 ? n : 4);
+                            });
+                            if (empty) empty.hidden = shown.length > 0;
+                        }
+
                         function apply(days) {
                             var now = Date.now();
                             var cutoff = days > 0 ? now - days * DAY : 0;
-                            var shown = 0;
-                            var items = list.querySelectorAll('.hot-page-item');
 
-                            items.forEach(function (el) {
+                            var rows = Array.prototype.slice.call(list.querySelectorAll('.hot-page-item'));
+                            rows.sort(function (a, b) {
+                                return (parseInt(b.getAttribute('data-visit') || '0', 10)
+                                        - parseInt(a.getAttribute('data-visit') || '0', 10));
+                            });
+
+                            var shown = 0;
+                            rows.forEach(function (el) {
                                 var published = parseInt(el.getAttribute('data-published') || '0', 10);
                                 var pass = days === 0 || (published > 0 && published >= cutoff);
                                 if (pass && shown < limit) {
                                     el.hidden = false;
+                                    el.parentNode.appendChild(el);
                                     shown++;
-                                    var rank = shown;
-                                    var fb = el.querySelector('.hot-page-thumb-fallback');
-                                    if (fb) fb.textContent = rank;
-                                    fb.className = 'hot-page-thumb-fallback rank-' + (rank <= 3 ? rank : 4);
                                 } else {
                                     el.hidden = true;
                                 }
                             });
 
-                            if (empty) empty.hidden = shown > 0;
+                            paint();
                         }
 
                         btns.forEach(function (btn) {
@@ -152,7 +171,7 @@
                             });
                         });
 
-                        apply(30);
+                        apply(365);
                     })();
                 </script>
 
