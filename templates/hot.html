@@ -7,12 +7,17 @@
 
     <div class="page" id="body-wrap">
 
-        <!-- 头部导航栏 -->
         <header class="not-top-img" id="page-header">
             <nav th:replace="~{modules/nav :: nav(title = ${singlePage.spec.title})}"></nav>
         </header>
-        <main class="layout hide-aside" id="content-inner">
+
+        <main class="layout hide-aside" id="content-inner"
+              th:with="hotLimit=${theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20},
+                       hotPoolSize=${hotLimit * 5},
+                       showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
+                       hotPosts=${postFinder.list({page: 1, size: hotPoolSize, sort: {'stats.visit,desc'}})}">
             <div id="page">
+
                 <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
                         smallTitle = '热度排行',
                         bigTitle = ${singlePage.spec.title},
@@ -20,105 +25,140 @@
                         buttonUrl = '',
                         buttonTitle = '')}"></div>
 
-                <div id="hot-list"
-                     th:with="hotPosts=${postFinder.list({page: 1, size: theme.config.hot.listNum, sort: {'stats.visit,desc'}})},
-                         postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme.config.layout.postRandomImg+'&' : theme.config.layout.postRandomImg+'?'}">
-                    <a class="hot-item" th:each="post,iStat : ${hotPosts}" th:href="@{${post.status.permalink}}"
-                       th:title="${post.spec.title}">
-                        <span class="hot-rank" th:text="${iStat.count}"
-                              th:classappend="${iStat.count <= 3} ? ' hot-top' : ''"></span>
-                        <img th:if="${theme.config.hot.showCover}" class="hot-cover" width="120" height="80"
-                             alt="文章封面"
-                             th:with="img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, 's')}"
-                             th:src="${isLazyload ? loadingImg : img}"
-                             th:data-lazy-src="${ isLazyload ? img : ''}">
-                        <span class="hot-info">
-                            <span class="hot-title" th:text="${post.spec.title}"></span>
-                            <span class="hot-meta">
-                                <span th:text="${post.stats.visit}"></span> 热度 ·
-                                <span th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"></span>
-                            </span>
-                        </span>
-                    </a>
+                <!-- 组件样式：/hot/ 与 /must-read/ 共用 -->
+                <link rel="stylesheet" th:href="${assets_link + '/zhheo/hot-page.css' + theme_version}">
+
+                <div id="hot-page" class="hot-page-shell">
+
+                    <!-- ============ 工具栏：时间范围 ============ -->
+                    <div class="hot-page-section hot-page-section-toolbar">
+                        <div class="hot-page-toolbar">
+                            <div class="hot-page-periods" role="tablist" aria-label="热门时间范围">
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-window="1" aria-pressed="false">当日</button>
+                                <button class="hot-period-btn is-active" type="button" role="tab"
+                                        data-window="30" aria-pressed="true">最近一个月</button>
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-window="365" aria-pressed="false">最近一年</button>
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-window="0" aria-pressed="false">全部</button>
+                            </div>
+                            <span class="hot-page-meta"
+                                  th:text="${#numbers.formatInteger(hotLimit)} + ' 篇'"></span>
+                        </div>
+                    </div>
+
+                    <!-- ============ 列表 ============ -->
+                    <div class="hot-page-section hot-page-section-list">
+                        <div class="hot-page-list" id="hot-page-list"
+                             th:with="limit=${hotLimit},
+                                      postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme.config.layout.postRandomImg+'&' : theme.config.layout.postRandomImg+'?'}">
+
+                            <a class="hot-page-item"
+                               th:each="post,iter : ${hotPosts.items}"
+                               th:href="@{${post.status.permalink}}"
+                               th:title="${post.spec.title}"
+                               th:attr="data-visit=${post.stats.visit},
+                                        data-published=${post.spec.publishTime.toEpochMilli()},
+                                        data-rank=${iter.count}">
+
+                                <span class="hot-page-thumb"
+                                      th:classappend="${#strings.isEmpty(post.spec.cover)} ? ' is-fallback' : ''"
+                                      th:if="${showCover}">
+                                    <img th:if="${!#strings.isEmpty(post.spec.cover)}" class="hot-page-thumb-img"
+                                         th:with="img=${thumbnail.gen(post.spec.cover, 's')}"
+                                         th:src="${isLazyload ? loadingImg : img}"
+                                         th:data-lazy-src="${isLazyload ? img : ''}"
+                                         th:data-srcset="${isLazyload ? thumbnail.gen(post.spec.cover, 's') + ' 400w, ' + thumbnail.gen(post.spec.cover, 'm') + ' 800w' : null}"
+                                         sizes="(max-width: 768px) 80px, 151px"
+                                         th:alt="${post.spec.title}" width="151" height="80">
+                                    <span class="hot-page-thumb-fallback"
+                                          th:classappend="${iter.count == 1} ? ' rank-1' : (${iter.count == 2} ? ' rank-2' : (${iter.count == 3} ? ' rank-3' : ''))"
+                                          th:text="${iter.count}"></span>
+                                </span>
+
+                                <span class="hot-page-item-main">
+                                    <span class="hot-page-item-title" th:text="${post.spec.title}"></span>
+                                    <span class="hot-page-item-meta">
+                                        <span class="hot-page-item-visitors"
+                                              th:text="${#numbers.formatInteger(post.stats.visit, 1, 'COMMA')} + ' 热度'"></span>
+                                        <span>·</span>
+                                        <time th:datetime="${post.spec.publishTime}"
+                                              th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                                        <th:block th:if="${not #lists.isEmpty(post.categories)}">
+                                            <span>·</span>
+                                            <a th:each="category : ${post.categories}"
+                                               th:href="@{${category.status.permalink}}"
+                                               th:text="${category.spec.displayName}"></a>
+                                        </th:block>
+                                    </span>
+                                </span>
+
+                                <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
+                            </a>
+
+                            <div class="hot-page-state" id="hot-page-empty" hidden>该时间范围内还没有热门文章</div>
+                        </div>
+                    </div>
+
                 </div>
-                <style>
-                    #hot-list {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 12px;
-                        background: var(--heo-card-bg);
-                        border: var(--style-border);
-                        border-radius: 12px;
-                        padding: 1rem 1.2rem;
-                        box-shadow: var(--heo-shadow-border);
-                    }
 
-                    #hot-list .hot-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                        padding: 8px;
-                        border-radius: 8px;
-                    }
+                <script th:inline="javascript">
+                    /* 轻量筛选：Halo 没有「按访问时间区间」的查询能力，
+                       因此服务端一次性渲染候选池（按访问量降序），
+                       这里按发布时间窗口过滤并重新编号，与参考站交互一致。 */
+                    (function () {
+                        var root = document.getElementById('hot-page');
+                        if (!root) return;
+                        var list = document.getElementById('hot-page-list');
+                        var empty = document.getElementById('hot-page-empty');
+                        var btns = root.querySelectorAll('.hot-page-periods .hot-period-btn');
+                        var limit = [[${hotLimit}]];
+                        var DAY = 86400000;
 
-                    #hot-list .hot-item:hover {
-                        background: var(--heo-main-op-light, rgba(66, 90, 239, .08));
-                    }
+                        function apply(days) {
+                            var now = Date.now();
+                            var cutoff = days > 0 ? now - days * DAY : 0;
+                            var shown = 0;
+                            var items = list.querySelectorAll('.hot-page-item');
 
-                    #hot-list .hot-rank {
-                        min-width: 32px;
-                        height: 32px;
-                        line-height: 32px;
-                        text-align: center;
-                        font-weight: 800;
-                        border-radius: 8px;
-                        background: var(--heo-card-border);
-                        opacity: .8;
-                    }
+                            items.forEach(function (el) {
+                                var published = parseInt(el.getAttribute('data-published') || '0', 10);
+                                var pass = days === 0 || (published > 0 && published >= cutoff);
+                                if (pass && shown < limit) {
+                                    el.hidden = false;
+                                    shown++;
+                                    var rank = shown;
+                                    var fb = el.querySelector('.hot-page-thumb-fallback');
+                                    if (fb) fb.textContent = rank;
+                                    fb.className = 'hot-page-thumb-fallback rank-' + (rank <= 3 ? rank : 4);
+                                } else {
+                                    el.hidden = true;
+                                }
+                            });
 
-                    #hot-list .hot-rank.hot-top {
-                        background: var(--heo-main);
-                        color: #fff;
-                        opacity: 1;
-                    }
-
-                    #hot-list .hot-cover {
-                        width: 120px;
-                        height: 80px;
-                        object-fit: cover;
-                        border-radius: 8px;
-                    }
-
-                    #hot-list .hot-info {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 4px;
-                        min-width: 0;
-                    }
-
-                    #hot-list .hot-title {
-                        font-weight: 700;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                    }
-
-                    #hot-list .hot-meta {
-                        font-size: .85em;
-                        opacity: .65;
-                    }
-
-                    @media screen and (max-width: 768px) {
-                        #hot-list .hot-cover {
-                            width: 90px;
-                            height: 64px;
+                            if (empty) empty.hidden = shown > 0;
                         }
-                    }
-                </style>
-            </div>
 
+                        btns.forEach(function (btn) {
+                            btn.addEventListener('click', function () {
+                                btns.forEach(function (b) {
+                                    b.classList.remove('is-active');
+                                    b.setAttribute('aria-pressed', 'false');
+                                });
+                                btn.classList.add('is-active');
+                                btn.setAttribute('aria-pressed', 'true');
+                                apply(parseInt(btn.getAttribute('data-window') || '0', 10));
+                            });
+                        });
+
+                        apply(30);
+                    })();
+                </script>
+
+            </div>
         </main>
-        <!-- 底部 -->
+
         <footer th:replace="~{modules/footer}"/>
     </div>
 

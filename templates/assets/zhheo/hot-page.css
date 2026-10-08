@@ -1,0 +1,321 @@
+/* ==========================================================================
+   热榜 / 必看 页面共用组件
+   --------------------------------------------------------------------------
+   借鉴 blog.zhheo.com 的 /hot/ 与 /must-read/ 页面：
+   两页共用同一套 hot-page-* 组件（卡片外壳 + 工具栏胶囊 + 列表 + 分页区）。
+   参考站列表由 JS 渲染，这里改为 Thymeleaf 服务端渲染 + 轻量 JS 排序/筛选，
+   首屏即可见、无需等待接口。
+   ========================================================================== */
+
+/* ---------- 卡片外壳 ---------- */
+#hot-page.hot-page-shell,
+#must-read-page.hot-page-shell {
+    --hot-page-anim-duration: .6s;
+    --hot-page-anim-step: .1s;
+    --hot-page-anim-base: .1s;
+    background: var(--heo-card-bg);
+    border: var(--style-border);
+    border-radius: 20px;
+    box-shadow: var(--heo-shadow-border);
+    overflow: hidden;
+}
+
+.hot-page-section {
+    padding: 18px 24px;
+}
+
+.hot-page-section + .hot-page-section {
+    border-top: var(--style-border);
+}
+
+.hot-page-section-toolbar {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.hot-page-section.hot-page-section-list {
+    padding: 0;
+}
+
+.hot-page-section.hot-page-section-pagination {
+    padding-top: 14px;
+    border-top: none;
+}
+
+/* ---------- 工具栏 / 筛选胶囊 ---------- */
+.hot-page-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.hot-page-toolbar::-webkit-scrollbar,
+.hot-page-periods::-webkit-scrollbar,
+.hot-page-metrics::-webkit-scrollbar {
+    display: none;
+}
+
+.hot-page-periods,
+.hot-page-metrics {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.hot-period-btn {
+    border: 0;
+    background: var(--heo-secondbg);
+    color: var(--heo-fontcolor);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    height: auto;
+    min-height: 32px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-sizing: border-box;
+    transition: background .3s ease, color .3s ease, box-shadow .3s ease;
+}
+
+.hot-period-btn:hover {
+    background: var(--heo-secondbg);
+    color: var(--heo-main);
+}
+
+.hot-period-btn.is-active {
+    background: var(--heo-main);
+    border-color: var(--heo-main);
+    color: var(--heo-card-bg);
+    box-shadow: var(--heo-shadow-main);
+}
+
+.hot-page-meta {
+    color: var(--heo-secondtext);
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+/* ---------- 列表 ---------- */
+.hot-page-list {
+    display: grid;
+    gap: 0;
+}
+
+.hot-page-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 24px;
+    border-radius: 0;
+    border-bottom: var(--style-border);
+    transition: background .3s ease;
+}
+
+.hot-page-item:hover {
+    background: var(--heo-secondbg);
+}
+
+.hot-page-list .hot-page-item:last-child {
+    border-bottom: 0;
+}
+
+.hot-page-item[hidden] {
+    display: none;
+}
+
+/* ---------- 缩略图 / 无封面时的排名色块 ---------- */
+.hot-page-thumb {
+    flex-shrink: 0;
+    width: 151px;
+    min-width: 151px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--heo-secondbg);
+    position: relative;
+}
+
+.hot-page-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
+    display: block;
+}
+
+.hot-page-item:hover .hot-page-thumb-img {
+    transform: scale(1.06);
+}
+
+.hot-page-thumb-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--heo-white);
+    background: var(--heo-secondbg);
+}
+
+.hot-page-thumb.is-fallback .hot-page-thumb-fallback {
+    display: flex;
+}
+
+.hot-page-thumb-fallback.rank-1 {
+    background: var(--heo-red);
+}
+
+.hot-page-thumb-fallback.rank-2 {
+    background: var(--heo-orange);
+}
+
+.hot-page-thumb-fallback.rank-3 {
+    background: var(--heo-yellow);
+}
+
+/* ---------- 文本区 ---------- */
+.hot-page-item-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.hot-page-item-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--heo-fontcolor);
+    margin-bottom: 8px;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hot-page-item:hover .hot-page-item-title {
+    color: var(--heo-main);
+}
+
+.hot-page-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--heo-secondtext);
+    font-size: 14px;
+}
+
+.hot-page-item-visitors {
+    font-weight: 700;
+    color: var(--heo-secondtext);
+}
+
+.hot-page-item-arrow {
+    color: var(--heo-secondtext);
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+/* ---------- 空状态 ---------- */
+.hot-page-state {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--heo-secondtext);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 96px;
+}
+
+.hot-page-state[hidden] {
+    display: none;
+}
+
+/* ---------- 分页区 ---------- */
+#hot-page .hot-page-section-pagination nav#pagination,
+#must-read-page .hot-page-section-pagination nav#pagination {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* ==========================================================================
+   移动端（对齐参考站 heoblogmw768.css 中的 hot-page-* 规则）
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    .hot-page-section {
+        padding: 0;
+    }
+
+    .hot-page-section-toolbar {
+        padding: 12px;
+    }
+
+    .hot-page-toolbar,
+    .hot-page-periods {
+        gap: 6px;
+    }
+
+    .hot-period-btn {
+        padding: 8px 18px;
+        min-height: 38px;
+    }
+
+    .hot-page-item {
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 12px;
+    }
+
+    .hot-page-item:hover {
+        background: transparent;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .hot-page-item-title {
+        font-size: 14px;
+    }
+
+    .hot-page-item-arrow {
+        display: none;
+    }
+
+    .hot-page-thumb {
+        width: 80px;
+        min-width: 80px;
+        height: 80px;
+        border-radius: 8px;
+    }
+
+    .hot-page-thumb-fallback {
+        font-size: 20px;
+    }
+
+    .hot-page-meta {
+        display: none;
+    }
+}

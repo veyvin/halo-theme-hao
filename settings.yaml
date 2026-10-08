@@ -3172,3 +3172,31 @@ spec:
           label: 显示封面
           value: true
           help: 榜单每行是否显示文章封面，关闭则只显示排名与标题
+    - group: mustRead
+      label: 16 · 页面-必看精选
+      formSchema:
+        - $formkit: number
+          name: listNum
+          label: 精选数量
+          value: 20
+          min: 5
+          max: 50
+          placeholder: 例如：20
+          help: 必看页展示的文章数量，建议 10-30
+        - $formkit: select
+          name: sort
+          label: 默认排序
+          value: visit
+          options:
+            - value: visit
+              label: 最多阅读
+            - value: upvote
+              label: 最多点赞
+            - value: comment
+              label: 最多评论
+          help: 页面默认按哪个指标排序，读者仍可在页面顶部切换
+        - $formkit: switch
+          name: showCover
+          label: 显示封面
+          value: true
+          help: 精选每行是否显示文章封面，关闭则只显示标题与数据

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page',title = ${singlePage.spec.title + ' | ' + site.title}, head = ~{::head})}">
+<th:block th:fragment="head">
+</th:block>
+<th:block th:fragment="content">
+
+    <div class="page" id="body-wrap">
+
+        <header class="not-top-img" id="page-header">
+            <nav th:replace="~{modules/nav :: nav(title = ${singlePage.spec.title})}"></nav>
+        </header>
+
+        <main class="layout hide-aside" id="content-inner"
+              th:with="mrLimit=${theme.config.mustRead != null and theme.config.mustRead.listNum != null and theme.config.mustRead.listNum > 0 ? theme.config.mustRead.listNum : 20},
+                       mrSort=${theme.config.mustRead != null and theme.config.mustRead.sort == 'comment' ? 'stats.comment,desc' : (theme.config.mustRead != null and theme.config.mustRead.sort == 'upvote' ? 'stats.upvote,desc' : 'stats.visit,desc')},
+                       limit=${mrLimit},
+                       poolSize=${mrLimit * 5},
+                       showCover=${theme.config.mustRead == null or theme.config.mustRead.showCover == null or theme.config.mustRead.showCover},
+                       mustReadPosts=${postFinder.list({page: 1, size: poolSize, sort: {mrSort}})}">
+            <div id="page">
+
+                <div th:replace="~{macro/author-content :: author-content(background = ${singlePage.spec.cover},
+                        smallTitle = '必看精选',
+                        bigTitle = ${singlePage.spec.title},
+                        detail = ${singlePage.spec.excerpt.raw},
+                        buttonUrl = '',
+                        buttonTitle = '')}"></div>
+
+                <!-- 组件样式：与 /hot/ 共用 -->
+                <link rel="stylesheet" th:href="${assets_link + '/zhheo/hot-page.css' + theme_version}">
+
+                <div id="must-read-page" class="hot-page-shell">
+
+                    <!-- ============ 工具栏：排序指标 + 分类 ============ -->
+                    <div class="hot-page-section hot-page-section-toolbar">
+                        <div class="hot-page-toolbar">
+                            <div class="hot-page-metrics" role="tablist" aria-label="精选排序依据">
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-metric="upvote" aria-pressed="false">最多点赞</button>
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        data-metric="comment" aria-pressed="false">最多评论</button>
+                                <button class="hot-period-btn is-active" type="button" role="tab"
+                                        data-metric="visit" aria-pressed="true">最多阅读</button>
+                            </div>
+                            <span class="hot-page-meta"
+                                  th:text="${#numbers.formatInteger(limit)} + ' 篇'"></span>
+                        </div>
+                    </div>
+
+                    <div class="hot-page-section hot-page-section-toolbar"
+                         th:if="${not #lists.isEmpty(categoryFinder.listAll())}">
+                        <div class="hot-page-toolbar">
+                            <div class="hot-page-periods" id="must-read-cats" role="tablist" aria-label="分类筛选">
+                                <button class="hot-period-btn is-active" type="button" role="tab"
+                                        data-category="" aria-pressed="true">全部分类</button>
+                                <button class="hot-period-btn" type="button" role="tab"
+                                        th:each="cat : ${categoryFinder.listAll()}"
+                                        th:attr="data-category=${cat.metadata.name}"
+                                        th:text="${cat.spec.displayName}"
+                                        aria-pressed="false"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ 列表 ============ -->
+                    <div class="hot-page-section hot-page-section-list">
+                        <div class="hot-page-list" id="must-read-page-list">
+
+                            <a class="hot-page-item"
+                               th:each="post,iter : ${mustReadPosts.items}"
+                               th:href="@{${post.status.permalink}}"
+                               th:title="${post.spec.title}"
+                               th:attr="data-upvote=${post.stats.upvote},
+                                        data-comment=${post.stats.comment},
+                                        data-visit=${post.stats.visit},
+                                        data-categories=${#strings.listJoin(post.spec.categories, ',')},
+                                        data-rank=${iter.count}">
+
+                                <span class="hot-page-thumb"
+                                      th:classappend="${#strings.isEmpty(post.spec.cover)} ? ' is-fallback' : ''"
+                                      th:if="${showCover}">
+                                    <img th:if="${!#strings.isEmpty(post.spec.cover)}" class="hot-page-thumb-img"
+                                         th:with="img=${thumbnail.gen(post.spec.cover, 's')}"
+                                         th:src="${isLazyload ? loadingImg : img}"
+                                         th:data-lazy-src="${isLazyload ? img : ''}"
+                                         th:data-srcset="${isLazyload ? thumbnail.gen(post.spec.cover, 's') + ' 400w, ' + thumbnail.gen(post.spec.cover, 'm') + ' 800w' : null}"
+                                         sizes="(max-width: 768px) 80px, 151px"
+                                         th:alt="${post.spec.title}" width="151" height="80">
+                                    <span class="hot-page-thumb-fallback"
+                                          th:classappend="${iter.count == 1} ? ' rank-1' : (${iter.count == 2} ? ' rank-2' : (${iter.count == 3} ? ' rank-3' : ''))"
+                                          th:text="${iter.count}"></span>
+                                </span>
+
+                                <span class="hot-page-item-main">
+                                    <span class="hot-page-item-title" th:text="${post.spec.title}"></span>
+                                    <span class="hot-page-item-meta">
+                                        <span class="hot-page-item-visitors"
+                                              th:text="${#numbers.formatInteger(post.stats.upvote, 1, 'COMMA')} + ' 赞'"></span>
+                                        <span>·</span>
+                                        <span th:text="${#numbers.formatInteger(post.stats.comment, 1, 'COMMA')} + ' 评论'"></span>
+                                        <span>·</span>
+                                        <time th:datetime="${post.spec.publishTime}"
+                                              th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+                                        <th:block th:if="${not #lists.isEmpty(post.categories)}">
+                                            <span>·</span>
+                                            <a th:each="category : ${post.categories}"
+                                               th:href="@{${category.status.permalink}}"
+                                               th:text="${category.spec.displayName}"></a>
+                                        </th:block>
+                                    </span>
+                                </span>
+
+                                <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
+                            </a>
+
+                            <div class="hot-page-state" id="must-read-empty" hidden>该分类下还没有精选文章</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <script th:inline="javascript">
+                    /* 分类筛选 + 排序指标切换：服务端渲染候选池，前端重排并重新编号。
+                       Halo 目前没有「按注解筛选文章」的 Finder，分类筛选是最通用的精选维度。 */
+                    (function () {
+                        var root = document.getElementById('must-read-page');
+                        if (!root) return;
+                        var list = document.getElementById('must-read-page-list');
+                        var empty = document.getElementById('must-read-empty');
+                        var metricBtns = root.querySelectorAll('.hot-page-metrics .hot-period-btn');
+                        var catBtns = document.querySelectorAll('#must-read-cats .hot-period-btn');
+                        var limit = [[${limit}]];
+
+                        var metric = 'visit';
+                        var category = '';
+
+                        function metricValue(el) {
+                            return parseInt(el.getAttribute('data-' + metric) || '0', 10);
+                        }
+
+                        function render() {
+                            var items = Array.prototype.slice.call(list.querySelectorAll('.hot-page-item'));
+
+                            items.sort(function (a, b) {
+                                if (category) {
+                                    var inA = (a.getAttribute('data-categories') || '').split(',').indexOf(category) > -1;
+                                    var inB = (b.getAttribute('data-categories') || '').split(',').indexOf(category) > -1;
+                                    if (inA !== inB) return inA ? -1 : 1;
+                                }
+                                return metricValue(b) - metricValue(a);
+                            });
+
+                            var shown = 0;
+                            items.forEach(function (el) {
+                                var cats = (el.getAttribute('data-categories') || '').split(',');
+                                var pass = !category || cats.indexOf(category) > -1;
+                                if (pass && shown < limit) {
+                                    el.hidden = false;
+                                    el.parentNode.appendChild(el);
+                                    shown++;
+                                    var fb = el.querySelector('.hot-page-thumb-fallback');
+                                    if (fb) {
+                                        var rank = shown;
+                                        fb.textContent = rank;
+                                        fb.className = 'hot-page-thumb-fallback rank-' + (rank <= 3 ? rank : 4);
+                                    }
+                                } else {
+                                    el.hidden = true;
+                                }
+                            });
+
+                            if (empty) empty.hidden = shown > 0;
+                        }
+
+                        metricBtns.forEach(function (btn) {
+                            btn.addEventListener('click', function () {
+                                metricBtns.forEach(function (b) {
+                                    b.classList.remove('is-active');
+                                    b.setAttribute('aria-pressed', 'false');
+                                });
+                                btn.classList.add('is-active');
+                                btn.setAttribute('aria-pressed', 'true');
+                                metric = btn.getAttribute('data-metric');
+                                render();
+                            });
+                        });
+
+                        catBtns.forEach(function (btn) {
+                            btn.addEventListener('click', function () {
+                                catBtns.forEach(function (b) {
+                                    b.classList.remove('is-active');
+                                    b.setAttribute('aria-pressed', 'false');
+                                });
+                                btn.classList.add('is-active');
+                                btn.setAttribute('aria-pressed', 'true');
+                                category = btn.getAttribute('data-category') || '';
+                                render();
+                            });
+                        });
+
+                        render();
+                    })();
+                </script>
+
+            </div>
+        </main>
+
+        <footer th:replace="~{modules/footer}"/>
+    </div>
+
+</th:block>
+
+</html>
