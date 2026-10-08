@@ -1,7 +1,6 @@
 <th:block
         th:with='postItems=${posts.items},
-          postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"},
-          coverSizes="(max-width: 768px) 52vw, 400px"'>
+          postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"}'>
     
     <!-- card，需要添加在没有图片时使用随机图片 -->
         <div class="recent-post-item"
@@ -33,7 +32,7 @@
                               isFirst=${iStat.first},
                               srcsetVal=${imgS + " 400w, " + img + " 800w, " + imgL + " 1200w"}'
                      th:alt="${post.spec.title}"
-                     sizes="${coverSizes}"
+                     sizes="(max-width: 768px) 52vw, 400px"
                      th:srcset="${isLazyload ? null : srcsetVal}"
                      th:data-srcset="${isLazyload ? srcsetVal : null}"
                      th:data-lazy-src="${isLazyload and !isFirst ? img : null}"
