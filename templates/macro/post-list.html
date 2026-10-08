@@ -56,9 +56,11 @@
                                   class="original"></span>
                         </th:block>
                         <!-- 最新角标：发布 N 天内显示，对标原站 lastestpost -->
-                        <span class="lastestpost" th:if="${theme.config.layout.post.latestDays > 0}"
-                              th:with="publishDays=${(new java.util.Date().getTime()-post.spec.publishTime.toEpochMilli())/86400000}"
-                              th:unless="${publishDays > theme.config.layout.post.latestDays}">最新</span>
+                        <!-- 注意：th:if/th:unless 的执行优先级高于 th:with，故用 th:block 承载变量 -->
+                        <th:block th:with="publishDays=${(new java.util.Date().getTime()-post.spec.publishTime.toEpochMilli())/86400000}">
+                            <span class="lastestpost"
+                                  th:if="${theme.config.layout.post.latestDays > 0 and publishDays <= theme.config.layout.post.latestDays}">最新</span>
+                        </th:block>
                         <a class="unvisited-post" th:if="${theme.config.layout.post.visitedMark}"
                            th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
                            th:attr="data-post-url=${post.status.permalink}"

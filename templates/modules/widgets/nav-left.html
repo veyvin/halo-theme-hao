@@ -6,10 +6,11 @@
               appsWidth=${apps != null and apps.panelWidth != null ? apps.panelWidth : 420},
               appsGroups=${apps != null ? apps.groups : null},
               useCustom=${appsSource == 'custom' and appsGroups != null and !#lists.isEmpty(appsGroups)},
-              leftMenuName=${theme.config.nav.leftMenu}">
+              leftMenuName=${theme.config.nav.leftMenu},
+              showMenu=${!useCustom and not #strings.isEmpty(leftMenuName)}">
 
-    <th:block th:with="showMenu=${!useCustom and not #strings.isEmpty(leftMenuName)}"
-              th:if="${theme.config.nav.menus.pc_leftMenu and (useCustom or showMenu)}">
+    <!-- 注意：th:if 的执行优先级高于 th:with，条件中引用的变量必须在此处先定义 -->
+    <th:block th:if="${theme.config.nav.menus.pc_leftMenu and (useCustom or showMenu)}">
 
         <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false" aria-haspopup="true"
              title="快捷入口"
