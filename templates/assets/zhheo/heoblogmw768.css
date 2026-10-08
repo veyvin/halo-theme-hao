@@ -1,0 +1,209 @@
+/* ==========================================================================
+   移动端样式 —— 对齐 blog.zhheo.com 的 heoblogmw768.css 做法
+   --------------------------------------------------------------------------
+   1) 独立样式表 + media 断点，且置于 zhheoblog.css / custom.css 之后加载，
+      使移动端规则拥有最终决定权，桌面端完全不受影响；
+   2) 只保留经 headless Chrome 实测「确实改变了计算样式」的规则，
+      避免与 custom.css 中的 !important / 高优先级选择器相互覆盖而变成死代码；
+   3) 自定义.css 已把文章卡片做成双列网格（grid-template-columns: repeat(2,1fr) !important），
+      这是本主题刻意的设计，故移动端沿用双列，只做细节对齐，不改列数。
+   ========================================================================== */
+
+/* ---------------- 首页文章卡片 ---------------- */
+
+/* 封面图跟随卡片圆角（基础样式是 24px 顶部圆角，会溢出 14px 圆角的卡片） */
+#recent-posts > .recent-post-item .post_cover img.post_bg {
+    border-radius: 0 !important;
+}
+
+/* 正文区固定高度，多余内容裁切，保证各卡片信息行对齐 */
+#recent-posts > .recent-post-item > .recent-post-info {
+    height: 150px;
+}
+
+/* 时间脱离文档流、贴到卡片右上角，不再与标题/摘要抢行 */
+#recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap time {
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: 0;
+}
+
+/* ---------------- 首页轮播：淡入淡出堆叠 → 横向 scroll-snap 卡片 ---------------- */
+
+#home_center {
+    padding: 0 1rem;
+    margin-top: 0;
+}
+
+.home-center-content {
+    height: auto;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.home-center-left {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* 基础样式里 .home-center-banner-item 是 position:absolute + opacity:0 的堆叠结构。
+   只放开 opacity 会让全部卡片纵向平铺（实测容器高度 222px → 1293px），
+   必须同时把容器改为 flex 横向排列、把 item 改为 position:relative。 */
+.home-center-banner {
+    display: flex;
+    height: 200px;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.home-center-banner::-webkit-scrollbar {
+    display: none;
+}
+
+.home-center-banner-item {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-width: 100%;
+    padding: 16px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.home-center-banner-item::after {
+    display: none;
+}
+
+.home-center-cover {
+    width: 100%;
+    max-width: 100%;
+}
+
+.home-center-banner-item.has-banner-cover .home-center-cover-img {
+    object-position: 70% center;
+}
+
+/* 标题浮在卡片左下角，避免横向滑动时被切掉 */
+.home-center-left .home-center-title {
+    bottom: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+    pointer-events: none;
+}
+
+.home-center-left .home-center-title a {
+    display: block;
+    font-size: 18px;
+    line-height: unset;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+.home-center-title a {
+    font-size: 1.2rem;
+    pointer-events: auto;
+}
+
+/* 移动端空间有限，隐藏标题上方的标签 */
+.home-center-title-tag {
+    display: none;
+}
+
+.home-center-indicators {
+    margin-top: 10px;
+}
+
+.home-center-indicator {
+    width: 6px;
+    height: 6px;
+}
+
+.home-center-indicator.active {
+    width: 20px;
+}
+
+/* ---------------- 分类栏：靠横向滚动浏览，隐藏「更多」与箭头 ---------------- */
+
+.category-bar-items {
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.category-bar-items::-webkit-scrollbar {
+    display: none;
+}
+
+.category-bar-more,
+.category-bar-next {
+    display: none;
+}
+
+/* ---------------- 通用：移动端隐藏不适用的浮层 ---------------- */
+
+/* 右侧悬浮按钮（主题定制，参考站无此元素） */
+#rightside {
+    display: none;
+}
+
+/* 自定义背景图在移动端不再铺满 */
+#web_bg {
+    background: 0 0 !important;
+}
+
+/* 助手/客服浮标 */
+.needEndHide {
+    display: none !important;
+}
+
+/* ---------------- 文章页 ---------------- */
+
+#post {
+    animation: none;
+}
+
+.post #article-container,
+.post #footer {
+    background: var(--heo-card-bg);
+}
+
+.post #footer {
+    background-image: none;
+}
+
+#post .tag_share .post-meta__tag-list {
+    justify-content: center;
+}
+
+/* 正文排版：移动端加大标题字号与段距 */
+#article-container.post-content h2 {
+    font-size: 28px;
+    margin-top: 2rem;
+}
+
+/* 去掉正文链接的横向内边距，避免长链接撑破屏幕 */
+#article-container a {
+    padding: 0;
+}
+
+#article-container ul li:not(.tab) {
+    padding: .2rem 0;
+}

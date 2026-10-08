@@ -19,6 +19,9 @@
                     <th:block th:each="item,iter : ${homeCenterItems}" th:if="${not #strings.isEmpty(item.post)}">
                         <th:block th:with="post=${postFinder.getByName(item.post)},
                                            itemCover=${!#strings.isEmpty(item.cover) ? item.cover : (#strings.isEmpty(post.spec.cover) ? postRandomImg + post.spec.title : thumbnail.gen(post.spec.cover, 's'))},
+                                           hasPostCover=${#strings.isEmpty(item.cover) and not #strings.isEmpty(post.spec.cover)},
+                                           coverSrcset=${hasPostCover ? thumbnail.gen(post.spec.cover, 's') + ' 400w, ' + thumbnail.gen(post.spec.cover, 'm') + ' 800w, ' + thumbnail.gen(post.spec.cover, 'l') + ' 1200w, ' + thumbnail.gen(post.spec.cover, 'xl') + ' 1600w' : ''},
+                                           isFirstItem=${iter.index == 0},
                                            itemTheme=${#strings.isEmpty(item.themeColor) ? '#425AEF' : item.themeColor},
                                            itemSelectedBg=${#strings.isEmpty(item.selectedBgColor) ? itemTheme : item.selectedBgColor}">
                             <div class="home-center-banner-item"
@@ -32,8 +35,13 @@
                                           style='--home-center-theme:' + ${itemTheme} + '; --home-center-theme-op:' + ${itemTheme} + '23; --home-center-theme-op-deep:' + ${itemTheme} + 'dd;'">
                                 <div class="home-center-cover">
                                     <img class="home-center-cover-img" width="800" height="450"
-                                         th:src="${isLazyload ? loadingImg : itemCover}"
-                                         th:data-lazy-src="${isLazyload ? itemCover : ''}"
+                                         th:src="${isLazyload and !isFirstItem ? loadingImg : itemCover}"
+                                         th:data-lazy-src="${isLazyload and !isFirstItem ? itemCover : null}"
+                                         sizes="(max-width: 768px) 92vw, 790px"
+                                         th:srcset="${hasPostCover and (!isLazyload or isFirstItem) ? coverSrcset : null}"
+                                         th:data-srcset="${hasPostCover and isLazyload and !isFirstItem ? coverSrcset : null}"
+                                         th:attr="fetchpriority=${isFirstItem ? 'high' : null}, loading=${isFirstItem ? 'eager' : null}"
+                                         decoding="async"
                                          th:alt="${post.spec.title}">
                                 </div>
                                 <div class="home-center-mask"></div>

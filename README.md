@@ -1,3 +1,11 @@
+# Hao (Fork)
+
+> 本主题是 [Hao](https://github.com/chengzhongxue/halo-theme-hao) 的 Fork 版本。
+
+Fork 自: [https://github.com/chengzhongxue/halo-theme-hao](https://github.com/chengzhongxue/halo-theme-hao)
+
+---
+
 <div align="center">
 <!-- 主题 Logo -->
 <img width="100px" src="./templates/assets/images/hao-logo.jpg" alt="Hao">
@@ -14,6 +22,8 @@
 ## ℹ️ 简介
 
 Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主题，基于 Thymeleaf 模板引擎开发，参考 Butterfly 与 Heo 的设计风格，融合 PJAX 无刷新跳转、暗色模式、代码高亮、音乐播放器、评论弹幕、瞬间、友链等丰富的博客特性。
+
+本 Fork 版本在原主题基础上进行调整和优化。
 
 ## 📷 预览
 
@@ -126,6 +136,6 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 - [提交 Issue](../../issues/new)
 - [提交 Pull Request](../../compare)
 
-## 📄 许可
+## 致谢
 
-本项目使用 [GPL-3.0](./LICENSE) 协议开源，请遵守开源协议。
+- [chengzhongxue/halo-theme-hao](https://github.com/chengzhongxue/halo-theme-hao) — 原主题作者

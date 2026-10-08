@@ -1,6 +1,7 @@
 <th:block
         th:with='postItems=${posts.items},
-          postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"}'>
+          postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"},
+          coverSizes="(max-width: 768px) 52vw, 400px"'>
     
     <!-- card，需要添加在没有图片时使用随机图片 -->
         <div class="recent-post-item"
@@ -26,9 +27,19 @@
             <a th:attr="title=${post.spec.title}" th:href="@{${post.status.permalink}}"
                th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                 <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="800" height="450"
-                     th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")}'
-                     th:alt="${post.spec.title}" th:data-lazy-src="${ isLazyload ? img : ''}"
-                     th:src="${isLazyload ? loadingImg : img}">
+                     th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")},
+                              imgS = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")},
+                              imgL = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "l")},
+                              isFirst=${iStat.first},
+                              srcsetVal=${imgS + " 400w, " + img + " 800w, " + imgL + " 1200w"}'
+                     th:alt="${post.spec.title}"
+                     sizes="${coverSizes}"
+                     th:srcset="${isLazyload ? null : srcsetVal}"
+                     th:data-srcset="${isLazyload ? srcsetVal : null}"
+                     th:data-lazy-src="${isLazyload and !isFirst ? img : null}"
+                     th:src="${!isLazyload or isFirst ? img : loadingImg}"
+                     th:attr="fetchpriority=${isFirst ? 'high' : null}, loading=${isFirst ? 'eager' : null}"
+                     decoding="async">
                 <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
                      th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">
                     <div class="post_art_glow"></div>
@@ -47,7 +58,7 @@
         <div class="recent-post-info">
             <div class="recent-post-info-top">
                 <div class="recent-post-info-top-tips">
-                    <span class="sticky-warp sticky" th:if="${post.spec.pinned}">置顶</span></span>
+                    <span class="sticky-warp sticky" th:if="${post.spec.pinned}">置顶</span>
                     <!-- 类别非空时 -->
                     <th:block th:if="${not #lists.isEmpty(post.categories)}">
                         <span th:each="category : ${post.categories}" th:href="@{${category.status.permalink}}"

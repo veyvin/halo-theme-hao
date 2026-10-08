@@ -64,6 +64,12 @@
 
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/custom.css' + theme_version}">
 
+    <!-- 移动端样式（对齐 blog.zhheo.com 的 heoblogmw768.css 思路）：
+         独立文件 + media 断点，且置于 zhheoblog.css / custom.css 之后，
+         使移动端规则拥有最终决定权，不影响桌面端 -->
+    <link rel="stylesheet" media="screen and (max-width: 768px)"
+          th:href="${assets_link + '/zhheo/heoblogmw768.css' + theme_version}">
+
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/commentBarrage.css'}">
 
     <link rel="stylesheet" th:href="${assets_link + '/css/hao-canvas.css' + theme_version}">
