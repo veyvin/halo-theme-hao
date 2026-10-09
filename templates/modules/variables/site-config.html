@@ -15,8 +15,8 @@
         isFriendLinksInFooter: [[${theme.config.footer.footer_group.enable_footer_group}]],
         loadingBox: [[${theme.config.other.loadingBoxs.loadingBoxEnable}]],
         loadProgressBar: [[${theme.config.other.loadingBoxs.loadProgressBar}]],
-        helloText: [[${#strings.listSplit(theme.config.sidebar.profile.helloText, ',')}]],
-        profileStyle: [[${theme.config.sidebar.profile.profileStyle}]],
+        helloText: /*[[${#strings.isEmpty(theme.config.sidebar.profile.helloText) ? '' : #strings.listSplit(theme.config.sidebar.profile.helloText, ',')}]]*/,
+        profileStyle: /*[[${theme.config.sidebar.profile.profileStyle ?: ''}]]*/,
         rightMenuEnable: [[${theme.config.tool.rightMenu.rightMenuEnable}]],
         date_suffix: {
             just: '刚刚',
@@ -54,9 +54,9 @@
         },
         source: {
             power: {
-                powerLink: [[${theme.config.sidebar.power.powerLink}]],
-                showNum: [[${theme.config.sidebar.power.showNum}]],
-                username: [[${theme.config.sidebar.power.username}]]
+                powerLink: /*[[${theme.config.sidebar.power.powerLink ?: ''}]]*/,
+                showNum: [[${theme.config.sidebar.power.showNum ?: 0}]],
+                username: /*[[${theme.config.sidebar.power.username ?: ''}]]*/
             },
             links: {
                 linksNum: [[${theme.config.footer.footer_group.num}]],
@@ -90,44 +90,38 @@
                 switch: [[${ theme.config.tool.snackbar.switch }]]
             },
             postAi: {
-                ai: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' :
+                ai: /*[[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' :
                         theme.config.post.aiDescription.mode != 'local' && !theme.config.post.aiDescription.switchBtn ? '' :
                         post.spec.excerpt.autoGenerate ? '本地模式需要自己填写文章摘要' :
-                        #strings.isEmpty(post.status.excerpt) ? '请填写文章摘要' : post.status.excerpt }]],
+                        #strings.isEmpty(post.status.excerpt) ? '请填写文章摘要' : post.status.excerpt}]]*/,
                 randomNum: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? 0 : theme.config.post.aiDescription.randomNum}]],
                 basicWordCount: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? 0 : theme.config.post.aiDescription.basicWordCount}]],
                 btnLink: "[(${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.btnLink})]",
                 gptName: "[(${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.gptName})]",
-                modeName: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.mode}]],
+                modeName: /*[[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.mode}]]*/,
                 switchBtn: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? false : theme.config.post.aiDescription.switchBtn}]]
             },
             img: {
                 src: [[${isLazyload ? 'data-lazy-src' : 'src' }]]
             },
             twikoo: {
-                js: [[${not #strings.isEmpty(theme.config.comments.twikoos.js) ? theme.config.comments.twikoos.js : assets_link +'/libs/twikoo/twikoo.all.min.js' }]],
+                js: /*[[${not #strings.isEmpty(theme.config.comments.twikoos.js) ? theme.config.comments.twikoos.js : assets_link +'/libs/twikoo/twikoo.all.min.js'}]]*/,
                 twikooUrl: "[(${theme.config.comments.twikoos.envId})]",
                 accessToken: "[(${theme.config.comments.twikoos.accessToken})]",
             },
             artalk: {
-                js: [[${not #strings.isEmpty(theme.config.comments.artalks.artalkJs) ? theme.config.comments.artalks.artalkJs : assets_link +'/libs/artalk/Artalk.js' }]],
-                css: [[${not #strings.isEmpty(theme.config.comments.artalks.artalkCss) ? theme.config.comments.artalks.artalkCss : assets_link +'/libs/artalk/Artalk.css' }]],
+                js: /*[[${not #strings.isEmpty(theme.config.comments.artalks.artalkJs) ? theme.config.comments.artalks.artalkJs : assets_link +'/libs/artalk/Artalk.js'}]]*/,
+                css: /*[[${not #strings.isEmpty(theme.config.comments.artalks.artalkCss) ? theme.config.comments.artalks.artalkCss : assets_link +'/libs/artalk/Artalk.css'}]]*/,
                 artalkUrl: "[(${theme.config.comments.artalks.server})]",
                 siteName: "[(${theme.config.comments.artalks.siteName})]",
             },
             waline: {
-                js: [[${not #strings.isEmpty(theme.config.comments.walines.walinesJs) ? theme.config.comments.walines.walinesJs : 'https://cdn.cbd.int/@waline/client@2.15.7/dist/waline.js' }]],
+                js: /*[[${not #strings.isEmpty(theme.config.comments.walines.walinesJs) ? theme.config.comments.walines.walinesJs : 'https://cdn.cbd.int/@waline/client@2.15.7/dist/waline.js'}]]*/,
                 serverURL: "[(${theme.config.comments.walines.serverURL})]",
-                locale: [[${not #strings.isEmpty(theme.config.comments.walines.locale) ? theme.config.comments.walines.locale : '' }]]
+                locale: /*[[${not #strings.isEmpty(theme.config.comments.walines.locale) ? theme.config.comments.walines.locale : ''}]]*/
             },
             footer: {
                 default_enable: [[${theme.config.footer.footerContent.default_enable_group.default_enable}]]
             }
         };
-    </script>
-    <!-- P1-4：GA_ID 预留，gtag 由 Halo 插件注入，未配置时 window.GA_ID 为 null，gtag 调用跳过 -->
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        window.GA_ID = [[${not #strings.isEmpty(theme.config.basics.ga_id)}]] ? "[[${theme.config.basics.ga_id}]]" : null;
-        /*]]>*/
     </script>

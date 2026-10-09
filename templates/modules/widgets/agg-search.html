@@ -33,7 +33,12 @@
     window.HAO_FRIENDS = [
       /*[# th:each="group : ${linkFinder.groupBy()}"]*/
       /*[# th:each="link : ${group.links}"]*/
-      { name: [[${link.spec.displayName}]], url: [[${link.spec.url}]], desc: [[${link.spec.description ?: ''}]], logo: [[${link.spec.logo ?: ''}]] },
+      {
+        name: /*[[${link.spec.displayName}]]*/,
+        url: /*[[${link.spec.url}]]*/,
+        desc: /*[[${link.spec.description ?: ''}]]*/,
+        logo: /*[[${link.spec.logo ?: ''}]]*/
+      },
       /*[/]*/
       /*[/]*/
     ];
@@ -43,7 +48,10 @@
           th:with="aggComments=${commentFinder.list(null, 1, theme.config.tool.aggSearch.commentCount)}">
     window.HAO_COMMENTS = [
       /*[# th:each="c : ${aggComments.items}"]*/
-      { text: [[${c.spec.content}]], author: [[${c.owner.displayName}]] },
+      {
+        text: /*[[${c.spec.content}]]*/,
+        author: /*[[${c.owner.displayName}]]*/
+      },
       /*[/]*/
     ];
   </script>

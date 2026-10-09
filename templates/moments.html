@@ -82,18 +82,16 @@
         <script th:if="${theme.config.other.bubbleEnable}" async data-pjax
                 th:src="${assets_link + '/libs/canvas/bubble.js'}"></script>
 
-        <!-- fmoments.js i18n：注入 localized fallback，避免 JS 里硬编码中文 -->
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            window.fmI18n = {
-                allAuthors: "[[${#messages.msg('moment.allAuthors') + '']}]",
-                error: "[[${#messages.msg('moment.error') + '']}]",
-                networkFail: "[[${#messages.msg('moment.networkFail') + '']}]",
-                httpError: "[[${#messages.msg('moment.httpError') + '']}]",
-                loading: "[[${#messages.msg('moment.loading') + '']}]"
-            };
-            /*]]>*/
-        </script>
+        <!-- fmoments.js i18n：通过 data-attrs 注入，避免 JS 硬编码 -->
+        <div id="fmomentsContainer"
+             th:data-i18n-all-authors="${#messages.msg('moment.allAuthors')}"
+             th:data-i18n-filter-applied="${#messages.msg('moment.filterApplied')}"
+             th:data-i18n-loading="${#messages.msg('moment.loading')}"
+             th:data-i18n-retry="${#messages.msg('moment.retry')}"
+             th:data-i18n-error="${#messages.msg('moment.error')}"
+             th:data-i18n-network-fail="${#messages.msg('moment.networkFail')}"
+             th:data-i18n-http-error="${#messages.msg('moment.httpError')}"
+             style="display:none;"></div>
     </div>
 
 </th:block>

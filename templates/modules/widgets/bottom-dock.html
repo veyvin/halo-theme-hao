@@ -28,7 +28,7 @@
           th:with="radioPosts=${postFinder.list({page: 1, size: theme.config.post.radio.radioCount, sort: {'spec.publishTime,desc'}})}">
     window.HAO_RADIO_LIST = [
       /*[# th:each="rp : ${radioPosts.items}"]*/
-      { title: [[${rp.spec.title}]], url: [[${rp.status.permalink}]] },
+       { title: /*[[${rp.spec.title}]]*/, url: /*[[${rp.status.permalink}]]*/ },
       /*[/]*/
     ];
   </script>

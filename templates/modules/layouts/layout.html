@@ -255,8 +255,8 @@
             
             typeof chatBtnFn === 'function' && chatBtnFn()
             
-            // google analytics（需 theme.config.basics.ga_id，未配置时跳过）
-            typeof gtag === 'function' && window.GA_ID && gtag('config', window.GA_ID, {
+            // google analytics（由 Halo 插件或主题配置注入 gtag；未配置时跳过）
+            typeof gtag === 'function' && typeof GA_ID !== 'undefined' && GA_ID && gtag('config', GA_ID, {
                 'page_path': window.location.pathname
             });
             

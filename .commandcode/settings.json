@@ -40,7 +40,13 @@
       "Shell(node --check templates/assets/js/fmoments.js)",
       "Shell(powershell \"Get-ChildItem -Path 'templates/assets/zhheo/custom.css','templates/assets/css/hao-post-tools.css','templates/assets/zhheo/zhheoblog.css','templates/assets/zhheo/heoblogmw768.css' | ForEach-Object { '{0}: {1} lines' -f $_.Name, (Get-Content $_.FullName).Count }\")",
       "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && echo \"ALL OK\")",
-      "Shell(node --check templates/assets/js/custom.js)"
+      "Shell(node --check templates/assets/js/custom.js)",
+      "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && node --check templates/assets/js/hao-read.js && node --check templates/assets/libs/gpt/post-ai.js && echo \"ALL JS + YAML OK\")",
+      "Shell(type:*)",
+      "Shell(powershell -command \"Get-Clipboard\" 2>$null | head -60)",
+      "Shell(powershell -command \"Get-Clipboard\" 2>$null)",
+      "Shell(powershell -command \"Get-ChildItem -Path '$env:COMMANDCODE_SCRATCHPAD' -ErrorAction SilentlyContinue\")",
+      "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && node --check templates/assets/js/hao-read.js && echo \"ALL OK\")"
     ],
     "deny": [],
     "defaultMode": "default"
