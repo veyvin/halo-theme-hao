@@ -84,6 +84,12 @@
             </div>
             
             <div class="article-meta-wrap">
+                <!-- 评论数（左侧） -->
+                <span class="post-meta-comment">
+                    <i class="far fa-comment-dots"></i>
+                    <span th:if="${post.stats != null and post.stats.comment != null and post.stats.comment > 0}" th:text="${post.stats.comment} + ' 条评论'"></span>
+                    <span th:else>暂无评论</span>
+                </span>
                 <!-- tag -->
                 <th:block th:if="${not #lists.isEmpty(post.tags)}">
                     <span class="article-meta tags">

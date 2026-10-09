@@ -3752,40 +3752,27 @@ p.p.gray,span.p.gray {
 }
 
 /* =====================================================
-   移动端首页文章列表：参考 zhheo.com 双列卡片布局
+   移动端首页文章列表：对齐 blog.zhheo.com 单列大卡片
    ===================================================== */
 @media screen and (max-width: 768px) {
-    /* 容器改为双列网格 */
+    /* 容器改为单列 */
     #recent-posts {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        padding: 0 12px !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-start !important;
-        align-items: start !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        padding: 0 16px !important;
     }
 
-    /* 分类栏 / 分页等非文章子项占满整行，避免左侧空一格 */
+    /* 分类栏粘性置顶 */
     #recent-posts > #category-bar,
-    #recent-posts > .category-bar,
-    #recent-posts > .pagination,
-    #recent-posts > nav.pagination,
-    #recent-posts > .page-number,
-    #recent-posts > style {
-        grid-column: 1 / -1;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    #recent-posts > #category-bar {
-        margin: 0 0 2px !important;
+    #recent-posts > .category-bar {
+        margin: 0 0 4px !important;
         padding: 4px 0 !important;
         height: auto !important;
         min-height: 44px;
-        border-radius: 12px !important;
-        background: color-mix(in srgb, var(--heo-card-bg) 92%, transparent) !important;
-        border: 1px solid var(--heo-card-border);
+        border-radius: 14px !important;
+        background: transparent !important;
+        border: none !important;
         box-shadow: none;
         position: sticky;
         top: 58px;
@@ -3793,62 +3780,71 @@ p.p.gray,span.p.gray {
     }
 
     #recent-posts > #category-bar .category-bar-items {
-        padding: 0 8px;
-        height: 36px;
-        gap: 4px;
+        padding: 0 4px;
+        height: 38px;
+        gap: 6px;
     }
 
     #recent-posts > #category-bar .category-bar-item a {
-        height: 32px;
-        padding: 0 12px;
+        height: 34px;
+        padding: 0 14px;
         border-radius: 999px;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
-        background: transparent;
+        background: var(--heo-card-bg);
+        color: var(--heo-fontcolor);
+        border: 1px solid var(--heo-card-border);
+        transition: all 0.25s ease;
     }
 
-    #recent-posts > #category-bar .category-bar-item.select a,
-    #recent-posts > #category-bar .category-bar-item a:hover {
+    #recent-posts > #category-bar .category-bar-item.select a {
         background: var(--heo-main);
         color: var(--heo-white) !important;
+        border-color: transparent;
+        box-shadow: 0 4px 12px var(--heo-main-op);
     }
 
     #recent-posts > #category-bar .category-bar-more {
-        margin-right: 8px;
-        padding: 0 10px;
-        height: 32px;
-        line-height: 32px;
+        margin-right: 4px;
+        padding: 0 12px;
+        height: 34px;
+        line-height: 34px;
         border-radius: 999px;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
+        background: var(--heo-card-bg);
+        border: 1px solid var(--heo-card-border);
     }
 
-    /* 卡片重置为单列布局（上下排列） */
+    /* 文章卡片：单列大图 */
     #recent-posts > .recent-post-item {
         flex-direction: column !important;
         height: auto !important;
         width: 100% !important;
+        max-width: 100% !important;
         margin: 0 !important;
-        border-radius: 14px !important;
+        border-radius: 18px !important;
         overflow: hidden;
         background: var(--heo-card-bg) !important;
         border: 1px solid var(--heo-card-border);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     #recent-posts > .recent-post-item:active {
-        transform: scale(0.98);
+        transform: scale(0.985);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
     }
 
-    /* 封面自适应高度（4:3 比例，更紧凑） */
+    /* 封面大图 16:9 */
     #recent-posts > .recent-post-item .post_cover {
         width: 100% !important;
         height: auto !important;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 16 / 9;
         border-radius: 0 !important;
         order: 1 !important;
         position: relative;
+        margin: 0;
     }
 
     #recent-posts > .recent-post-item .post_cover img.post_bg {
@@ -3858,211 +3854,170 @@ p.p.gray,span.p.gray {
         transition: transform 0.6s ease;
     }
 
-    #recent-posts > .recent-post-item:hover .post_cover img.post_bg {
-        transform: scale(1.05);
+    /* 渐变封面也铺满 */
+    #recent-posts > .recent-post-item .post_cover .post_bg.post_art_bg {
+        width: 100%;
+        height: 100%;
     }
 
-    /* 分类标签浮在封面左上角 */
-    #recent-posts > .recent-post-item .post_cover .post-category-badge,
-    #recent-posts > .recent-post-item .post_cover .post-meta-categories {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        z-index: 2;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        color: #fff !important;
-        font-size: 10px !important;
-        padding: 3px 8px;
-        border-radius: 6px;
-        text-decoration: none;
-    }
-
-    /* 文章信息紧凑排布 */
+    /* 文章信息区 */
     #recent-posts > .recent-post-item > .recent-post-info {
-        padding: 10px 12px 12px !important;
+        padding: 14px 16px 16px !important;
         width: 100% !important;
         order: 2 !important;
     }
 
+    /* 标签 chips 一行横排 */
     #recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
     }
 
+    #recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top-tips {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 2px;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top-tips .original {
+        font-size: 12px;
+        color: var(--heo-secondtext);
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        font-weight: 500;
+    }
+
+    /* 标题：更大更醒目 */
     #recent-posts > .recent-post-item > .recent-post-info .article-title {
-        font-size: 0.92em !important;
-        line-height: 1.45 !important;
-        font-weight: 600;
+        font-size: 1.05em !important;
+        line-height: 1.5 !important;
+        font-weight: 700;
         -webkit-line-clamp: 2;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
         margin: 0 !important;
         color: var(--text-highlight-color);
+        letter-spacing: 0.01em;
     }
 
-    /* 摘要显示一行 */
+    /* 摘要显示一行（对齐图二） */
     #recent-posts > .recent-post-item > .recent-post-info .content {
         display: -webkit-box !important;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        font-size: 0.78em !important;
-        color: var(--heo-fontcolor);
-        opacity: 0.7;
-        margin-top: 4px;
+        font-size: 0.82em !important;
+        color: var(--heo-secondtext);
+        margin-top: 2px;
         height: auto !important;
     }
 
-    /* 元信息行 */
+    /* 底部元信息行：评论数 + 时间（左右分布） */
     #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 11px !important;
-        color: var(--heo-fontcolor);
-        opacity: 0.6;
-        margin-top: 8px;
+        justify-content: space-between;
+        font-size: 12px !important;
+        color: var(--heo-secondtext);
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--heo-card-border);
     }
 
-    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-date {
+    /* 左侧：评论数 */
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-comment {
         display: flex;
         align-items: center;
+        gap: 4px;
     }
 
-    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap i {
+    #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-comment i {
         margin-right: 2px;
     }
 
-    /* 标签在元信息中显示 */
+    /* 隐藏标签云（卡片内不需要重复显示） */
     #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .article-meta.tags {
         display: none;
     }
 
     /* 置顶角标 */
-    #recent-posts > .recent-post-item > .recent-post-info .sticky-warp {
-        position: absolute;
-        top: 8px;
-        right: 8px;
+    #recent-posts > .recent-post-item .sticky-warp {
         background: linear-gradient(135deg, #ff6b6b, #ee5a24);
         color: #fff;
-        font-size: 10px;
-        padding: 2px 8px;
+        font-size: 11px;
+        padding: 3px 8px;
         border-radius: 6px;
         font-weight: 600;
-    }
-
-    /* 无封面时全宽显示 */
-    #recent-posts > .recent-post-item > .recent-post-info.no-cover {
-        padding: 16px !important;
-    }
-
-    #recent-posts > .recent-post-item > .recent-post-info.no-cover .article-title {
-        font-size: 1em !important;
-        -webkit-line-clamp: 3;
     }
 
     /* 最新角标 */
     #recent-posts > .recent-post-item .lastestpost {
         background: linear-gradient(135deg, #667eea, #764ba2);
         color: #fff;
-        font-size: 10px;
-        padding: 2px 6px;
+        font-size: 11px;
+        padding: 2px 8px;
         border-radius: 4px;
-        margin-right: 6px;
     }
 
     /* 未读标记 */
     #recent-posts > .recent-post-item .unvisited-post {
         display: none;
     }
+
+    /* 无封面卡片 */
+    #recent-posts > .recent-post-item > .recent-post-info.no-cover {
+        padding: 18px 16px !important;
+    }
+
+    #recent-posts > .recent-post-item > .recent-post-info.no-cover .article-title {
+        font-size: 1.05em !important;
+        -webkit-line-clamp: 3;
+    }
+
+    /* 分页对齐 */
+    #recent-posts > .pagination,
+    #recent-posts > nav.pagination {
+        width: 100%;
+        margin-top: 8px;
+    }
 }
 
 /* 更小屏幕（375px 以下）微调 */
 @media screen and (max-width: 375px) {
     #recent-posts {
-        gap: 8px !important;
-        padding: 0 8px !important;
+        gap: 12px !important;
+        padding: 0 12px !important;
     }
 
     #recent-posts > .recent-post-item {
-        border-radius: 10px !important;
+        border-radius: 14px !important;
     }
 
     #recent-posts > .recent-post-item > .recent-post-info {
-        padding: 8px 10px 10px !important;
+        padding: 12px 14px 14px !important;
     }
 
     #recent-posts > .recent-post-item > .recent-post-info .article-title {
-        font-size: 0.85em !important;
+        font-size: 0.98em !important;
     }
 }
 
-/* ========== 移动端首页头部（紧凑：头像 + 标题/副标题） ========== */
+/* ========== 移动端首页头部：隐藏（对齐 blog.zhheo.com，无独立信息区） ========== */
 @media screen and (max-width: 768px) {
     .mobile-home-header {
-        padding: 12px 16px 8px;
-        text-align: left;
-        background: transparent;
+        display: none !important;
     }
 
-    .mobile-home-header-inner {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 14px;
-        border-radius: 18px;
-        background: color-mix(in srgb, var(--heo-card-bg) 88%, transparent);
-        border: 1px solid var(--heo-card-border);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    }
-
-    .mobile-home-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        object-fit: cover;
-        flex-shrink: 0;
-        background: var(--heo-secondbg);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .mobile-home-text {
-        min-width: 0;
-        flex: 1;
-    }
-
-    .mobile-home-header .mobile-home-title {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: var(--heo-fontcolor);
-        margin: 0 0 2px;
-        letter-spacing: 0.02em;
-        line-height: 1.25;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .mobile-home-header .mobile-home-subtitle {
-        font-size: 0.78rem;
-        color: var(--heo-secondtext);
-        opacity: 1;
-        font-weight: 400;
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    /* 首页顶区与列表间距收紧 */
+    /* 首页顶区间距调整 */
     #home_top {
-        margin-bottom: 8px !important;
-        padding: 0 12px;
+        margin-bottom: 12px !important;
+        padding: 0 16px;
     }
 
     #home_top .recent-top-post-group,
