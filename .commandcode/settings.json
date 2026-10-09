@@ -47,7 +47,11 @@
       "Shell(powershell -command \"Get-Clipboard\" 2>$null)",
       "Shell(powershell -command \"Get-ChildItem -Path '$env:COMMANDCODE_SCRATCHPAD' -ErrorAction SilentlyContinue\")",
       "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && node --check templates/assets/js/hao-read.js && echo \"ALL OK\")",
-      "Shell(ls templates/assets/js/test_*.js 2>nul || echo \"No test files found\")"
+      "Shell(ls templates/assets/js/test_*.js 2>nul || echo \"No test files found\")",
+      "Shell(java:*)",
+      "Shell(mvn:*)",
+      "Shell(curl --version 2 >& 1)",
+      "Shell(curl -sL -o thymeleaf.jar https://repo1.maven.org/maven2/org/thymeleaf/thymeleaf/3.1.15.RELEASE/thymeleaf-3.1.15.RELEASE.jar)"
     ],
     "deny": [],
     "defaultMode": "default"
