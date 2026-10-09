@@ -1,19 +1,19 @@
 <div class="bbTimeList container" id="bbTimeList"
      th:if="${theme.config.top.moment}">
 
-    <i class="haofont hao-icon-logo-moment" onclick="" style="font-size: 1.3rem;" title="瞬间"></i>
+    <i class="haofont hao-icon-logo-moment" onclick="" style="font-size: 1.3rem;" th:title="${#messages.msg('nav.moments')}"></i>
 
     <!--   未安装插件（perf-5：无 swiper，CSS 淡入淡出轮换提示，省 144KB）   -->
     <th:block th:if="!${pluginFinder.available('PluginMoments')}">
         <div class="swiper-container swiper-no-swiping moment-fallback" id="bbtalk" tabindex="-1">
             <div class="swiper-wrapper" id="bber-talk"
-                 onclick="location.href=location.href='https\:\/\/github.com/halo-sigs/plugin-moments'">
-                <div class="li-style swiper-slide moment-fallback-item">这里需要安装瞬间的插件</div>
-                <div class="li-style swiper-slide moment-fallback-item">去安装吧！</div>
+                 onclick="location.href='https://github.com/halo-sigs/plugin-moments'">
+                <div class="li-style swiper-slide moment-fallback-item" th:text="${#messages.msg('moment.installPlugin')}"></div>
+                <div class="li-style swiper-slide moment-fallback-item" th:text="${#messages.msg('moment.goInstall')}"></div>
             </div>
         </div>
         <i class="bber-gotobb haofont hao-icon-circle-arrow-right"
-           onclick="location.href=location.href='https\:\/\/github.com/halo-sigs/plugin-moments'" title="下载插件"></i>
+           onclick="location.href='https://github.com/halo-sigs/plugin-moments'" th:title="${#messages.msg('moment.installAction')}"></i>
         <style>
             #bbtalk.moment-fallback .swiper-wrapper { position: relative; display: block; }
             #bbtalk.moment-fallback .moment-fallback-item { animation: moment-fallback-swap 6s infinite; }
@@ -38,7 +38,7 @@
                 </th:block>
             </div>
         </div>
-        <i class="bber-gotobb haofont hao-icon-circle-arrow-right" onclick="location.href='/moments'" title="查看全文"></i>
+        <i class="bber-gotobb haofont hao-icon-circle-arrow-right" onclick="location.href='/moments'" th:title="${#messages.msg('common.viewMore')}"></i>
     </th:block>
 
 </div>

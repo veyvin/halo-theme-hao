@@ -17,7 +17,10 @@
     <!--  解决 katex pjax问题 -->
     <script th:if="${pluginFinder.available('plugin-katex')}" defer=""
             src="/plugins/plugin-katex/assets/static/katex.min.js"></script>
-    <script th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
+    <!-- P0-3：custom.js 仅含自定义元素（hao-tabs/hao-grid/hao-collapse），按需加载 -->
+    <script defer th:if="${(htmlType == 'post' and #strings.contains(post.content.content, 'hao-')) or
+                          (htmlType == 'page' and #strings.contains(singlePage.content.content, 'hao-'))}"
+            th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
     <th:block th:if="${head != null}">
         <th:block th:replace="${head}"/>
     </th:block>
@@ -29,22 +32,23 @@
 <!-- loading 页面 -->
 <th:block th:replace="~{modules/loading-box}"/>
 
-<!-- 网站背景 -->
+<!-- 网站背景：图片懒加载+低优先级，移动端 CSS 已 display:none 但仍会下载，故加 lazy 降低优先级 -->
 <div id="web_bg">
     <div th:if="${theme.config.top.global_background.enable_global_background_img}">
         <img th:if="${theme.config.top.global_background.enable_global_background_above_video == false}"
              class="global_background_img" width="1920" height="1080" alt="网站背景图"
+             loading="lazy" decoding="async" fetchpriority="low"
              th:src="${theme.config.top.global_background.global_background_img}"
         />
+        <!-- P0-3：背景视频 autoplay 会耗流量且移动浏览器阻止；改为 muted playsinline，降低优先级 -->
         <video th:if="${theme.config.top.global_background.enable_global_background_above_video}"
                class="index-video"
                id="index-video"
-               autoplay=""
-               th:src="${theme.config.top.global_background.global_background_video}"
-               loop=""
                muted=""
                playsinline=""
                webkit-playsinline=""
+               th:src="${theme.config.top.global_background.global_background_video}"
+               loop=""
                style="display:block;object-fit:cover;width:100%;height:100%;pointer-events:none;">
         </video>
     </div>
@@ -119,36 +123,44 @@
 <div th:replace="~{modules/widgets/right-menu}"/>
 
 <div>
-    <script th:src="${assets_link + '/js/utils.js' + theme_version}"></script>
-    <script th:src="${assets_link + '/js/halo.js' + theme_version}"></script>
-    <script th:src="${assets_link + '/js/main.js' + theme_version}"></script>
-    <script charset="utf-8" data-pjax th:src="${assets_link + '/zhheo/blogex.js' + theme_version}"></script>
-    <script th:src="${assets_link + '/js/tw_cn.js' + theme_version}"></script>
+    <script defer th:src="${assets_link + '/js/utils.js' + theme_version}"></script>
+    <script defer th:src="${assets_link + '/js/halo.js' + theme_version}"></script>
+    <script defer th:src="${assets_link + '/js/main.js' + theme_version}"></script>
+    <script charset="utf-8" data-pjax defer th:src="${assets_link + '/zhheo/blogex.js' + theme_version}"></script>
+    <script defer th:if="${theme.config.style.translate.translateEnable}" th:src="${assets_link + '/js/tw_cn.js' + theme_version}"></script>
     <!-- 预加载 https://github.com/GoogleChromeLabs/quicklink（替代 instant.page，viewport 内链接空闲预取） -->
-    <script th:src="${assets_link + '/libs/quicklink/quicklink.umd.js'}"></script>
-    <script>
+    <!-- P2-2：perf.disableQuicklink 控制开关；兼容 schema 未下发时（undefined）仍加载 -->
+    <script defer th:src="${assets_link + '/libs/quicklink/quicklink.umd.js'}"
+            th:if="${not ((theme.config.other.perf?.disableQuicklink) ?: false)}"></script>
+    <script th:if="${not ((theme.config.other.perf?.disableQuicklink) ?: false)}">
         // quicklink 预取限流：默认并发无限会打爆小带宽服务器（503），且必须排除 logout 等敏感 GET
+        // 省流量：saveData/2G 不预取；空闲时调度，避免阻塞 load
         window.addEventListener('load', function () {
             try {
                 if (!window.quicklink) return;
-                quicklink.listen({
-                    limit: 10,
-                    throttle: 2,
-                    delay: 1500,
-                    ignores: [
-                        function (uri) { return uri.indexOf('#') !== -1; },
-                        /\/console|\/logout|\/login|\/uc\b|\/apis?\/|\/upload|\/avatar|\/search|\/moments|\/photos|\/videos|\/music|\/links|\/about|\.xml|\.txt|\.json|javascript:/i
-                    ]
-                });
+                var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (conn && (conn.saveData || (conn.effectiveType && conn.effectiveType.indexOf('4G') !== 0 && conn.effectiveType.indexOf('5G') !== 0))) return;
+                var run = function () {
+                    quicklink.listen({
+                        limit: 10,
+                        throttle: 2,
+                        delay: 1500,
+                        ignores: [
+                            function (uri) { return uri.indexOf('#') !== -1; },
+                            /\/console|\/logout|\/login|\/uc\b|\/apis?\/|\/upload|\/avatar|\/search|\/moments|\/photos|\/videos|\/music|\/links|\/about|\.xml|\.txt|\.json|javascript:/i
+                        ]
+                    });
+                };
+                if ('requestIdleCallback' in window) requestIdleCallback(function () { run(); }, { timeout: 3000 });
+                else setTimeout(run, 2000);
             } catch (e) {}
         });
     </script>
-    
-    <script th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
-    
+
+    <script defer th:if="${isLazyload}" th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
+
     <!-- 右下角通知 https://www.polonel.com/snackbar/ -->
-    <!-- todo head 中有它的 css，应该可以写一块，并改成后台可配置的功能，代码中应该还有他的 js -->
-    <script th:src="${assets_link + '/libs/node-snackbar/snackbar.min.js'}"></script>
+    <script defer th:if="${theme.config.tool.snackbar.switch}" th:src="${assets_link + '/libs/node-snackbar/snackbar.min.js'}"></script>
     
     <div class="js-pjax">
         <!-- 动态标题 -->
@@ -162,33 +174,32 @@
         <script th:if="${theme.config.comments.visitorMail.visitorMailEnable}">var visitorMail = "[(${theme.config.comments.visitorMail.mail})]";</script>
     </th:block>
     
-    <!-- 深色模式下添加粒子效果canvas -->
     <canvas th:if="${theme.config.style.universe}" id="universe" width="1312" height="880"></canvas>
     <script th:if="${theme.config.style.universe}" async="" th:src="${assets_link + '/libs/canvas/dark.js'}"></script>
     
     <!-- https://davidshimjs.github.io/qrcodejs/ 生成二维码 -->
-    <!-- 应该是文章页分享使用 -->
-    <script data-pjax th:src="${assets_link + '/libs/qrcode/qrcode.min.js'}" ></script>
-    
+    <!-- 仅文章页分享使用 -->
+    <script defer data-pjax th:if="${htmlType == 'post'}" th:src="${assets_link + '/libs/qrcode/qrcode.min.js'}" ></script>
+
     <!-- 瀑布流 https://masonry.desandro.com/（替代已停更的 waterfall.js，仅 moments 页用到） -->
-    <script th:if="${htmlType == 'moments'}" th:src="${assets_link + '/libs/masonry/masonry.pkgd.min.js'}"></script>
-    
+    <script defer th:if="${htmlType == 'moments'}" th:src="${assets_link + '/libs/masonry/masonry.pkgd.min.js'}"></script>
+
     <!-- 获取主色 https://lokeshdhakar.com/projects/color-thief/ -->
     <!--<script th:src="@{/assets/libs/color-thief/color-thief.umd.js}"></script>-->
-    <script th:src="${assets_link + '/libs/fast-average-color/index.browser.min.js'}"></script>
-    
+    <script defer th:if="${htmlType == 'post' and theme.config.post.dynamicBackground}" th:src="${assets_link + '/libs/fast-average-color/index.browser.min.js'}"></script>
+
 
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
 
-        <!-- 简繁转换 -->
-        <script th:src="${assets_link + '/js/translate.js'}"></script>
+        <!-- 简繁转换：仅开启时加载 -->
+        <script defer th:if="${theme.config.style.translate.translateEnable}" th:src="${assets_link + '/js/translate.js'}"></script>
 
         <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换） -->
-    <script th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax
+    <script defer th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax
             th:src="${assets_link + '/libs/swiper/swiper-bundle.min.js'}"></script>
-    
-    <!-- 右键菜单 -->
-    <script th:if="${theme.config.tool.rightMenu.rightMenuEnable}"
+
+    <!-- 右键菜单：defer，保证 jQuery（head defer）先执行 -->
+    <script defer th:if="${theme.config.tool.rightMenu.rightMenuEnable}"
             th:src="${assets_link + '/zhheo/rightmenu.js'}"></script>
     
     <!-- 评论弹幕 -->
@@ -232,21 +243,20 @@
             window.refreshFn()
             
             document.querySelectorAll('script[data-pjax]').forEach(item => {
-                        const newScript = document.createElement('script')
-                        const content = item.text || item.textContent || item.innerHTML || ""
-                        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
-                        newScript.appendChild(document.createTextNode(content))
-                        item.parentNode.replaceChild(newScript, item)
-                    }
+                            const newScript = document.createElement('script')
+                            const content = item.text || item.textContent || item.innerHTML || ""
+                            Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                            newScript.appendChild(document.createTextNode(content))
+                            item.parentNode.replaceChild(newScript, item)
+                        }
             )
             
             GLOBAL_CONFIG.lazyload.enable && window.lazyLoadInstance.update()
             
             typeof chatBtnFn === 'function' && chatBtnFn()
-            typeof panguInit === 'function' && panguInit()
             
-            // google analytics
-            typeof gtag === 'function' && gtag('config', '', {
+            // google analytics（需 theme.config.basics.ga_id，未配置时跳过）
+            typeof gtag === 'function' && window.GA_ID && gtag('config', window.GA_ID, {
                 'page_path': window.location.pathname
             });
             

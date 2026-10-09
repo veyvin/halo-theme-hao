@@ -2,10 +2,10 @@
 <div class="card-widget card-recent-post" >
     <a th:if="${not #strings.isEmpty(theme.config.sidebar.newcomment.newcommentUrl)}"
        th:onclick="pjax.loadUrl([[${theme.config.sidebar.newcomment.newcommentUrl}]])"
-       title="查看更多" aria-label="查看更多"
+          title="${#messages.msg('common.viewMore')}" aria-label="${#messages.msg('common.viewMore')}"
        class="card-more-btn"
        style="cursor:pointer" draggable="false"><i class="haofont hao-icon-chevron-right"></i></a>
-    <div class="item-headline"><i class="haofont hao-icon-chat--fill" style="font-size: 19px;"></i><span>最新评论</span></div>
+    <div class="item-headline"><i class="haofont hao-icon-chat--fill" style="font-size: 19px;"></i><span th:text="${#messages.msg('aside.recentComments')}"></span></div>
     <div class="aside-list" id="newcomm">
         <th:block th:if="${#strings.equals(theme.config.comments.use, 'commentWidget') }"
                   th:with="newcommentnumber = ${#conversions.convert(theme.config.sidebar.newcomment.newcommentnumber, 'java.lang.Integer') >= 0 ?  theme.config.sidebar.newcomment.newcommentnumber : 5}">
@@ -22,14 +22,12 @@
                 <div class="content">
                     <a class="comment"
                        style="display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;overflow: hidden;"
-                       th:href="${url}" th:title="${comment.spec.content}" th:text="${comment.spec.content}"
-                       data-pjax-state="">
+                       th:href="${url}" th:title="${comment.spec.content}" data-pjax-state="">
 
                     </a>
                     <div class="name">
                         <span th:text="${comment.owner.displayName + ' / '}">stonewu / </span>
-                        <time
-                                th:datetime="${#dates.format(comment.metadata.creationTimestamp, 'yyyy-MM-dd HH:mm:ss')}"></time>
+                        <time th:datetime="${#dates.format(comment.metadata.creationTimestamp, 'yyyy-MM-dd HH:mm:ss')}"></time>
                     </div>
                 </div>
             </div>

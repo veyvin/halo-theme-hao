@@ -1718,21 +1718,19 @@ spec:
               key: post_aiDescription_basicWordCount
               placeholder: 例如：1000
               min: 1000
-            - $formkit: text
+            - $formkit: password
               if: $get(aiDescriptionEnable).value
               name: key
               label: API Key
               value: xxxx
               placeholder: 粘贴天理 AI 的 API Key，仅 AI 模式需要
-              help: 天理 AI 摘要服务的密钥，仅在 AI 模式下需要填写
-              key: post_aiDescription_key
-            - $formkit: url
+              help: 天理 AI 摘要服务的密钥，仅在 AI 模式下填写；前端不输出到 JS，避免泄露
+            - $formkit: password
               if: $get(aiDescriptionEnable).value
               name: Referer
               label: 博客地址（鉴权）
-              help: 天理 AI 接口鉴权用的博客地址，注意保留末尾斜杠
+              help: 天理 AI 接口鉴权用的博客地址，注意保留末尾斜杠；前端不输出到 JS，避免泄露
               value: https://xx.xx/
-              key: post_aiDescription_Referer
               placeholder: 例如：https://xxx.com/
               validation: url
             - $formkit: switch
@@ -3058,6 +3056,48 @@ spec:
               aspectRatio: "16/9"
               label: 背景图片
               help: 404 页面的背景图片
+            - $formkit: group
+              name: perf
+              label: 性能优化
+              key: perf
+              help: 性能相关开关，关闭前请先在本地测试 Lighthouse
+              value:
+                disablePace: false
+                disableSnackbar: false
+                disableQuicklink: false
+                disableUniverse: false
+                disableTranslate: false
+              children:
+                - $formkit: switch
+                  name: disablePace
+                  key: disablePace
+                  label: 关闭 Pace 加载进度条
+                  value: false
+                  help: 关闭页面顶部的加载进度条（Pace），仅在不需要时开启
+                - $formkit: switch
+                  name: disableSnackbar
+                  key: disableSnackbar
+                  label: 关闭 Snackbar 通知
+                  value: false
+                  help: 关闭右下角通知弹窗（node-snackbar）
+                - $formkit: switch
+                  name: disableQuicklink
+                  key: disableQuicklink
+                  label: 关闭 quicklink 预取
+                  value: false
+                  help: 关闭空闲预取 viewport 链接，省流量但略降体验
+                - $formkit: switch
+                  name: disableUniverse
+                  key: disableUniverse
+                  label: 关闭深色粒子背景
+                  value: false
+                  help: 关闭深色模式下的粒子特效 canvas（universe）
+                - $formkit: switch
+                  name: disableTranslate
+                  key: disableTranslate
+                  label: 关闭简繁转换
+                  value: false
+                  help: 关闭简体繁体转换（translate/tw_cn）
         - $formkit: group
           name: error_500
           label: 500 页面

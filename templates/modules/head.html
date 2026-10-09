@@ -4,9 +4,14 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1" name="viewport">
     <meta content="telephone=no" name="format-detection">
-    <meta content="var(--heo-card-bg)" name="theme-color">
+    <!-- theme-color：浏览器主题色，CSS 变量在 media 标签中无效，用实际 hex 值 -->
+    <meta name="theme-color" th:content="${theme.config.style.themeLightSkin ?: '#ffffff'}">
+    <meta name="theme-color" th:content="${theme.config.style.themeDarkSkin ?: '#1d1b20'}" media="(prefers-color-scheme: dark)">
     <!-- description / keywords / favicon / generator / robots 由 Halo 自动注入，主题不再重复输出 -->
     <!-- canonical + Open Graph + Twitter Card：Halo 未统一生成，由主题按开关提供 -->
+    <!-- perf-1: DNS 预解析外部域名，减少首次外联耗时 -->
+    <link rel="preconnect" th:href="${theme.config.comments.twikoos.envId}" th:if="${theme.config.comments.use == 'Twikoo' and not #strings.isEmpty(theme.config.comments.twikoos.envId)}" crossorigin>
+    <link rel="preconnect" th:href="${'https://' + theme.config.comments.artalks.server}" th:if="${theme.config.comments.use == 'Artalk' and not #strings.isEmpty(theme.config.comments.artalks.server)}" crossorigin>
     <th:block th:if="${theme.config.basics.seo.enable_metadata}">
         <!-- 文章页 -->
         <th:block th:if="${htmlType == 'post' && post != null}">
@@ -54,8 +59,8 @@
     <title th:text="${siteTitle}"></title>
     <!-- favicon 由 Halo 按系统设置自动注入，主题不再重复输出 -->
 
-    <!-- jQuery 为 body 尾部同步脚本（blogex/rightmenu 顶层直接用 $）的前置依赖，必须同步加载 -->
-    <script th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
+    <!-- jQuery：defer 不阻塞解析；依赖方（blogex/rightmenu/main/console）均已改为 defer/DOMContentLoaded/load 回调内使用，顺序由 defer 保证 -->
+    <script defer th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
 
     <!-- perf-2: defer 非首屏关键脚本；首屏主题切换逻辑已内联在下方（带 heo 存在性守卫），defer 脚本就绪后会补调 initThemeColor -->
     <script defer th:src="${assets_link + '/js/heo.js' + theme_version}"></script>
@@ -70,9 +75,13 @@
     <link rel="stylesheet" media="screen and (max-width: 768px)"
           th:href="${assets_link + '/zhheo/heoblogmw768.css' + theme_version}">
 
-    <link rel="stylesheet" th:href="${assets_link + '/zhheo/commentBarrage.css'}">
+    <link rel="stylesheet" th:if="${ ( ( not #strings.isEmpty(theme.config.comments.twikoos.envId)  && not #strings.isEmpty(theme.config.comments.twikoos.accessToken) ) ||
+        ( not #strings.isEmpty(theme.config.comments.artalks.server) && not #strings.isEmpty(theme.config.comments.artalks.siteName)) ||
+          (#strings.equals(theme.config.comments.use, 'Waline') && not #strings.isEmpty(theme.config.comments.walines.serverURL)) )
+        && theme.config.comments.commentBarrageConfig.commentBarrageEnable
+        && theme.config.comments.commentsEnable}" th:href="${assets_link + '/zhheo/commentBarrage.min.css'}">
 
-    <link rel="stylesheet" th:href="${assets_link + '/css/hao-canvas.css' + theme_version}">
+    <link rel="stylesheet" th:href="${assets_link + '/css/a11y-reduce-motion.css' + theme_version}">
 
     <script defer th:if="${theme.config.post.aiAssistantEnable}" th:src="${assets_link + '/js/hao-ai.js' + theme_version}"></script>
 
@@ -87,20 +96,18 @@
     <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换，省 144KB+CSS） -->
     <link th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" rel="stylesheet" th:href="${assets_link + '/libs/swiper/swiper-bundle.min.css'}"/>
     
-    <!-- 右下角通知 -->
-    <link th:href="${assets_link + '/libs/node-snackbar/snackbar.min.css'}"
+    <!-- 右下角通知：仅开启隐私弹窗时加载 -->
+    <link th:if="${theme.config.tool.snackbar.switch}" th:href="${assets_link + '/libs/node-snackbar/snackbar.min.css'}"
           media="print"
           onload='this.media="all"'
           rel="stylesheet"
     />
 
-    <!-- perf-4: 代码高亮按需加载：仅文章/页面且正文含代码块时加载（首页省 ~850KB） -->
+    <!-- perf-4: 代码高亮二选一：插件存在用 PluginPrismJS，否则用本地 prism（首页无 <pre 时省 ~850KB） -->
     <th:block th:if="${(htmlType == 'post' && #strings.contains(post.content.content, '<pre')) ||
                         (htmlType == 'page' && #strings.contains(singlePage.content.content, '<pre'))}">
-        <!-- 代码块自动识别语言 -->
-        <th:block th:replace="~{modules/common/code}"/>
-        <!--  代码块-->
-        <th:block th:replace="~{macro/prism-code}"/>
+        <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
+        <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
     </th:block>
 
     <!-- 页脚内容-样式一 -->
@@ -216,14 +223,14 @@
         })(window)
     </script>
 
-    <!-- 动态加载条 -->
-    <script data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"
+    <!-- 动态加载条：async 不阻塞解析；loadingBox 关闭时不加载，避免与 preloader 双进度 -->
+    <script async data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"
             th:src="${assets_link + '/libs/pace/pace.min.js'}"
-            th:if="${theme.config.other.loadingBoxs.loadProgressBar}">
+            th:if="${theme.config.other.loadingBoxs.loadingBoxEnable and theme.config.other.loadingBoxs.loadProgressBar}">
     </script>
 
-    <!-- 复制 https://githubfast.com/zenorocha/clipboard.js -->
-    <script th:src="${assets_link + '/libs/clipboard/clipboard.min.js'}"></script>
+    <!-- 复制：仅文章/页面需要，且 defer 不阻塞 -->
+    <script defer th:if="${htmlType == 'post' or htmlType == 'page'}" th:src="${assets_link + '/libs/clipboard/clipboard.min.js'}"></script>
 
     <!-- icon图标 -->
     <link rel="stylesheet" th:href="${assets_link + '/icon/iconfont.css' + theme_version}">

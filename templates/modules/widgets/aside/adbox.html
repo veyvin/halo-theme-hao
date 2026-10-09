@@ -1,6 +1,6 @@
 <!-- 广告 -->
 <div class="card-widget" th:if="${theme.config.sidebar.adbox.adType=='google'}">
-    <div class="item-headline"><span>广告</span></div>
+        <div class="item-headline"><span th:text="${#messages.msg('common.ad')}"></span></div>
     <script async th:src="${'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + theme.config.sidebar.adbox.ad_google.ad_client}"
             crossorigin="anonymous"></script>
     <!-- 广告2 -->

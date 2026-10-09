@@ -14,8 +14,11 @@
     let gptName = GLOBAL_CONFIG.source.postAi.gptName;
     let modeName = GLOBAL_CONFIG.source.postAi.modeName;
     let switchBtn = GLOBAL_CONFIG.source.postAi.switchBtn //# 可以配置是否显示切换按钮 以切换tianli/local
-    let keys = GLOBAL_CONFIG.source.postAi.keys;
-    let Referers = GLOBAL_CONFIG.source.postAi.Referers;
+    // P0-4：key & Referer 改为 server-side 注入 hidden input，避免出现在 GLOBAL_CONFIG 里
+    var keyEl = document.getElementById('ai-tianli-key');
+    var refEl = document.getElementById('ai-tianli-referer');
+    var keys = (keyEl && keyEl.value) ? keyEl.value : '';
+    var Referers = (refEl && refEl.value) ? refEl.value : '';
 
     // let post = document.querySelector('#post')
     // const interface = {
@@ -157,8 +160,15 @@
         animationRunning = false;
         elapsed = 0;
         observer.disconnect(); // 暂停上一次监听
+        var animationInterval = null; // P0-4：提升作用域，提前退避时可清理
         if (mode === "tianli") {
             num = Math.max(10, Math.min(2000, num));
+            // P0-4：key/Referer 为空则降级为 local 提示，避免 403 报错
+            if (!keys) {
+                startAI("请在后台「AI 摘要」设置中填写天理 API Key。");
+                clearInterval(animationInterval);
+                return;
+            }
             const options = {
                 key: keys,
                 Referer: Referers
@@ -179,7 +189,6 @@
                 body: JSON.stringify(requestBody),
             };
             try {
-                let animationInterval = null
                 if (animationInterval) clearInterval(animationInterval);
                 animationInterval = setInterval(() => {
                     const animationText = "生成中" + ".".repeat(j);
@@ -211,7 +220,7 @@
                 clearInterval(animationInterval)
 
             } catch (error) {
-                console.error(error);
+                clearInterval(animationInterval);
                 explanation.innerHTML = "发生异常" + error;
             }
         } else {

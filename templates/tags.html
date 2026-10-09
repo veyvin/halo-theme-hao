@@ -11,7 +11,7 @@
             <nav th:replace="~{modules/nav :: nav(title = #{page.tags.title})}"></nav>
         </header>
         <main class="layout hide-aside" id="content-inner">
-            <div id="page"><h1 class="page-title" style="display: inline;">标签</h1>
+            <div id="page"><h1 class="page-title" th:text="${#messages.msg('page.title.tag')}">标签</h1>
                 <div class="tag-cloud-title is-center">标签 - <span class="tag-cloud-amount">0</span></div>
                 <div class="tag-cloud-list is-center">
                     <a th:each="tagItem : ${tagFinder.listAll()}"

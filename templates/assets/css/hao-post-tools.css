@@ -1,7 +1,7 @@
 /* 文章朗读高亮 + 页内查找标记 */
 #article-container .hc-reading { background: color-mix(in srgb, var(--heo-main, #425aef) 12%, transparent); border-radius: 6px; transition: background .3s; }
-#article-container .hc-mark { background: #fde68a; color: inherit; border-radius: 3px; padding: 0 1px; }
-[data-theme="dark"] #article-container .hc-mark { background: #92400e; color: #fef3c7; }
+#article-container .hc-mark { background: color-mix(in srgb, var(--heo-main, #425aef) 12%, transparent); }
+[data-theme="dark"] #article-container .hc-mark { background: color-mix(in srgb, var(--heo-main, #425aef) 24%, transparent); color: inherit; }
 
 /* ---------- AI 助手面板 ---------- */
 #hao-ai-panel {

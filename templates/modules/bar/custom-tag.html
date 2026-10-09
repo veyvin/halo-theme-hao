@@ -2,7 +2,7 @@
 <div id="category-bar">
     <div class="category-bar-items" id="category-bar-items">
         <div class="category-bar-item select" id="category-bar-home">
-            <a href="/">首页</a>
+            <a href="/" data-pjax-state=""><span th:text="${#messages.msg('nav.home')}"></span></a>
         </div>
 
         <th:block th:replace="~{modules/bar/fixed-items :: fixed-items}" />

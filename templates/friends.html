@@ -20,7 +20,8 @@
                 <div id="fMomentsMessageBoard">
                     <div class="fMomentsUpdatedTime">
                         <i class="fas fa-sync-alt"></i>
-                        最近更新：<span id="lastUpdateTime">加载中...</span>
+                        <th:block th:utext="${#messages.msg('friends.lastUpdated')}"></th:block>
+                        <span id="lastUpdateTime" th:utext="${#messages.msg('friends.loading')}"></span>
                     </div>
 
                     <div class="fMomentsStatsGrid">
@@ -52,27 +53,29 @@
 
                 <!-- 控制面板 -->
                 <div class="fMomentsControlPanel">
-                    <div class="fMomentsSearchBox">
+                    <!-- P2-4：i18n 文本通过 data-i18n 注入，JS 读取避免硬编码 -->
+                    <div class="fMomentsSearchBox" data-i18n-search="${#messages.msg('friends.searchPlaceholder')}">
                         <i class="fas fa-search fMomentsSearchIcon"></i>
-                        <input type="text" class="fMomentsSearchInput" placeholder="搜索文章标题或作者..." id="searchInput">
+                        <input type="text" class="fMomentsSearchInput"
+                               th:placeholder="${#messages.msg('friends.searchPlaceholder')}" id="searchInput">
                     </div>
 
                     <div class="fMomentsFilterGroup">
                         <select class="fMomentsSelect" id="authorFilter">
-                            <option value="">全部作者</option>
+                            <option value="" th:text="${#messages.msg('friends.allAuthors')}"></option>
                         </select>
 
                         <select class="fMomentsSelect" id="sortSelect">
-                            <option value="pubDate">按发布时间</option>
-                            <option value="creationTime">按创建时间</option>
-                            <option value="author">按作者名称</option>
-                            <option value="title">按标题</option>
+                            <option value="pubDate" th:text="${#messages.msg('friends.sortPubDate')}"></option>
+                            <option value="creationTime" th:text="${#messages.msg('friends.sortCreationTime')}"></option>
+                            <option value="author" th:text="${#messages.msg('friends.sortAuthor')}"></option>
+                            <option value="title" th:text="${#messages.msg('friends.sortTitle')}"></option>
                         </select>
 
                         <div class="fMomentsToggle">
-                            <span>升序</span>
+                            <span th:text="${#messages.msg('friends.ascending')}"></span>
                             <div class="fMomentsSwitch active" id="sortOrderSwitch"></div>
-                            <span>降序</span>
+                            <span th:text="${#messages.msg('friends.descending')}"></span>
                         </div>
                     </div>
                 </div>
@@ -85,49 +88,56 @@
                         <span class="fMomentsDisplayCount" id="displayedCount">0</span>
                         <span>/</span>
                         <span class="fMomentsDisplayCount" id="totalCount">0</span>
-                        <span>篇文章</span>
+                        <span th:text="${#messages.msg('friends.foundCountSuffix')}"></span>
                     </div>
                     <div class="fMomentsDisplayInfo" id="filterStatus" style="display: none;">
                         <i class="fas fa-info-circle"></i>
-                        <span id="filterText">已应用筛选条件</span>
+                        <span id="filterText" th:text="${#messages.msg('friends.filterApplied')}"></span>
                     </div>
                 </div>
 
                 <!-- 加载状态 -->
                 <div id="loadingIndicator" class="fMomentsLoading">
                     <div class="fMomentsLoadingSpinner"></div>
-                    <div class="fMomentsLoadingText">正在加载动态内容...</div>
+                    <div class="fMomentsLoadingText" th:text="${#messages.msg('friends.loadingContent')}"></div>
                 </div>
 
                 <!-- 朋友圈文章容器 -->
-                <div id="fmomentsContainer"></div>
+                <div id="fmomentsContainer"
+                     data-i18n-all-authors="${#messages.msg('friends.allAuthors')}"
+                     data-i18n-filter-applied="${#messages.msg('friends.filterApplied')}"
+                     data-i18n-loading="${#messages.msg('friends.loadingContent')}"
+                     data-i18n-retry="${#messages.msg('friends.retry')}"
+                     data-i18n-error="${#messages.msg('friends.loadFail')}"
+                     data-i18n-network-fail="${#messages.msg('friends.networkFail')}"
+                     data-i18n-http-error="${#messages.msg('friends.httpError')}"></div>
 
                 <!-- 加载更多按钮 -->
                 <div id="loadingStatus" style="display: none;">
                     <button id="fmomentsMoreBtn" type="button">
                         <i class="fas fa-angle-double-down"></i>
-                        <span>加载更多</span>
+                        <span th:text="${#messages.msg('friends.loadMore')}"></span>
                     </button>
                     <div class="fMomentsNoMore" id="noMoreTip" style="display: none;">
                         <i class="fas fa-check-circle"></i>
-                        <div>🎉 已显示全部内容</div>
-                        <small>共找到 <span id="finalCount">0</span> 篇文章</small>
+                        <div th:text="${#messages.msg('friends.allShown')}"></div>
+                        <small><span th:text="${#messages.msg('friends.foundCountPrefix')}"></span><span id="finalCount">0</span><span th:text="${#messages.msg('friends.foundCountSuffix')}"></span></small>
                     </div>
                 </div>
 
                 <!-- 错误状态 -->
                 <div class="fMomentsErrorState" id="errorState" style="display: none;">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <h3>加载失败</h3>
-                    <div id="errorMessage">请检查网络连接后重试</div>
-                    <button class="fMomentsRetryBtn" id="retryBtn">重新加载</button>
+                    <h3 th:text="${#messages.msg('friends.loadFail')}"></h3>
+                    <div id="errorMessage" th:text="${#messages.msg('friends.checkNetwork')}"></div>
+                    <button class="fMomentsRetryBtn" id="retryBtn" th:text="${#messages.msg('friends.retry')}"></button>
                 </div>
 
                 <!-- 空状态 -->
                 <div class="fMomentsEmptyState" id="emptyState" style="display: none;">
                     <i class="fas fa-search"></i>
-                    <h3>没有找到匹配的文章</h3>
-                    <p>尝试更换搜索词或调整筛选条件</p>
+                    <h3 th:text="${#messages.msg('friends.noPosts')}"></h3>
+                    <p th:utext="${#messages.msg('friends.noResults')}"></p>
                 </div>
             </div>
         </main>
@@ -252,7 +262,19 @@
             // 全局初始化状态追踪
             window._momentsInitializing = false;
 
-            // 初始化朋友圈应用
+            // P2-4：i18n 文本注入给 FriendMomentsApp，避免 JS 硬编码
+            window.fmI18n = (function(){
+                var c = document.getElementById('fmomentsContainer');
+                return c ? {
+                    allAuthors: c.getAttribute('data-i18n-all-authors') || '全部作者',
+                    filterApplied: c.getAttribute('data-i18n-filter-applied') || '已应用筛选条件',
+                    loading: c.getAttribute('data-i18n-loading') || '正在加载动态内容...',
+                    retry: c.getAttribute('data-i18n-retry') || '重新加载',
+                    error: c.getAttribute('data-i18n-error') || '加载失败',
+                    networkFail: c.getAttribute('data-i18n-network-fail') || '网络连接失败，请检查网络后重试',
+                    httpError: c.getAttribute('data-i18n-http-error') || '服务器错误'
+                } : {};
+            })();
             async function initMomentsApp() {
                 // 防止并发初始化
                 if (window._momentsInitializing) {

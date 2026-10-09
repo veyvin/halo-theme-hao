@@ -3,7 +3,9 @@
     <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
         <!-- 子菜单 -->
         <ul class="menus_item_child"
-            th:classappend="${#annotations.get(menuItem,'isVertical')=='1'?' vertical_nav':''}">
+            th:id="'menu-children-' + ${menuItem.status.name}"
+            th:classappend="${#annotations.get(menuItem,'isVertical')=='1'?' vertical_nav':''}"
+            role="menu" aria-label="Submenu">
             <li class="recursion_menus_item" th:each="childMenu : ${menuItem.children}">
                 <a class="site-page child" th:target="${childMenu.spec.target?.value}"
                    th:href="@{${childMenu.status.href}}">
@@ -36,9 +38,10 @@
             
             <!-- javascript:void(0);" -->
             <a class="site-page" rel="external nofollow"
-               th:if="${#lists.isEmpty(menuItem.children)}"
-               th:target="${menuItem.spec.target?.value}"
-               th:href="@{${menuItem.status.href}}">
+                th:if="${#lists.isEmpty(menuItem.children)}"
+                th:target="${menuItem.spec.target?.value}"
+                th:href="@{${menuItem.status.href}}"
+                th:aria-current="${#strings.equals(menuItem.status.href, '/') and #strings.equals(site.url, '/') ? 'page' : null}">
                 <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
                     <svg class="ali_icon" aria-hidden="true">
                         <use th:href="${#annotations.getOrDefault(menuItem, 'icon','jiewen joe-icon-zuzhijiagou')}"></use>
@@ -47,7 +50,9 @@
                 <span th:text="${menuItem.status.displayName}"></span>
             </a>
             
-            <button th:if="${not #lists.isEmpty(menuItem.children)}" class="site-page" type="button">
+            <button th:if="${not #lists.isEmpty(menuItem.children)}" class="site-page" type="button"
+                    th:aria-expanded="${false}" aria-controls="menu-children-[[${menuItem.status.name}]]"
+                    aria-haspopup="true">
                 <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
                     <svg class="ali_icon" aria-hidden="true">
                         <use th:href="${#annotations.getOrDefault(menuItem, 'icon','jiewen joe-icon-zuzhijiagou')}"></use>

@@ -6,21 +6,21 @@
   <div id="hao-aggsearch" style="display:none;">
     <div class="aggsearch-dialog">
       <div class="aggsearch-navbar">
-        <div class="aggsearch-title">搜索</div>
-        <span class="aggsearch-close" onclick="haoAggSearch.close()" title="关闭"><i class="haofont hao-icon-xmark"></i></span>
+        <div class="aggsearch-title" th:text="${#messages.msg('aggsearch.title')}"></div>
+        <span class="aggsearch-close" onclick="haoAggSearch.close()" th:title="${#messages.msg('common.close')}"><i class="haofont hao-icon-xmark"></i></span>
       </div>
       <div class="aggsearch-input-panel">
         <div class="aggsearch-input">
-          <input id="aggsearch-input" placeholder="输入关键词进行搜索" type="text" autocomplete="off">
+          <input id="aggsearch-input" th:placeholder="${#messages.msg('aggsearch.placeholder')}" type="text" autocomplete="off">
         </div>
-        <button id="aggsearch-btn" type="button" title="搜索" aria-label="搜索" onclick="haoAggSearch.run()"><i
+        <button id="aggsearch-btn" type="button" th:title="${#messages.msg('aggsearch.search')}" th:aria-label="${#messages.msg('aggsearch.search')}" onclick="haoAggSearch.run()"><i
             class="haofont hao-icon-search--line"></i></button>
       </div>
       <div class="aggsearch-tabs">
-        <span class="aggsearch-tab active" data-type="all">综合</span>
-        <span class="aggsearch-tab" data-type="post">文章</span>
-        <span class="aggsearch-tab" data-type="friend" th:if="${pluginFinder.available('PluginLinks')}">友链</span>
-        <span class="aggsearch-tab" data-type="comment">评论</span>
+        <span class="aggsearch-tab active" data-type="all" th:text="${#messages.msg('aggsearch.tab.all')}"></span>
+        <span class="aggsearch-tab" data-type="post" th:text="${#messages.msg('aggsearch.tab.posts')}"></span>
+        <span class="aggsearch-tab" data-type="friend" th:if="${pluginFinder.available('PluginLinks')}" th:text="${#messages.msg('aggsearch.tab.friends')}"></span>
+        <span class="aggsearch-tab" data-type="comment" th:text="${#messages.msg('aggsearch.tab.comments')}"></span>
       </div>
       <div class="aggsearch-results" id="aggsearch-results">
         <div id="aggsearch-hits"></div>

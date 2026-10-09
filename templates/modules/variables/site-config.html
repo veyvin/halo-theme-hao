@@ -90,18 +90,16 @@
                 switch: [[${ theme.config.tool.snackbar.switch }]]
             },
             postAi: {
-                ai: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable  ?  ''  :
-                                    theme.config.post.aiDescription.mode != 'local' && !theme.config.post.aiDescription.switchBtn ? '' :
-                                    post.spec.excerpt.autoGenerate ? '本地模式需要自己填写文章摘要' :
-                                    #strings.isEmpty(post.status.excerpt) ? '请填写文章摘要' : post.status.excerpt  }]],
-                randomNum: [[${theme.config.post.aiDescription.randomNum}]],
-                basicWordCount: [[${theme.config.post.aiDescription.basicWordCount}]],
-                btnLink: "[(${theme.config.post.aiDescription.btnLink})]",
-                gptName: "[(${theme.config.post.aiDescription.gptName})]",
-                modeName: [[${theme.config.post.aiDescription.mode}]],
-                switchBtn: [[${theme.config.post.aiDescription.switchBtn}]],
-                keys: "[(${theme.config.post.aiDescription.key})]",
-                Referers: "[(${theme.config.post.aiDescription.Referer})]",
+                ai: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' :
+                        theme.config.post.aiDescription.mode != 'local' && !theme.config.post.aiDescription.switchBtn ? '' :
+                        post.spec.excerpt.autoGenerate ? '本地模式需要自己填写文章摘要' :
+                        #strings.isEmpty(post.status.excerpt) ? '请填写文章摘要' : post.status.excerpt }]],
+                randomNum: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? 0 : theme.config.post.aiDescription.randomNum}]],
+                basicWordCount: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? 0 : theme.config.post.aiDescription.basicWordCount}]],
+                btnLink: "[(${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.btnLink})]",
+                gptName: "[(${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.gptName})]",
+                modeName: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.mode}]],
+                switchBtn: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? false : theme.config.post.aiDescription.switchBtn}]]
             },
             img: {
                 src: [[${isLazyload ? 'data-lazy-src' : 'src' }]]
@@ -125,7 +123,11 @@
             footer: {
                 default_enable: [[${theme.config.footer.footerContent.default_enable_group.default_enable}]]
             }
-        }
-    };
-
-</script>
+        };
+    </script>
+    <!-- P1-4：GA_ID 预留，gtag 由 Halo 插件注入，未配置时 window.GA_ID 为 null，gtag 调用跳过 -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.GA_ID = [[${not #strings.isEmpty(theme.config.basics.ga_id)}]] ? "[[${theme.config.basics.ga_id}]]" : null;
+        /*]]>*/
+    </script>

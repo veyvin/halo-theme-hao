@@ -118,7 +118,7 @@
     </th:block>
 
     <!-- 返回主页 -->
-    <a href="/" id="site-name" title="返回博客主页">
+    <a href="/" id="site-name" th:title="${#messages.msg('nav.home')}">
         <span th:utext="${#strings.isEmpty(theme.config.basics.siteTitle)} ? ${site.title} : ${theme.config.basics.siteTitle}"></span>
     </a>
 </div>

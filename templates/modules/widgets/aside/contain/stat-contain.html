@@ -6,33 +6,33 @@
     <div class="webinfo">
         <div class="webinfo-item">
             <div class="webinfo-item-title"><i class="haofont hao-icon-file-lines"></i>
-                <div class="item-name">文章数 :</div>
+                <div class="item-name" th:text="${#messages.msg('stat.posts')}"></div>
             </div>
             <div class="item-count" th:text="${stats.post}"></div>
         </div>
         <!-- P0-3 补齐：分类数（对标原站网站统计） -->
         <div class="webinfo-item">
             <div class="webinfo-item-title"><i class="haofont hao-icon-folder-open"></i>
-                <div class="item-name">分类数 :</div>
+                <div class="item-name" th:text="${#messages.msg('stat.categories')}"></div>
             </div>
             <div class="item-count" th:text="${stats.category}"></div>
         </div>
         <!-- P0-3 补齐：评论数（对标原站网站统计） -->
         <div class="webinfo-item">
             <div class="webinfo-item-title"><i class="haofont hao-icon-chat--fill"></i>
-                <div class="item-name">评论数 :</div>
+                <div class="item-name" th:text="${#messages.msg('stat.comments')}"></div>
             </div>
             <div class="item-count" th:text="${stats.comment}"></div>
         </div>
         <div class="webinfo-item">
             <div class="webinfo-item-title"><i class="haofont hao-icon-bullseye"></i>
-                <div class="item-name">访问量 :</div>
+                <div class="item-name" th:text="${#messages.msg('stat.visits')}"></div>
             </div>
             <div class="item-count" th:text="${stats.visit}"></div>
         </div>
         <div class="webinfo-item">
             <div class="webinfo-item-title"><i class="haofont hao-icon-stopwatch"></i>
-                <div class="item-name">建站天数 :</div>
+                <div class="item-name" th:text="${#messages.msg('stat.days')}"></div>
             </div>
             <div class="item-count" th:text="${theme.config.basics.siteStartTime}"  id="runtimeshow"></div>
         </div>

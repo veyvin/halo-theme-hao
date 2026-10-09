@@ -1,0 +1,30 @@
+# Developer Taste Preferences
+- Prefers `defer` on scripts rather than `async` when execution order matters (jQuery → Pjax → consumers). Confidence: 0.9
+- Prefers images to use `loading="lazy"` and `decoding="async"` unless they are LCP above-the-fold. Confidence: 0.85
+- Removes backup CSS files and unused JS libraries (e.g., `tw_cn.js`, duplicate `instant.page`) to reduce payload. Confidence: 0.8
+- Uses `fetchpriority` / `preload` for critical LCP images. Confidence: 0.7
+- Avoids exposing API keys or sensitive tokens in client-side `GLOBAL_CONFIG` — prefers server-side hidden `<input>` injection. Confidence: 0.9
+- Changes sensitive settings.yaml fields to `password` type to mask input. Confidence: 0.8
+- Adds `prefers-reduced-motion` media query to disable animations and carousels when the OS prefers reduced motion. Confidence: 0.85
+- Prefers `:focus-visible` outline styles over `:focus` for keyboard navigation. Confidence: 0.8
+- Avoids `display: none` on scrollbars/elements that should remain usable/accessible — prefers `visibility: hidden` or `width: 0`. Confidence: 0.75
+- Replaces hardcoded colors with CSS variables (`var(--heo-*)`) and uses `color-mix()` for dark-mode variants instead of duplicating hex values. Confidence: 0.85
+- Uses `font-display: swap` on `@font-face` declarations. Confidence: 0.7
+- Prefers `#messages.msg(...)` lookups over hardcoded Chinese text in Thymeleaf templates. Confidence: 0.9
+- Maintains parallel `default.properties` (English) and `zh_CN.properties` (Chinese) key sets. Confidence: 0.85
+- Validates YAML config with `npx --yes js-yaml` and JS syntax with `node --check` before committing changes. Confidence: 0.9
+- Uses `git diff --stat` and `git status` to review changes before finalizing. Confidence: 0.85
+- Runs `node scripts/sync-vendor.mjs` as a build sanity check. Confidence: 0.75
+- Works in priority tiers: P0 (critical fixes) → P1 (server-side improvements) → P2 (polish/accessibility). Confidence: 0.9
+- Uses `todo_write` task tracking with status labels (completed/in_progress/pending). Confidence: 0.8
+- Uses content-conditional script loading — loads a script (e.g., `custom.js` defining Web Components like `hao-tabs`) only when the rendered page content actually contains the corresponding markers (e.g., `hao-` prefix), avoiding unnecessary downloads on pages that don't need the component. Confidence: 0.85
+- Guards external/analytics function calls defensively — checks `typeof fn === 'function' && window.CONFIG_VAR` before invoking third-party functions (e.g., `gtag`), and only injects config variables when the corresponding settings.yaml field is non-empty. Confidence: 0.85
+- Replaces background-video `autoplay` with `muted playsinline webkit-playsinline` plus `pointer-events:none` to save mobile bandwidth and avoid browser autoplay-blocking on mobile. Confidence: 0.8
+- Uses real hex values (not CSS variables) in `<meta name="theme-color">` tags, recognizing that CSS variables don't resolve inside `media` attribute contexts; uses Thymeleaf `?:` fallback to provide a default. Confidence: 0.8
+- Adds conditional `preconnect`/`dns-prefetch` for external services (e.g., comment systems) only when the service is configured and active, avoiding unnecessary early connection to unused domains. Confidence: 0.75
+- Consolidates redundant meta/HTML declarations — reduces duplicate tag declarations (e.g., 4 redundant `theme-color` metas → 2 clean ones with defaults) to keep markup minimal. Confidence: 0.75
+- Values iterative optimization discovery — after a comprehensive optimization pass, immediately asks "what else can be optimized," indicating a preference for sustained, continuous finding of performance/a11y/i18n improvements rather than settling at a single pass. Confidence: 0.8
+- Uses `th:inline="javascript"` with CDATA to inject server-side i18n message values (`#messages.msg(...)`) into a `window`-scoped JS object (e.g., `window.fmI18n`), bridging Thymeleaf template i18n to client-side vanilla JavaScript. Confidence: 0.8
+- Uses English (not Chinese) as the hardcoded fallback string in JS when reading from an injected i18n `window` object — pattern `(window.i18n && window.i18n.key) || 'English default'` — so missing translations degrade to English rather than a single-language default. Confidence: 0.85
+- Defers (does not auto-apply) optimizations that require runtime or build-tool validation unavailable in the local environment (e.g., CSS tree-shaking with PurgeCSS/uncss, Prism behavior under pjax in a live Halo instance), instead documenting the risk and recommending specific tools/conditions rather than guessing. Confidence: 0.8
+- Performs a comprehensive final sweep — greps all template and JS files for remaining hardcoded Chinese strings after initial i18n fixes — to catch instances missed by partial conversions. Confidence: 0.75

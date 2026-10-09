@@ -1,16 +1,16 @@
 <th:block >
     <!-- 解决 pjax问题  自动识别语言-->
-    <th:block th:if="${pluginFinder.available('PluginPrismJS')}">
-        <script src="/plugins/PluginPrismJS/assets/static/highlight.js/highlight.min.js"></script>
+    <th:block th:if="${pluginFinder.available('PluginPrismJS') and theme.config.code.enable}">
+        <script defer src="/plugins/PluginPrismJS/assets/static/highlight.js/highlight.min.js"></script>
 
 
         <script>
             document.addEventListener("pjax:complete", function () {
-                hljs.highlightAll()
+                (typeof hljs !== 'undefined') && hljs.highlightAll()
             })
         </script>
 
-        <script data-pjax
+        <script defer data-pjax
                 src="/plugins/PluginPrismJS/assets/static/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
 
     </th:block>

@@ -12,7 +12,7 @@
         <main class="layout" id="content-inner">
             <!-- archive -->
             <div id="archive">
-                <div class="article-sort-title">文章<sup>[[${siteStatsFinder.getStats().post}]]</sup></div>
+                <div class="article-sort-title"><span th:text="${#messages.msg('page.archives.posts')}"></span><sup>[[${siteStatsFinder.getStats().post}]]</sup></div>
                 <div class="article-sort" th:each="archive : ${archives.items}"
                      th:with='postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"}'>
                     <div class="article-sort-item year" th:text="${archive.year}"></div>
@@ -22,7 +22,7 @@
                         <div class="article-sort-item" th:each="post : ${month.posts}">
                             <a class="article-sort-item-img" th:href="@{${post.status.permalink}}"
                                th:title="${post.spec.title}">
-                                <img th:alt="${post.spec.title}"
+                                <img th:alt="${post.spec.title}" loading="lazy" decoding="async" width="80" height="80"
                                      th:src="${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, 's')}">
                             </a>
                             <div class="article-sort-item-info">

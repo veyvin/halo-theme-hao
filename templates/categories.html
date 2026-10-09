@@ -12,12 +12,12 @@
         <main class="layout hide-aside" id="content-inner">
 
             <div id="page">
-                <h1 class="page-title" style="display: inline;">分类</h1>
+                <h1 class="page-title" th:text="${#messages.msg('page.title.category')}">分类</h1>
                 <div th:if="${#strings.equals(theme.config.categories.use, 'default')}" class="category-sections"
                      th:with="allCats=${categoryFinder.listAll()},stats=${siteStatsFinder.getStats()}">
                     <div class="category-stats">
                         查看不同领域的 <a th:href="@{${site.routes.categoriesUri}}" th:text="${#lists.size(allCats)}"></a> 个分类，
-                        共 <a th:href="@{${site.routes.archivesUri}}" th:text="${stats.post}"></a> 篇文章
+                        共 <a th:href="@{${site.routes.archivesUri}}" th:text="${stats.post}"></a> <span th:text="${#messages.msg('page.archives.posts')}"></span>
                     </div>
                     <section class="category-section" th:each="categoryItem : ${allCats}">
                         <h2 class="category-section-title">

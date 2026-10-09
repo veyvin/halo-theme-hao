@@ -1,6 +1,6 @@
 <!-- 归档列表：archives 页大小不能为 0 -->
 <th:block>
-    <div class="item-headline"><a class="card-more-btn" th:href="@{${site.routes.archivesUri}}" title="查看更多" data-pjax-state=""></a></div>
+    <div class="item-headline"><a class="card-more-btn" th:href="@{${site.routes.archivesUri}}" th:title="${#messages.msg('common.viewMore')}" data-pjax-state=""></a></div>
     <ul class="card-archive-list"
         th:with="rawQty=${theme.config.sidebar.archivesQuantity},
                  archivesQuantity=${rawQty != null and #conversions.convert(rawQty, 'java.lang.Integer') > 0 ? #conversions.convert(rawQty, 'java.lang.Integer') : 8},

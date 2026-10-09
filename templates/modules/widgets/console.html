@@ -1,6 +1,6 @@
 <!-- TODO 控制台功能 -->
 <div id="console" >
-  <div class="close-btn" onclick="heo.hideConsole()" href="javascript:void(0);" role="button" tabindex="0" aria-label="关闭控制台">
+  <div class="close-btn" onclick="heo.hideConsole()" href="javascript:void(0);" role="button" tabindex="0" th:aria-label="${#messages.msg('common.close')}">
     <i class="haofont hao-icon-circle-xmark"></i>
   </div>
   <div class="console-card-group">
@@ -8,13 +8,13 @@
     <div class="console-card-group-left">
       <div class="console-card" id="card-newest-comments" onclick="heo.hideConsole()">
         <div class="card-content">
-          <div class="author-content-item-tips">互动</div>
-          <span class="author-content-item-title">最近评论</span>
+  <div class="author-content-item-tips" th:text="${#messages.msg('console.interaction')}"></div>
+           <span class="author-content-item-title" th:text="${#messages.msg('console.recentComments')}"></span>
         </div>
         <div class="aside-list">
           <th:block th:if="${#strings.equals(theme.config.comments.use, 'commentWidget') }">
             <!-- BUG：由于当前的列出所有评论API无过滤功能，非文章页的评论无法查询到页面信息，所以非文章评论跳转至首页-->
-            <div class="aside-list-item" th:each="comment,iterStat : ${commentFinder.list(null, 1, 20)}"
+            <div class="aside-list-item" th:each="comment,iterStat : ${commentFinder.list(null, 1, 6)}"
                  th:with="page = ${comment.spec.subjectRef.kind == 'Post' ? postFinder.getByName(comment.spec.subjectRef.name) :
                   comment.spec.subjectRef.kind == 'SinglePage' && not #strings.contains('photos,links,moments', comment.spec.subjectRef.name) ? singlePageFinder.getByName(comment.spec.subjectRef.name) : null},
                   url = ${page == null? '/' : page.status.permalink + '#comment-' + comment.metadata.name}"
@@ -40,13 +40,13 @@
               });
             </script>
           </th:block>
-          <span th:if="${#strings.equals(theme.config.comments.use, 'Twikoo') }">正在加载中...</span></div>
+          <span th:if="${#strings.equals(theme.config.comments.use, 'Twikoo') }" th:text="${#messages.msg('common.loading')}"></span></div>
       </div>
       <!-- P0-3 最近文章：对标原站 console 博客最近文章（带日期） -->
       <div class="console-card console-recent-posts" onclick="heo.hideConsole()">
         <div class="card-content">
-          <div class="author-content-item-tips">文章</div>
-          <span class="author-content-item-title">最近发布</span>
+          <div class="author-content-item-tips" th:text="${#messages.msg('nav.posts')}"></div>
+            <span class="author-content-item-title" th:text="${#messages.msg('console.recentPosts')}"></span>
         </div>
         <div class="aside-list console-recent-list"
              th:with="consolePosts=${postFinder.list({page: 1, size: 5, sort: {'spec.publishTime,desc'}})}">
@@ -66,8 +66,8 @@
     <div class="console-card-group-right">
       <div class="console-card tags" onclick="heo.hideConsole()">
         <div class="card-content">
-          <div class="author-content-item-tips">标签</div>
-          <span class="author-content-item-title">寻找感兴趣的领域</span>
+          <div class="author-content-item-tips" th:text="${#messages.msg('nav.tags')}"></div>
+          <span class="author-content-item-title" th:text="${#messages.msg('console.findInterests')}"></span>
         </div>
         <div class="card-tag-cloud" th:with="tags=${tagFinder.list(1,20)}">
           <a style="font-size:1em;color:#d3d3d3"
@@ -79,7 +79,7 @@
       </div>
       <!-- 底部展示时间归档 -->
       <div class="console-card history" onclick="heo.hideConsole()">
-        <div class="item-headline"><i class="fas fa-archive"></i><span>文章</span></div>
+        <div class="item-headline"><i class="fas fa-archive"></i><span th:text="${#messages.msg('nav.posts')}"></span></div>
         <!-- archives 第二参数为页大小，0 会异常；只取近年份，避免加载过多 posts 截断响应 -->
         <ul class="card-archive-list" th:with="archives = ${postFinder.archives(1, 8)}">
           <th:block th:each="archive : ${archives.items}">
@@ -88,23 +88,12 @@
               <a class="card-archive-list-link" th:href="@{'/archives/'+${archive.year}+'/'+${month.month}}"
                  data-pjax-state="load"><span
                       class="card-archive-list-date">
-                  [[${(month.month=='01') ? '一月' :
-                            (month.month == '02') ? "二月"  :
-                            (month.month == '03') ? "三月" :
-                            (month.month == '04') ? "四月" :
-                            (month.month == '05') ? "五月" :
-                            (month.month == '06') ? "六月" :
-                            (month.month == '07') ? "七月" :
-                            (month.month == '08') ? "八月" :
-                            (month.month == '09') ? "九月" :
-                            (month.month == '10') ? "十月" :
-                            (month.month == '11') ? "十一月" :
-                                          "十二月"}]] [[${archive.year}]]
+                  [[${#messages.msg('month.' + month.month)}]] [[${archive.year}]]
                 </span>
                 <div class="card-archive-list-count-group"><span
                         class="card-archive-list-count"
                         th:text="${month.posts != null ? #lists.size(month.posts) : 0}"></span>
-                  <span class="card-archive-list-count-unit">篇</span>
+                  <span class="card-archive-list-count-unit" th:text="${#messages.msg('post.unit')}"></span>
                 </div>
               </a>
             </li>
@@ -116,14 +105,14 @@
 
   <div class="button-group">
     <div class="console-btn-item">
-      <a class="darkmode_switchbutton" href="javascript:void(0);" onclick="navFn.switchDarkMode();" rel="external nofollow"
-         title="显示模式切换" aria-label="显示模式切换"><i class="haofont hao-icon-moon-clear-fill" style="font-size:1rem"></i>
-      </a>
-    </div>
-    <div class="console-btn-item" id="consoleHideAside" onclick="heo.hideAsideBtn()" title="边栏显示控制"><a
-            class="asideSwitch" data-pjax-state="" aria-label="边栏显示控制"><i class="haofont hao-icon-arrows-left-right"></i></a></div>
-    <div class="console-btn-item on" id="consoleCommentBarrage" onclick="heo.switchCommentBarrage()" title="热评开关"><a
-            class="commentBarrage" data-pjax-state="" aria-label="热评开关"><i class="haofont hao-icon-chat--fill"></i></a></div>
+    <a class="darkmode_switchbutton" href="javascript:void(0);" onclick="navFn.switchDarkMode();" rel="external nofollow"
+            th:title="${#messages.msg('console.darkMode')}" th:aria-label="${#messages.msg('console.darkMode')}"><i class="haofont hao-icon-moon-clear-fill" style="font-size:1rem"></i>
+         </a>
+      </div>
+      <div class="console-btn-item" id="consoleHideAside" onclick="heo.hideAsideBtn()" th:title="${#messages.msg('console.toggleSidebar')}"><a
+               class="asideSwitch" data-pjax-state="" th:aria-label="${#messages.msg('console.toggleSidebar')}"><i class="haofont hao-icon-arrows-left-right"></i></a></div>
+      <div class="console-btn-item on" id="consoleCommentBarrage" onclick="heo.switchCommentBarrage()" th:title="${#messages.msg('console.barrage')}"><a
+               class="commentBarrage" data-pjax-state="" th:aria-label="${#messages.msg('console.barrage')}"><i class="haofont hao-icon-chat--fill"></i></a></div>
 
     <!--<div class="console-btn-item" id="consoleKeyboard" onclick="heo.keyboardToggle()" title="快捷键开关"><a-->
     <!--        class="keyboard-switch"><i class="fa-duotone fa-keyboard"></i></a>-->

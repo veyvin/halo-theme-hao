@@ -3,23 +3,23 @@
   <div class="needEndHide" id="bottom-dock">
     <a class="dock-item" id="dock-tts" href="javascript:void(0);"
        th:if="${htmlType == 'post' && theme.config.post.readAloudEnable}"
-       onclick="haoRead.toggle(false); return false;" title="播放全文朗读" aria-label="播放全文朗读">
+      onclick="haoRead.toggle(false); return false;" th:title="${#messages.msg('dock.readAloud')}" th:aria-label="${#messages.msg('dock.readAloud')}">
       <i class="haofont hao-icon-play dock-icon-play"></i>
       <i class="haofont hao-icon-pause dock-icon-pause" style="display:none;"></i>
-      <span class="dock-title">全文朗读</span>
+      <span class="dock-title" th:text="${#messages.msg('dock.readAloud')}"></span>
     </a>
     <a class="dock-item" id="dock-podcast" href="javascript:void(0);"
        th:if="${htmlType == 'post' && theme.config.post.readAloudEnable}"
-       onclick="haoRead.toggle(true); return false;" title="播放全文播客陪读" aria-label="播放全文播客陪读">
+       onclick="haoRead.toggle(true); return false;" th:title="${#messages.msg('dock.companion')}" th:aria-label="${#messages.msg('dock.companion')}">
       <i class="haofont hao-icon-chat--fill dock-icon-play"></i>
       <i class="haofont hao-icon-pause dock-icon-pause" style="display:none;"></i>
-      <span class="dock-title">播客陪读</span>
+      <span class="dock-title" th:text="${#messages.msg('dock.companion')}"></span>
     </a>
     <a class="dock-item" id="dock-radio" href="javascript:void(0);"
        th:if="${theme.config.post.radio.radioEnable}"
-       onclick="haoRadio.toggle(); return false;" title="开启电台模式，随机挑选文章陪读" aria-label="电台模式">
+       onclick="haoRadio.toggle(); return false;" th:title="${#messages.msg('dock.radio')}" th:aria-label="${#messages.msg('dock.radio')}">
       <i class="haofont hao-icon-radio"></i>
-      <span class="dock-title" id="dock-radio-title">电台模式</span>
+      <span class="dock-title" id="dock-radio-title" th:text="${#messages.msg('dock.radio')}"></span>
     </a>
   </div>
   <!-- 电台候选队列：取最新 N 篇，JS 端打乱顺序连续朗读 -->

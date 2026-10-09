@@ -1,4 +1,5 @@
 <th:block th:fragment="post-list(_path)">
+    <!-- card，需要添加在没有图片时使用随机图片 -->
     <div class="recent-posts" id="recent-posts"
          th:with='postItems=${posts.items},
                      postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,"?") ? theme.config.layout.postRandomImg+"&" : theme.config.layout.postRandomImg+"?"}'>

@@ -14,7 +14,7 @@
                 <div id="category-bar">
                     <div class="category-bar-items" id="category-bar-items">
                         <div class="category-bar-item" id="category-bar-home">
-                            <a href="/">首页</a>
+                            <a href="/" data-pjax-state="" th:text="${#messages.msg('nav.home')}"></a>
                         </div>
                         <div class="category-bar-item"
                              th:classappend="${category.metadata.name == categoryItem.metadata.name} ? ' select'"

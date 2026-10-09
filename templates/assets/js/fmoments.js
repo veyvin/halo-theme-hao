@@ -136,7 +136,7 @@ if (typeof window.FriendMomentsApp === 'undefined') {
                 } else {
                     const option = document.createElement('option');
                     option.value = '';
-                    option.textContent = '全部作者';
+                    option.textContent = (window.fmI18n && window.fmI18n.allAuthors) || 'All authors';
                     authorFilter.appendChild(option);
                 }
             }
@@ -743,11 +743,13 @@ if (typeof window.FriendMomentsApp === 'undefined') {
             if (errorState) errorState.style.display = 'block';
 
             if (errorMessage) {
-                let message = '加载失败，请稍后重试';
+                // P2-4：JS 硬编码改为 i18n fallback
+                var i18n = window.fmI18n || {};
+                let message = (i18n.error || 'Failed to load, please try again later');
                 if (error.message.includes('fetch')) {
-                    message = '网络连接失败，请检查网络后重试';
+                    message = (i18n.networkFail || 'Network error, please check your connection');
                 } else if (error.message.includes('HTTP')) {
-                    message = `服务器错误: ${error.message}`;
+                    message = `${i18n.httpError || 'Server error'}: ${error.message}`;
                 }
                 errorMessage.textContent = message;
             }

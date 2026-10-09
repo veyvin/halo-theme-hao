@@ -10,49 +10,49 @@
         <div class="rightMenu-group rightMenu-line rightMenuPlugin">
             <div class="rightMenu-item" id="menu-copytext">
                 <i class="haofont hao-icon-copy"></i>
-                <span>复制选中文本</span>
+                <span th:text="${#messages.msg('rightMenu.copyText')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-pastetext">
                 <i class="haofont hao-icon-paste"></i>
-                <span>粘贴文本</span>
+                <span th:text="${#messages.msg('rightMenu.pasteText')}"></span>
             </div>
             <a class="rightMenu-item" id="menu-commenttext">
                 <i class="haofont hao-icon-comment-medical"></i>
-                <span>引用到评论</span>
+                <span th:text="${#messages.msg('rightMenu.quoteComment')}"></span>
             </a>
             <div class="rightMenu-item" id="menu-newwindow">
                 <i class="haofont hao-icon-window-restore"></i>
-                <span>新窗口打开</span>
+                <span th:text="${#messages.msg('rightMenu.openNewWindow')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-copylink">
                 <i class="haofont hao-icon-link"></i>
-                <span>复制链接地址</span>
+                <span th:text="${#messages.msg('rightMenu.copyLink')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-copyimg">
                 <i class="haofont hao-icon-images"></i>
-                <span>复制此图片</span>
+                <span th:text="${#messages.msg('rightMenu.copyImage')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-downloadimg">
                 <i class="haofont hao-icon-download"></i>
-                <span>下载此图片</span>
+                <span th:text="${#messages.msg('rightMenu.downloadImage')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-newwindowimg" >
                 <i class="haofont hao-icon-window-restore"></i>
-                <span>新窗口打开图片</span>
+                <span th:text="${#messages.msg('rightMenu.openImageNewWindow')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-search">
                 <i class="haofont hao-icon-search--line"></i>
-                <span>站内搜索</span>
+                <span th:text="${#messages.msg('rightMenu.searchSite')}"></span>
             </div>
             <div class="rightMenu-item" id="menu-searchBaidu">
                 <i class="haofont hao-icon-baidu"></i>
-                <span>百度搜索</span>
+                <span th:text="${#messages.msg('rightMenu.searchBaidu')}"></span>
             </div>
         </div>
         <div class="rightMenu-group rightMenu-line rightMenuOther">
             <a class="rightMenu-item menu-link" id="menu-randomPost" onclick="toRandomPost()">
                 <i class="haofont hao-icon-shuffle"></i>
-                <span>随便逛逛</span>
+                <span th:text="${#messages.msg('rightMenu.randomPost')}"></span>
             </a>
         </div>
         <!-- <div class="rightMenu-group rightMenu-line">
@@ -68,12 +68,12 @@
         <div class="rightMenu-group rightMenu-line rightMenuOther">
             <div class="rightMenu-item" id="menu-copy">
                 <i class="haofont hao-icon-copy"></i>
-                <span>复制地址</span>
+                <span th:text="${#messages.msg('rightMenu.copyAddress')}"></span>
             </div>
             <div th:if="${theme.config.comments.commentBarrageConfig.commentBarrageEnable}" class="rightMenu-item" id="menu-commentBarrage"
                  rel="external nofollow noreferrer" draggable="false" style="display: flex;">
                 <i class="haofont hao-icon-chat--fill"></i>
-                <span class="menu-commentBarrage-text">关闭热评</span>
+                <span class="menu-commentBarrage-text" th:text="${#messages.msg('rightMenu.toggleHotComments')}"></span>
             </div>
         </div>
     </div>

@@ -13,10 +13,9 @@
 
         <main class="layout hide-aside" id="content-inner"
               th:with="hotLimit=${theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20},
-                       hotPoolSize=${(theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20) * 5},
-                       showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
-                       hotDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
-                       hotPosts=${postFinder.list({page: 1, size: hotPoolSize, sort: {'spec.publishTime,desc'}})}">
+                     showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
+                     hotDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
+                     hotPosts=${postFinder.list({page: 1, size: hotLimit})}">
             <div id="page">
 
                 <!-- 组件样式：/hot/ 与 /must-read/ 共用 -->
@@ -35,17 +34,17 @@
                     <!-- ============ 工具栏：时间范围 ============ -->
                     <div class="hot-page-section hot-page-section-toolbar">
                         <div class="hot-page-toolbar">
-                            <div class="hot-page-periods" role="tablist" aria-label="热门时间范围">
+                            <div class="hot-page-periods" role="tablist" th:aria-label="${#messages.msg('hot.range')}">
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-window="1" aria-pressed="false">当日</button>
+                                        data-window="1" aria-pressed="false" th:text="${#messages.msg('hot.tabDay')}"></button>
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-window="30" aria-pressed="false">最近一个月</button>
+                                        data-window="30" aria-pressed="false" th:text="${#messages.msg('hot.tabMonth')}"></button>
                                 <button class="hot-period-btn is-active" type="button" role="tab"
-                                        data-window="365" aria-pressed="true">最近一年</button>
+                                        data-window="365" aria-pressed="true" th:text="${#messages.msg('hot.tabYear')}"></button>
                                 <button class="hot-period-btn" type="button" role="tab"
-                                        data-window="0" aria-pressed="false">全部</button>
+                                        data-window="0" aria-pressed="false" th:text="${#messages.msg('hot.tabAll')}"></button>
                             </div>
-                            <span class="hot-page-meta" th:text="${hotLimit} + ' 篇'"></span>
+                            <span class="hot-page-meta" th:text="${hotLimit} + #messages.msg('hot.postsCount')"></span>
                         </div>
                     </div>
 
@@ -100,7 +99,7 @@
                                 <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
                             </div>
 
-                            <div class="hot-page-state" id="hot-page-empty" hidden>该时间范围内还没有热门文章</div>
+                            <div class="hot-page-state" id="hot-page-empty" hidden><span th:text="${#messages.msg('hot.empty')}"></span></div>
                         </div>
                     </div>
 

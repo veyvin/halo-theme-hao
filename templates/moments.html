@@ -34,14 +34,14 @@
                                             <img th:each="momentItem : ${content.medium}"
                                                  th:if="${momentItem.type.name == 'PHOTO'}"
                                                  th:src="${isLazyload ? loadingImg : momentItem.url}"
-                                                 th:data-lazy-src="${ isLazyload ? momentItem.url : ''}" title="瞬间配图">
+                                                 th:data-lazy-src="${ isLazyload ? momentItem.url : ''}" th:title="${#messages.msg('moment.imageDesc')}">
                                             <div class="bber-content-noimg"></div>
                                             <div class="bber-content-noimg"></div>
                                             <div class="bber-content-noimg"></div>
                                         </div>
                                         <div th:each="momentItem : ${content.medium}" class="bber-music"
                                              th:if="${momentItem.type.name == 'VIDEO'}">
-                                            <video th:src="${momentItem.url}"></video>
+                                            <video th:src="${momentItem.url}" preload="none" controls playsinline></video>
                                         </div>
                                     </th:block>
                                 </div>
@@ -81,6 +81,19 @@
         <!-- 卡片顶部气泡效果 -->
         <script th:if="${theme.config.other.bubbleEnable}" async data-pjax
                 th:src="${assets_link + '/libs/canvas/bubble.js'}"></script>
+
+        <!-- fmoments.js i18n：注入 localized fallback，避免 JS 里硬编码中文 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            window.fmI18n = {
+                allAuthors: "[[${#messages.msg('moment.allAuthors') + '']}]",
+                error: "[[${#messages.msg('moment.error') + '']}]",
+                networkFail: "[[${#messages.msg('moment.networkFail') + '']}]",
+                httpError: "[[${#messages.msg('moment.httpError') + '']}]",
+                loading: "[[${#messages.msg('moment.loading') + '']}]"
+            };
+            /*]]>*/
+        </script>
     </div>
 
 </th:block>
