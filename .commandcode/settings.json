@@ -46,7 +46,8 @@
       "Shell(powershell -command \"Get-Clipboard\" 2>$null | head -60)",
       "Shell(powershell -command \"Get-Clipboard\" 2>$null)",
       "Shell(powershell -command \"Get-ChildItem -Path '$env:COMMANDCODE_SCRATCHPAD' -ErrorAction SilentlyContinue\")",
-      "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && node --check templates/assets/js/hao-read.js && echo \"ALL OK\")"
+      "Shell(npx --yes js-yaml settings.yaml >NUL 2>NUL && echo \"YAML OK\" && node --check templates/assets/js/fmoments.js && node --check templates/assets/js/custom.js && node --check templates/assets/js/hao-read.js && echo \"ALL OK\")",
+      "Shell(ls templates/assets/js/test_*.js 2>nul || echo \"No test files found\")"
     ],
     "deny": [],
     "defaultMode": "default"
