@@ -5,8 +5,10 @@
   "description": "halo-theme-hao 前端第三方库：npm 统一管理，node scripts/sync-vendor.mjs 同步到 templates/assets/libs",
   "scripts": {
     "sync-vendor": "node scripts/sync-vendor.mjs",
-    "update-vendor": "npm update && npm run sync-vendor",
-    "build": "npm run sync-vendor",
+    "sync-twikoo-emoji": "node scripts/sync-twikoo-heo-emoji.mjs",
+    "patch-twikoo": "node scripts/patch-twikoo-heo-hosts.mjs && node scripts/patch-twikoo-heo-mode-confirm.mjs",
+    "update-vendor": "npm update && npm run sync-vendor && npm run patch-twikoo",
+    "build": "npm run sync-vendor && npm run patch-twikoo",
     "package": "theme-package"
   },
   "dependencies": {
@@ -30,7 +32,7 @@
     "quicklink": "2.3.0",
     "@fancyapps/ui": "6.1.13",
     "fast-average-color": "9.6.0",
-    "twikoo": "1.7.22",
+    "twikoo": "2.0.13",
     "artalk": "2.10.0",
     "vue": "2.6.14"
   },

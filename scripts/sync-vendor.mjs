@@ -45,7 +45,9 @@ const MAP = [
   ["masonry-layout/dist/masonry.pkgd.min.js", "masonry/masonry.pkgd.min.js"],
   ["quicklink/dist/quicklink.umd.js", "quicklink/quicklink.umd.js"],
   ["fast-average-color/dist/index.browser.min.js", "fast-average-color/index.browser.min.js"],
+  ["twikoo/dist/twikoo.min.js", "twikoo/twikoo.min.js"],
   ["twikoo/dist/twikoo.all.min.js", "twikoo/twikoo.all.min.js"],
+  // twikoo.heo.min.js 来自 blog.zhheo.com，含 Heo 皮肤，勿用 npm 覆盖
   ["artalk/dist/Artalk.js", "artalk/Artalk.js"],
   ["artalk/dist/Artalk.css", "artalk/Artalk.css"],
   ["vue/dist/vue.min.js", "vue/vue.min.js"],

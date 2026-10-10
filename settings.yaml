@@ -1831,6 +1831,57 @@ spec:
           help: 版权样式一中显示的一句话描述
           key: post_desc
           placeholder: 例如：分享设计与科技生活
+        - $formkit: attachment
+          if: $get(copyrightsStyle).value == 'one'
+          name: authorFrontImg
+          label: 作者形象叠图
+          help: 版权样式一头像上的角色形象（可选，留空则只显示头像）
+          key: post_authorFrontImg
+          placeholder: 请输入形象图片地址
+          width: 8rem
+          aspectRatio: 1/1
+        - $formkit: text
+          if: $get(copyrightsStyle).value == 'one'
+          name: authorAboutUrl
+          value: "/about/"
+          label: 作者卡跳转链接
+          help: 点击文末作者头像跳转的页面
+          key: post_authorAboutUrl
+          placeholder: 例如：/about/
+        - $formkit: group
+          if: $get(copyrightsStyle).value == 'one'
+          name: reward
+          label: 打赏作者
+          value:
+            enable: false
+            url: ""
+          children:
+            - $formkit: switch
+              name: enable
+              label: 显示打赏按钮
+              help: 在文末作者卡显示「打赏作者」按钮
+            - $formkit: url
+              name: url
+              label: 打赏页面地址
+              placeholder: 例如：https://afdian.com/a/xxx 或 /rewards/
+              help: 打赏按钮跳转链接
+        - $formkit: group
+          if: $get(copyrightsStyle).value == 'one'
+          name: report
+          label: 反馈与投诉
+          value:
+            enable: false
+            url: ""
+          children:
+            - $formkit: switch
+              name: enable
+              label: 显示反馈与投诉
+              help: 在文末标签旁显示「反馈与投诉」链接
+            - $formkit: url
+              name: url
+              label: 反馈页面地址
+              placeholder: 例如：/feedback/ 或外部表单链接
+              help: 反馈与投诉跳转链接
         - $formkit: group
           name: post_edit
           label: 运营模式与责任
@@ -2005,6 +2056,7 @@ spec:
           value:
             envId:
             accessToken:
+            adminPassword:
             js: ""
           children:
             - $formkit: url
@@ -2022,11 +2074,17 @@ spec:
               help: 在浏览器F12的控制台中获取，用于显示弹幕，详情请查看文档
               validation: required
             - $formkit: text
+              name: adminPassword
+              key: adminPassword
+              label: Twikoo评论 - 管理密码
+              placeholder: 留空则不显示评论删除按钮
+              help: 填 Twikoo 管理面板的管理密码（Docker 的 ACCESS_TOKEN），Halo 超级管理员登录后可在评论右侧直接删除评论。注意：这不是上面的「管理员令牌」，令牌是浏览器里的匿名 uid
+            - $formkit: text
               name: js
               key: js
               label: Twikoo评论 - js
               placeholder: 请输入js文件地址
-              help: 主题的twikoo版本是最新版本(如果你使用的不是最新版本请自己引入js文件)
+              help: 留空使用主题内置 Heo 皮肤版 Twikoo 2.x。勿填 twikoo.all.min.js（那是 1.x）
         - $formkit: group
           if: $get(commentsEnable).value && $get(use).value == 'Waline'
           name: walines

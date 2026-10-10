@@ -2,7 +2,8 @@
 <th:block  th:if="${#strings.equals(theme.config.comments.use, 'Twikoo') &&
 not #strings.isEmpty(theme.config.comments.twikoos.envId)}">
     <div class="js-pjax">
-        <script th:src="${assets_link + '/js/comment/twikoo.js'}"></script>
+        <!-- theme_version 缓存戳：twikoo.js 改动后浏览器能立即拿到新版，避免旧版长缓存 -->
+        <script th:src="${assets_link + '/js/comment/twikoo.js' + theme_version}"></script>
     </div>
     <!-- 最近评论 -->
     <script>

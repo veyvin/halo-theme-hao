@@ -315,3 +315,85 @@ img.post-copyright__author_img_front {
     margin: 10px
 }
 
+/* 打赏按钮圆角与内容对齐 zhheo */
+.post-reward .reward-button {
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.post-reward .reward-button-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.post-reward .reward-button-content i {
+    font-size: 1rem;
+}
+
+.post-tools-left .post-reward,
+.post-tools-left .reward-link.mode {
+    margin: 0 4px;
+}
+
+/* 文末标签行 + 反馈与投诉 */
+.post-bottom-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 1rem;
+    width: 100%;
+}
+
+.post-bottom-tools .post-tools-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.post-bottom-tools .post-tools-right {
+    margin-left: 0;
+    flex: 0 0 auto;
+}
+
+.post-bottom-tools .post-report {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: var(--style-border-always);
+    background: var(--heo-secondbg);
+    color: var(--heo-secondtext);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.post-bottom-tools .post-report:hover {
+    color: var(--heo-white);
+    background: var(--heo-main);
+    border-color: var(--heo-main);
+    box-shadow: var(--heo-shadow-main);
+}
+
+@media screen and (max-width: 768px) {
+    .post-bottom-tools {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .post-bottom-tools .post-tools-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .post-bottom-tools .post-report {
+        width: 100%;
+        justify-content: center;
+    }
+}
+

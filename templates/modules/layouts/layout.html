@@ -132,6 +132,9 @@
 <!-- 聚合搜索面板 -->
 <div th:replace="~{modules/widgets/agg-search}"/>
 
+<!-- Twikoo 评论管理面板（仅 Halo 超级管理员渲染） -->
+<div th:replace="~{modules/widgets/twikoo-admin}"/>
+
 
 <div th:replace="~{modules/widgets/right-menu}"/>
 
@@ -202,7 +205,7 @@
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
 
         <!-- 简繁转换：仅开启时加载 -->
-        <script defer th:if="${theme.config.style.translate.translateEnable}" th:src="${assets_link + '/js/translate.js'}"></script>
+        <script defer th:if="${theme.config.style.translate.translateEnable}" th:src="${assets_link + '/js/translate.js' + theme_version}"></script>
 
         <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换） -->
     <script defer th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax

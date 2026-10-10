@@ -1,7 +1,7 @@
 <th:block th:if="${#strings.equals(theme.config.comments.use, 'Artalk')
   && not #strings.isEmpty(theme.config.comments.artalks.server)}">
     <div class="js-pjax">
-        <script th:src="${assets_link + '/js/comment/artalk.js'}"></script>
+        <script th:src="${assets_link + '/js/comment/artalk.js' + theme_version}"></script>
         <input type="hidden" name="page-type" id="page-type" value="album">
     </div>
     <!-- 最近评论 -->

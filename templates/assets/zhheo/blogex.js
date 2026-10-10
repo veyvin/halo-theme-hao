@@ -275,22 +275,17 @@ var getTimeState = () => {
 
 //引用到评论
 function rightMenuCommentText(txt) {
-    if (GLOBAL_CONFIG.rightMenuEnable) {
+    if (GLOBAL_CONFIG.rightMenuEnable && typeof rm !== 'undefined') {
         rm.hideRightMenu();
     }
-    var input = document.getElementsByClassName(GLOBAL_CONFIG.source.comments.textarea)[0];
-    let evt = document.createEvent('HTMLEvents');
-    evt.initEvent('input', true, true);
     let inputValue = replaceAll(txt, '\n', '\n> ')
-    input.value = '> ' + inputValue + '\n\n';
-    input.dispatchEvent(evt);
-    var domTop = document.querySelector("#post-comment").offsetTop;
-    window.scrollTo(0, domTop - 80);
-    input.focus();
-    input.setSelectionRange(-1, -1);
+    var input = btf.fillCommentText('> ' + inputValue + '\n\n');
+    var comment = document.querySelector("#post-comment");
+    if (comment) window.scrollTo(0, comment.offsetTop - 80);
     if (document.getElementById("comment-tips")) {
         document.getElementById("comment-tips").classList.add("show");
     }
+    if (input) input.focus();
 }
 
 //替换所有内容
@@ -420,14 +415,9 @@ function removeLoading() {
 }
 
 function addFriendLink() {
-    var input = document.getElementsByClassName(GLOBAL_CONFIG.source.comments.textarea)[0];
-    let evt = document.createEvent('HTMLEvents');
-    evt.initEvent('input', true, true);
-    input.value = '昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n';
-    input.dispatchEvent(evt);
-    heo.scrollTo("#post-comment");
-    input.focus();
-    input.setSelectionRange(-1, -1);
+    var input = btf.fillCommentText('昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n');
+    if (typeof heo !== 'undefined' && heo.scrollTo) heo.scrollTo("#post-comment");
+    if (input) input.focus();
 }
 
 //从一个给定的数组arr中,随机返回num个不重复项

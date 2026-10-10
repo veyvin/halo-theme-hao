@@ -4,33 +4,33 @@ cd /d "%~dp0"
 
 where npm >nul 2>&1
 if errorlevel 1 (
-  echo [ERROR] 未找到 npm，请先安装 Node.js。
+  echo [ERROR] npm not found. Install Node.js first.
   exit /b 1
 )
 
 if not exist "node_modules\@halo-dev\theme-package-cli" (
-  echo [INFO] 正在安装打包依赖...
+  echo [INFO] Installing package dependencies...
   call npm install
   if errorlevel 1 (
-    echo [ERROR] npm install 失败。
+    echo [ERROR] npm install failed.
     exit /b 1
   )
 )
 
-echo [INFO] 递增 theme.yaml 补丁版本...
+echo [INFO] Bumping theme.yaml patch version...
 node scripts\bump-theme-version.mjs
 if errorlevel 1 (
-  echo [ERROR] 版本号递增失败。
+  echo [ERROR] Version bump failed.
   exit /b 1
 )
 
-echo [INFO] 正在打包主题 zip...
+echo [INFO] Packaging theme zip...
 call npm run package
 if errorlevel 1 (
-  echo [ERROR] 打包失败。
+  echo [ERROR] Package failed.
   exit /b 1
 )
 
 echo.
-echo [OK] 打包完成，产物在 dist\ 目录。
+echo [OK] Done. Output is in dist\
 exit /b 0

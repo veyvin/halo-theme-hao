@@ -76,11 +76,19 @@
 
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/custom.css' + theme_version}">
 
-    <!-- 移动端样式（对齐 blog.zhheo.com 的 heoblogmw768.css 思路）：
-         独立文件 + media 断点，且置于 zhheoblog.css / custom.css 之后，
-         使移动端规则拥有最终决定权，不影响桌面端 -->
+    <!-- Twikoo 2.x Heo 皮肤：先于移动端样式，避免桌面规则被 mw768 误伤 -->
+    <link rel="stylesheet"
+          th:if="${theme.config.comments.commentsEnable && #strings.equals(theme.config.comments.use, 'Twikoo') && not #strings.isEmpty(theme.config.comments.twikoos.envId)}"
+          th:href="${assets_link + '/zhheo/twikoo-v2-heo.css' + theme_version}">
+
+    <!-- 移动端样式：media 断点 + 置于 Twikoo 皮肤之后，移动端拥有最终决定权 -->
     <link rel="stylesheet" media="screen and (max-width: 768px)"
           th:href="${assets_link + '/zhheo/heoblogmw768.css' + theme_version}">
+
+    <!-- 评论管理按钮（仅 Halo 超级管理员）：置于皮肤与移动端样式之后，避免被覆盖 -->
+    <link rel="stylesheet"
+          th:if="${theme.config.comments.commentsEnable && #strings.equals(theme.config.comments.use, 'Twikoo') && not #strings.isEmpty(theme.config.comments.twikoos.envId)}"
+          th:href="${assets_link + '/zhheo/twikoo-admin.css' + theme_version}">
 
     <link rel="stylesheet" th:if="${ ( ( not #strings.isEmpty(theme.config.comments.twikoos.envId)  && not #strings.isEmpty(theme.config.comments.twikoos.accessToken) ) ||
         ( not #strings.isEmpty(theme.config.comments.artalks.server) && not #strings.isEmpty(theme.config.comments.artalks.siteName)) ||

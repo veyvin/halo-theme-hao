@@ -13,6 +13,15 @@
             <button th:if="${htmlType == 'post' && theme.config.post.aiAssistantEnable}" id="hao-ai-btn" type="button" title="AI 助手" onclick="haoAiToggle()"><i class="haofont hao-icon-message"></i></button>
             <a id="to_comment" href="#post-comment" title="直达评论" aria-label="直达评论" ><i class="haofont hao-icon-chat--fill" style="font-size: 17px;"></i></a>
             <a th:if="${theme.config.comments.commentBarrageConfig.commentBarrageEnable}" id="switch-commentBarrage" href="javascript:heo.switchCommentBarrage();" rel="external nofollow noreferrer" title="开关弹幕" aria-label="开关弹幕" draggable="false" data-pjax-state="external"><i class="haofont hao-icon-danmu"></i></a>
+            <!-- 评论管理入口：仅 Halo 超级管理员可见；用内联 onclick 以便 pjax 替换 #rightside-config-show 后仍可用 -->
+            <a id="to_twikoo_admin" href="javascript:;" rel="external nofollow noreferrer" draggable="false" data-pjax-state="external"
+               onclick="haoTwikooAdmin &amp;&amp; haoTwikooAdmin.open(); return false;"
+               sec:authorize='hasRole("super-role") or hasRole("role-template-super-role")'
+               th:if="${theme.config.comments.commentsEnable
+                        and #strings.equals(theme.config.comments.use, 'Twikoo')
+                        and not #strings.isEmpty(theme.config.comments.twikoos.envId)
+                        and not #strings.isEmpty(theme.config.comments.twikoos.adminPassword)}"
+               title="评论管理" aria-label="评论管理"><i class="haofont hao-icon-comment-medical"></i></a>
             <button id="go-up" type="button" title="回到顶部"><i class="haofont hao-icon-arrow-up"></i></button>
             <a th:if="${htmlType == 'post' || htmlType == 'page'}"
                th:with="editor = ${htmlType == 'post' ? 'posts/editor?name='+ post.metadata.name : htmlType == 'page' ? 'single-pages/editor?name='+ singlePage.metadata.name : '' }"

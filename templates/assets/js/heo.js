@@ -590,9 +590,11 @@ var heo = {
             return !1;
         }
         dr_js_autofill_commentinfos();
-        var input = document.getElementsByClassName(GLOBAL_CONFIG.source.comments.textarea)[0];
-        input.focus();
-        input.setSelectionRange(-1, -1);
+        var input = btf.getCommentInput();
+        if (input) {
+            input.focus();
+            try { input.setSelectionRange && input.setSelectionRange(-1, -1) } catch (e) {}
+        }
     },
 
     //爱发电赞助

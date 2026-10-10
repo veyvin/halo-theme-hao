@@ -1,27 +1,50 @@
-<!-- 版权样式一 -->
+<!-- 版权样式一（对齐 zhheo：作者卡 + 打赏/订阅 + 标签 + 反馈） -->
 <th:block th:if="${#strings.equals(theme.config.post.copyrightsStyle, 'one')}">
-    <!-- 版权声明 -->
-    <div class="post-copyright">
+    <div class="post-copyright"
+         th:with="contributor=${contributorFinder.getContributor(post.owner.metadata.name)},
+                  authorBack=${contributor.avatar ?: (not #strings.isEmpty(site.logo) ? site.logo : assets_link + '/images/hao-logo.jpg')},
+                  authorFront=${theme.config.post.authorFrontImg}">
         <div class="post-copyright__author_group">
-            <div th:with="contributor=${contributorFinder.getContributor(post.owner.metadata.name)}">
-                <a class="post-copyright__author_img" th:href="'/authors/'+${contributor.name}" data-pjax-state="">
-                    <!--                <img class="post-copyright__author_img_back entered loading"-->
-                    <!--                 th:src="@{${#strings.isEmpty(site.logo) ?  assets_link + '/images/hao-logo.jpg' : site.logo}}">-->
-                    <!-- 获取当前文章对象（假设变量为 $post） -->
-                    <img class="post-copyright__author_img_back entered loading" width="40" height="40" alt="作者头像"
-                         th:src="${contributor.avatar ?: assets_link + '/images/hao-logo.jpg'}"/>
-                </a>
-            </div>
+            <a class="post-copyright__author_img"
+               th:href="${not #strings.isEmpty(theme.config.post.authorAboutUrl) ? theme.config.post.authorAboutUrl : '/about/'}"
+               title="关于博主"
+               data-pjax-state="">
+                <img class="post-copyright__author_img_back entered loading" width="66" height="66"
+                     alt="头像背景"
+                     th:src="${authorBack}"/>
+                <img th:if="${not #strings.isEmpty(authorFront)}"
+                     class="post-copyright__author_img_front entered loading" width="66" height="66"
+                     alt="形象"
+                     th:src="${authorFront}"/>
+            </a>
             <div class="post-copyright__author_name">[[${site.title}]]</div>
             <div class="post-copyright__author_desc">[[${theme.config.post.desc}]]</div>
         </div>
+
         <div class="post-tools" id="post-tools">
             <div class="post-tools-left">
-                <div class="rewardLeftButton" th:if="${theme.config.post.post_edit.enable_post_edit}">
-                    <div class="reward-link mode"><a
-                            class="reward-link-button" th:href="@{${theme.config.post.post_edit.post_edit_url}}"
-                            data-pjax-state=""><i class="haofont hao-icon-plant-fill"></i><span th:text="${#messages.msg('footer.subscribe')}"></span></a></div>
+                <!-- 打赏作者 -->
+                <div class="post-reward" th:if="${theme.config.post.reward != null and theme.config.post.reward.enable}">
+                    <a class="reward-button button--animated"
+                       th:href="@{${theme.config.post.reward.url}}"
+                       th:attr="target=${#strings.startsWith(theme.config.post.reward.url, 'http') ? '_blank' : null},
+                                rel=${#strings.startsWith(theme.config.post.reward.url, 'http') ? 'noopener external nofollow noreferrer' : null}"
+                       title="打赏作者">
+                        <span class="reward-button-content">
+                            <i class="haofont hao-icon-hand-heart-fill"></i>
+                            <span th:text="${#messages.msg('post.reward')}"></span>
+                        </span>
+                    </a>
                 </div>
+                <!-- 订阅 / 运营 -->
+                <div class="reward-link mode" th:if="${theme.config.post.post_edit.enable_post_edit}">
+                    <a class="reward-link-button" th:href="@{${theme.config.post.post_edit.post_edit_url}}"
+                       data-pjax-state="">
+                        <i class="haofont hao-icon-plant-fill"></i>
+                        <span th:text="${#messages.msg('footer.subscribe')}"></span>
+                    </a>
+                </div>
+                <!-- 分享 -->
                 <div class="shareRight"
                      th:if="${theme.config.post.share_right.mobile_edit  || theme.config.post.share_right.weibo_edit || theme.config.post.share_right.copyurl_edit}">
                     <div class="share-link mobile" th:if="${theme.config.post.share_right.mobile_edit}">
@@ -50,6 +73,7 @@
                 </div>
             </div>
         </div>
+
         <div th:if="${not #strings.isEmpty(#annotations.get(post, 'copyrightEnable')) ?
               #annotations.get(post, 'copyrightEnable') == 'true' : theme.config.post.copyrights.enable}"
              class="post-copyright__notice">
@@ -58,18 +82,28 @@
                          theme.config.post.copyrights.reprintContent : theme.config.post.copyrights.content}">
             </span>
         </div>
-
-
     </div>
-    <div class="post-tools-right">
-        <div class="tag_share">
-            <div class="post-meta__tag-list">
-                <a class="post-meta__tags" th:each="tag : ${post.tags}" th:href="@{${tag.status.permalink}}">
-                    <span class="tags-punctuation">[[${tag.spec.displayName}]]</span>
 
-                    <span class="tagsPageCount" th:text="${tag.status.visiblePostCount}"></span>
-                </a>
+    <!-- 标签 + 反馈与投诉（对齐 zhheo post-bottom-tools） -->
+    <div class="post-bottom-tools">
+        <div class="post-tools-left">
+            <div class="tag_share">
+                <div class="post-meta__tag-list">
+                    <a class="post-meta__tags" th:each="tag : ${post.tags}" th:href="@{${tag.status.permalink}}">
+                        <span class="tags-punctuation">[[${tag.spec.displayName}]]</span>
+                        <span class="tagsPageCount" th:text="${tag.status.visiblePostCount}"></span>
+                    </a>
+                </div>
             </div>
+        </div>
+        <div class="post-tools-right"
+             th:if="${theme.config.post.report != null and theme.config.post.report.enable and not #strings.isEmpty(theme.config.post.report.url)}">
+            <a class="post-report"
+               th:href="@{${theme.config.post.report.url}}"
+               th:attr="target=${#strings.startsWith(theme.config.post.report.url, 'http') ? '_blank' : null},
+                        rel=${#strings.startsWith(theme.config.post.report.url, 'http') ? 'noopener external nofollow noreferrer' : null}"
+               th:text="${#messages.msg('post.report')}"
+               title="反馈与投诉"></a>
         </div>
     </div>
     <link rel="stylesheet" th:href="${assets_link + '/css/post-copyright-one.css' + theme_version}">

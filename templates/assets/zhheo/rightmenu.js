@@ -316,19 +316,14 @@ rm.pasteText = function () {
 //引用到评论
 rm.rightMenuCommentText = function (txt) {
     rm.hideRightMenu();
-    var input = document.getElementsByClassName(GLOBAL_CONFIG.source.comments.textarea)[0];
-    let evt = document.createEvent('HTMLEvents');
-    evt.initEvent('input', true, true);
     let inputValue = replaceAll(txt, '\n', '\n> ')
-    input.value = '> ' + inputValue + '\n\n';
-    input.dispatchEvent(evt);
-    var domTop = document.querySelector("#post-comment").offsetTop;
-    window.scrollTo(0, domTop - 80);
-    input.focus();
-    input.setSelectionRange(-1, -1);
+    var input = btf.fillCommentText('> ' + inputValue + '\n\n');
+    var comment = document.querySelector("#post-comment");
+    if (comment) window.scrollTo(0, comment.offsetTop - 80);
     if (document.getElementById("comment-tips")) {
         document.getElementById("comment-tips").classList.add("show");
     }
+    if (input) input.focus();
 }
 
 //替换所有内容

@@ -19,7 +19,7 @@
       <div class="aggsearch-tabs">
         <span class="aggsearch-tab active" data-type="all" th:text="${#messages.msg('aggsearch.tab.all')}"></span>
         <span class="aggsearch-tab" data-type="post" th:text="${#messages.msg('aggsearch.tab.posts')}"></span>
-        <span class="aggsearch-tab" data-type="friend" th:if="${pluginFinder.available('PluginLinks')}" th:text="${#messages.msg('aggsearch.tab.friends')}"></span>
+        <span class="aggsearch-tab" data-type="friend" th:if="${pluginFinder.available('PluginLinks') and linkFinder != null}" th:text="${#messages.msg('aggsearch.tab.friends')}"></span>
         <span class="aggsearch-tab" data-type="comment" th:text="${#messages.msg('aggsearch.tab.comments')}"></span>
       </div>
       <div class="aggsearch-results" id="aggsearch-results">
@@ -28,8 +28,8 @@
     </div>
     <div class="aggsearch-mask" onclick="haoAggSearch.close()"></div>
   </div>
-  <!-- 友链候选（需友链插件） -->
-  <script data-pjax th:inline="javascript" th:if="${pluginFinder.available('PluginLinks')}">
+  <!-- 友链候选（需友链插件；插件 bean 未就绪时 linkFinder 为 null，直接跳过，避免整页渲染中断） -->
+  <script data-pjax th:inline="javascript" th:if="${pluginFinder.available('PluginLinks') and linkFinder != null}">
     window.HAO_FRIENDS = [
       /*[# th:each="group : ${linkFinder.groupBy()}"]*/
       /*[# th:each="link : ${group.links}"]*/

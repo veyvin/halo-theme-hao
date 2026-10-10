@@ -78,9 +78,18 @@
                 barrageTime: [[${ theme.config.comments.commentBarrageConfig.barrageTime }]],
                 mailMd5: "[(${theme.config.comments.commentBarrageConfig.mailMd5})]",
                 lazyload: [[${theme.config.comments.lazyload}]],
-                textarea: [[${ theme.config.comments.use == 'Twikoo' ? 'el-textarea__inner' :
+                /* Twikoo 2.x 使用 tk-textarea__inner / tk-rich-text-editor，不再是 Element UI */
+                textarea: [[${ theme.config.comments.use == 'Twikoo' ? 'tk-textarea__inner' :
                                    theme.config.comments.use == 'Artalk' ? 'atk-textarea' :
                                    theme.config.comments.use == 'Waline' ? 'wl-editor' : 'appearance-none' }]]
+            },
+            /* 本站登录用户 → 评论自动填昵称（替代 HeoID） */
+            user: {
+                loggedIn: [[${#authorization.expression('isAuthenticated()')}]],
+                displayName: /*[[${#authorization.expression('isAuthenticated()') ? contributorFinder.getContributor(#authentication.name).displayName : ''}]]*/ '',
+                avatar: /*[[${#authorization.expression('isAuthenticated()') ? contributorFinder.getContributor(#authentication.name).avatar : ''}]]*/ '',
+                name: /*[[${#authorization.expression('isAuthenticated()') ? contributorFinder.getContributor(#authentication.name).name : ''}]]*/ '',
+                permalink: /*[[${#authorization.expression('isAuthenticated()') ? '/authors/' + contributorFinder.getContributor(#authentication.name).name : ''}]]*/ ''
             },
             post: {
                 dynamicBackground: [[${ theme.config.post.dynamicBackground }]],
@@ -106,9 +115,15 @@
                 src: [[${isLazyload ? 'data-lazy-src' : 'src' }]]
             },
             twikoo: {
-                js: /*[[${not #strings.isEmpty(theme.config.comments.twikoos.js) ? theme.config.comments.twikoos.js : assets_link +'/libs/twikoo/twikoo.all.min.js'}]]*/,
+                js: /*[[${(not #strings.isEmpty(theme.config.comments.twikoos.js) and not #strings.contains(theme.config.comments.twikoos.js, 'all.min')) ? theme.config.comments.twikoos.js : assets_link +'/libs/twikoo/twikoo.heo.min.js'}]]*/,
                 twikooUrl: "[(${theme.config.comments.twikoos.envId})]",
                 accessToken: "[(${theme.config.comments.twikoos.accessToken})]",
+                /* HeoID 按钮文案/跳转 → 本站登录 */
+                loginText: /*[[${#messages.msg('comment.loginToComment')}]]*/ '使用本站账号登录发表评论',
+                loginUrl: '/login',
+                /* 评论管理：默认关闭，仅超级管理员由下方独立 script 打开 */
+                haloAdmin: false,
+                adminPassword: ''
             },
             artalk: {
                 js: /*[[${not #strings.isEmpty(theme.config.comments.artalks.artalkJs) ? theme.config.comments.artalks.artalkJs : assets_link +'/libs/artalk/Artalk.js'}]]*/,
@@ -126,4 +141,11 @@
             }
         }
     };
+</script>
+<!-- 评论管理：非超级管理员整段被 sec:authorize 移除，管理密码不会出现在任何访客的页面里 -->
+<!-- 属性用单引号包裹，表达式内部才能安全使用双引号（Thymeleaf 赋值解析器会截断嵌套引号） -->
+<!-- super-role = Halo 2.20+ 的超级管理员角色名；role-template-super-role = 旧版本命名，两者都兼容 -->
+<script sec:authorize='hasRole("super-role") or hasRole("role-template-super-role")' th:inline="javascript">
+    window.GLOBAL_CONFIG.source.twikoo.haloAdmin = true;
+    window.GLOBAL_CONFIG.source.twikoo.adminPassword = "[(${theme.config.comments.twikoos.adminPassword ?: ''})]";
 </script>

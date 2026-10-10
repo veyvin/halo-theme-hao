@@ -1,0 +1,3627 @@
+/* Twikoo 2.x Heo 皮肤 — 自 blog.zhheo.com/twikoo.min.js 抽取全部主题 CSS */
+
+.twikoo {
+  position: relative;
+}
+.twikoo svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* 全局 CSS */
+.tk-content img {
+  max-width: 300px;
+  max-height: 300px;
+  vertical-align: middle;
+}
+/* 正文行内表情：比字号明显易读，仍小于插图上限 */
+.twikoo .tk-content img.tk-input-emoji,
+.twikoo .tk-content img.tk-owo-emotion,
+.twikoo .tk-preview-container img.tk-input-emoji,
+.twikoo .tk-preview-container img.tk-owo-emotion {
+  width: auto;
+  height: 26px;
+  max-width: 30px;
+  max-height: 26px;
+  vertical-align: -0.25em;
+  object-fit: contain;
+}
+.twikoo .tk-content .vemoji {
+  height: 26px;
+  max-height: 26px;
+  width: auto;
+  max-width: 30px;
+  vertical-align: -0.25em;
+  object-fit: contain;
+}
+.tk-content img.tk-content-image {
+  display: block;
+  margin-left: 0;
+  margin-right: auto;
+  max-width: min(300px, 100%);
+  height: auto;
+}
+.tk-owo-emotion,
+.twikoo .OwO-item img {
+  width: 48px;
+  height: auto;
+}
+
+/* tk-ui component styles */
+.twikoo .tk-input__inner,
+.twikoo .tk-textarea__inner {
+  color: currentColor;
+  background-color: transparent;
+  border-color: rgba(144,147,153,0.31);
+  border-radius: 12px;
+}
+@media (hover: hover) {
+.twikoo .tk-input__inner:hover,
+  .twikoo .tk-textarea__inner:hover {
+    border-color: rgba(144,147,153,0.50);
+}
+}
+.twikoo .tk-input__inner:focus,
+.twikoo .tk-textarea__inner:focus {
+  border-color: var(--heo-lighttext);
+}
+.twikoo .tk-input-group__append,
+.twikoo .tk-input-group__prepend {
+  color: currentColor;
+  background-clip: padding-box;
+  background-color: rgba(144,147,153,0.13);
+  border-color: rgba(144,147,153,0.31);
+  border-radius: 12px 0 0 12px;
+}
+.twikoo .tk-btn {
+  border-radius: 99px;
+}
+.twikoo .tk-btn:not(.tk-btn--primary):not(.tk-btn--text) {
+  color: currentColor;
+  background-color: rgba(144,147,153,0.063);
+  border-color: rgba(144,147,153,0.31);
+}
+.twikoo .tk-btn:not(.tk-btn--primary):not(.tk-btn--text):active,
+.twikoo .tk-btn:not(.tk-btn--primary):not(.tk-btn--text):focus {
+  color: var(--heo-lighttext);
+  background-color: var(--heo-main-op-light);
+  border-color: var(--heo-main-op);
+}
+@media (hover: hover) {
+.twikoo .tk-btn:not(.tk-btn--primary):not(.tk-btn--text):hover {
+    color: var(--heo-lighttext);
+    background-color: var(--heo-main-op-light);
+    border-color: var(--heo-main-op);
+}
+}
+.twikoo .tk-btn.is-plain:focus {
+  color: var(--heo-lighttext);
+  border-color: var(--heo-main-op);
+  background-color: var(--heo-main-op-light);
+}
+@media (hover: hover) {
+.twikoo .tk-btn.is-plain:hover {
+    color: var(--heo-lighttext);
+    border-color: var(--heo-main-op);
+    background-color: var(--heo-main-op-light);
+}
+}
+.twikoo .tk-btn.is-plain:active {
+  color: var(--heo-lighttext);
+  border-color: var(--heo-main-op);
+}
+.twikoo .tk-btn--primary {
+  color: var(--heo-card-bg);
+  background-color: var(--heo-lighttext);
+  border-color: var(--heo-lighttext);
+  border: var(--style-border-always);
+}
+.twikoo .tk-btn--primary:focus {
+  color: var(--heo-card-bg);
+  background-color: var(--heo-main-op-deep);
+  border-color: var(--heo-main-op-deep);
+}
+@media (hover: hover) {
+.twikoo .tk-btn--primary:hover {
+    color: var(--heo-card-bg);
+    background-color: var(--heo-main-op-deep);
+    border-color: var(--heo-main-op-deep);
+}
+}
+.twikoo .tk-btn--primary:active {
+  color: var(--heo-card-bg);
+  background-color: var(--heo-main-op-deep);
+  border-color: var(--heo-main-op-deep);
+}
+.twikoo .tk-btn--primary.is-disabled,
+.twikoo .tk-btn--primary.is-disabled:active,
+.twikoo .tk-btn--primary.is-disabled:focus {
+  color: rgba(255,255,255,0.63);
+  background-color: var(--heo-main);
+  border-color: transparent;
+  opacity: 1;
+}
+@media (hover: hover) {
+.twikoo .tk-btn--primary.is-disabled:hover {
+    color: rgba(255,255,255,0.63);
+    background-color: var(--heo-main);
+    border-color: transparent;
+}
+}
+.twikoo .tk-loading-mask {
+  background: color-mix(in srgb, var(--heo-card-bg, #fff) 55%, transparent);
+  backdrop-filter: none;
+}
+.twikoo .tk-textarea .tk-input__count {
+  color: currentColor;
+  background: transparent;
+  bottom: 10px;
+}
+
+/* heotwikootip - 全局统一 tooltip，挂载到 body 避免 overflow 遮挡 */
+.heo-twikoo-tip {
+  position: fixed;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  min-width: 0;
+  max-width: 280px;
+  width: max-content;
+  white-space: normal;
+  text-align: center;
+  color: var(--heo-lighttext);
+  background: var(--heo-card-bg, rgba(0,0,0,0.75));
+  border: var(--style-border-always);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  pointer-events: none;
+  z-index: 99999;
+  animation: heo-twikoo-tip-fade 0.15s ease;
+}
+@keyframes heo-twikoo-tip-fade {
+from { opacity: 0
+}
+to { opacity: 1
+}
+}
+
+.tk-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tk-action-link {
+  color: var(--heo-lighttext);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  height: 32px;
+  min-width: 32px;
+  box-sizing: border-box;
+  background-color: var(--heo-secondbg);
+  border-radius: 9999px;
+  transition: background-color 0.2s, color 0.2s;
+  border: var(--style-border-always);
+}
+@media (hover: hover) {
+  /* 仅保留官方图标切换，不改变背景/文字色 */
+.tk-action-link:not(.tk-action-link-reply):hover .tk-action-icon {
+    display: none;
+}
+.tk-action-link:not(.tk-action-link-reply):hover .tk-action-icon-solid {
+    display: block;
+}
+}
+.tk-action-link .tk-action-icon-solid {
+  display: none;
+}
+/* 仅点赞按钮做图标切换，回复按钮不隐藏图标避免数字“消失” */
+.tk-action-link.tk-liked .tk-action-icon {
+  display: none;
+}
+.tk-action-link.tk-liked .tk-action-icon-solid {
+  display: block;
+}
+.tk-action-count {
+  margin-left: 4px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+}
+.tk-action-icon {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  line-height: 0;
+  color: var(--heo-lighttext);
+}
+
+.tk-avatar {
+  flex-shrink: 0;
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 99px;
+  margin-right: 16px;
+}
+.tk-comment .tk-submit .tk-avatar,
+.tk-replies .tk-avatar {
+  height: 26px;
+  width: 26px;
+}
+.tk-avatar.tk-has-avatar {
+  background-color: rgba(144,147,153,0.13);
+}
+.tk-avatar.tk-clickable {
+  cursor: pointer;
+}
+@media (hover: hover) {
+.tk-avatar:hover,
+  .tk-avatar:hover .tk-avatar-img {
+    transform: none !important;
+    animation: none !important;
+}
+}
+.tk-avatar .tk-avatar-img {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 99px;
+  color: #c0c4cc;
+}
+.tk-comment .tk-submit .tk-avatar .tk-avatar-img,
+.tk-replies .tk-avatar .tk-avatar-img {
+  height: 26px;
+  width: 26px;
+}
+
+.tk-main {
+  flex: 1;
+  width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tk-row {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.tk-comment-avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.tk-row .tk-comment-avatar {
+  margin-right: 0;
+  flex-shrink: 0;
+}
+/* HeoID 认证角标：覆盖在头像右下角，带白色描边 */
+.tk-comment-avatar-wrap .heo-twikoo-tip-trigger {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  z-index: 1;
+}
+.tk-row .tk-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.tk-row .tk-action {
+  flex-shrink: 0;
+}
+.tk-meta-head {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tk-meta-head > * {
+  flex-shrink: 0;
+}
+.tk-meta-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.tk-time {
+  font-size: 13px;
+  color: #999999;
+}
+.tk-nick,
+.tk-nick-link strong {
+  font-weight: bold;
+  line-height: 1;
+  color: var(--heo-fontcolor);
+}
+.tk-user-level,
+.tk-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1.25;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-sizing: border-box;
+  min-height: 20px;
+}
+.tk-user-level {
+  font-weight: bold;
+  color: #111111;
+  background-color: #e8e8e8;
+  margin-left: 6px;
+  border: 1px solid transparent;
+  vertical-align: middle;
+}
+/* 认证标 → 等级：收窄（昵称 → 等级仍用上方 margin-left） */
+.tk-meta-head .heo-twikoo-tip-trigger + .tk-user-level {
+  margin-left: 0px;
+}
+.tk-nick-link {
+  color: inherit;
+  text-decoration: none;
+}
+.tk-meta-head .tk-nick,
+.tk-meta-head .tk-nick-link {
+  font-size: 15px;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+.tk-nick-link:hover {
+    color: var(--heo-lighttext);
+}
+}
+.tk-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
+}
+.tk-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  line-height: 0;
+  cursor: pointer;
+  color: var(--heo-lighttext);
+}
+@media (hover: hover) {
+.tk-action-btn:hover {
+    color: var(--heo-lighttext);
+}
+.tk-action-btn-report:hover {
+    color: var(--heo-lighttext);
+}
+}
+.tk-action-btn-report {
+  color: #b8b8b8;
+}
+.tk-action-btn-delete {
+  color: #b8b8b8;
+}
+@media (hover: hover) {
+.tk-action-btn-delete:hover {
+    color: #f56c6c;
+}
+}
+.tk-action-btn svg {
+  width: 100%;
+  height: 100%;
+}
+.tk-anonymous-no-reply {
+  color: var(--heo-secondtext);
+  font-size: 12px;
+}
+.tk-extras-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.tk-extras-row .tk-actions {
+  flex-shrink: 0;
+}
+.tk-extras {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tk-extras > * {
+  flex-shrink: 0;
+}
+.tk-extra {
+  display: inline-flex;
+  align-items: center;
+  background: var(--heo-card-bg);
+  border: var(--style-border-always);
+  padding: 0 8px;
+  border-radius: 999px;
+  color: var(--heo-secondtext);
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.tk-extra:not(.tk-extra-quality) {
+  height: 22px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+.tk-extra-quality {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.tk-extra-quality-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+  white-space: nowrap;
+}
+.tk-extra-quality-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+.tk-extra-quality-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.tk-extra-quality-pill._quality-good {
+  color: var(--heo-lighttext);
+  background: var(--heo-card-bg);
+}
+.tk-extra-quality-pill._quality-great {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2276ff 0%, #9160ff 50%, #ff3e80 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.tk-tag {
+  background-color: #f2f6fc;
+}
+.tk-tag-tooltip {
+  cursor: default;
+}
+.tk-tag-green {
+  background-color: rgba(103,194,58,0.13);
+  border: 1px solid rgba(103,194,58,0.50);
+  border-radius: 999px;
+  color: #67c23a;
+}
+.tk-tag-purple {
+  gap: 4px;
+  padding: 2px 8px 2px 6px;
+  background-color: rgba(144,101,176,0.13);
+  border: 1px solid rgba(144,101,176,0.50);
+  border-radius: 999px;
+  color: #9065b0;
+}
+.tk-tag-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+.tk-tag-link:hover {
+  opacity: 0.9;
+}
+.tk-tag-heorewards-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.tk-tag-with-icon {
+  gap: 4px;
+  padding: 2px 8px 2px 6px;
+}
+.tk-tag-master-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.tk-tag-yellow {
+  background-color: rgba(230,162,60,0.13);
+  border: 1px solid rgba(230,162,60,0.50);
+  border-radius: 999px;
+  color: #e6a23c;
+}
+.tk-heoid-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  line-height: 0;
+  color: var(--heo-blue);
+  cursor: default;
+  box-sizing: content-box;
+  background-color: var(--heo-card-bg, #fff);
+  border: 2px solid var(--heo-card-bg, #fff);
+  border-radius: 50%;
+  overflow: hidden;
+}
+.tk-reply .tk-comment-avatar-wrap .heo-twikoo-tip-trigger {
+  right: -2px;
+  bottom: -2px;
+}
+/* 小头像（回复）：认证标改为蓝色圆点，尺寸更小 */
+.tk-reply .tk-heoid-icon {
+  width: 7px;
+  height: 7px;
+  background-color: var(--heo-blue);
+}
+.tk-reply .tk-heoid-icon svg {
+  display: none;
+}
+.tk-heoid-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.tk-bot-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 0;
+  vertical-align: middle;
+  line-height: 0;
+  color: var(--heo-secondtext);
+  opacity: 0.6;
+  cursor: default;
+}
+.tk-bot-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.tk-tag-blue {
+  background-color: var(--heo-main-op-light);
+  border: 1px solid var(--heo-main-op);
+  border-radius: 999px;
+  color: var(--heo-lighttext);
+}
+.tk-tag-first {
+  background-color: rgba(59, 130, 246, 0.13);
+  border: 1px solid rgba(59, 130, 246, 0.50);
+  border-radius: 999px;
+  color: #3b82f6;
+}
+.tk-tag-first-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
+.tk-tag-first-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.tk-tag-red {
+  background-color: rgba(245,108,108,0.13);
+  border: 1px solid rgba(245,108,108,0.50);
+  border-radius: 999px;
+  color: #f56c6c;
+}
+.tk-comment {
+  display: flex;
+  flex-direction: row;
+  word-break: break-all;
+  scroll-margin-top: 80px; /* 锚点跳转时避开顶部固定头部，可自行调整 */
+}
+/* 锚点定位的目标评论高亮提示 */
+.tk-comment.tk-anchored {
+  animation: tk-anchor-highlight 2s ease-out;
+}
+@keyframes tk-anchor-highlight {
+0% { background: rgba(var(--tk-anchor-color, 56, 116, 255), 0.16);
+}
+100% { background: transparent;
+}
+}
+.tk-content {
+  overflow: hidden;
+  max-height: 500px;
+  position: relative;
+  font-size: 15px;
+  line-height: 1.65;
+}
+/* 图片/表情间距由 applyContentImageSpacing() 通过 JS 控制 */
+.tk-content-expand {
+  max-height: none;
+}
+.tk-content :deep(.tk-mention-chip) {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0 1px;
+  padding: 0 7px 0 2px;
+  height: 1.5em;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--heo-theme, #425aef) 14%, transparent);
+  color: var(--heo-theme, #425aef);
+  font-weight: 600;
+  font-size: inherit;
+  line-height: 1;
+  vertical-align: middle;
+  transform: translateY(-2px);
+  white-space: nowrap;
+}
+.tk-content :deep(.tk-mention-chip-avatar) {
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+.tk-content :deep(.tk-mention-chip-text) {
+  line-height: 1;
+}
+/* 块级：避免与正文同一行（无 <p> 包裹时正文会与冒号头并排） */
+.tk-comment.tk-reply .tk-reply-header {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  color: var(--heo-secondtext);
+}
+.tk-reply-header .tk-ruser {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+.tk-reply-header .tk-ruser:hover {
+    color: var(--heo-lighttext);
+}
+}
+.tk-replies .tk-main {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  gap: 8px;
+}
+.tk-replies {
+  margin-left: 8px;
+  padding-left: 16px;
+  border-left: 1px dashed rgba(153, 153, 153, 0.5);
+  border-image: repeating-linear-gradient(to bottom, rgba(153,153,153,0.5) 0 2px, transparent 2px 6px) 1;
+  position: relative;
+}
+.tk-expand-replies {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tk-expand-replies-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  line-height: 0;
+  flex-shrink: 0;
+  color: inherit;
+}
+.tk-expand-replies-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.tk-submit {
+  margin-top: 16px;
+}
+.tk-expand {
+  font-size: 12px;
+}
+.tk-lightbox {
+  display: block;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+.tk-lightbox-image {
+  min-width: 100px;
+  min-height: 30px;
+  width: auto;
+  height: auto;
+  max-width: 95%;
+  max-height: 95%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(90deg, #eeeeee 50%, #e3e3e3 0);
+  background-size: 40px 100%;
+}
+@media screen and (max-width: 767px) {
+.tk-replies .tk-main {
+    padding-bottom: 0;
+}
+}
+
+.tk-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tk-comments-container {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+/* 锚点置顶区：与下方常规评论列表区分开 */
+.tk-anchor-comments {
+  border-bottom: 1px dashed rgba(128, 128, 128, 0.25);
+  padding-bottom: 16px;
+}
+.tk-comments-no {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tk-comments-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+}
+.tk-comments-empty-img {
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.tk-comments-empty-img--dark {
+  display: none;
+}
+[data-theme="dark"] .tk-comments-empty-img--light,
+.darkmode .tk-comments-empty-img--light,
+.night .tk-comments-empty-img--light,
+.DarkMode .tk-comments-empty-img--light,
+[data-user-color-scheme="dark"] .tk-comments-empty-img--light {
+  display: none;
+}
+[data-theme="dark"] .tk-comments-empty-img--dark,
+.darkmode .tk-comments-empty-img--dark,
+.night .tk-comments-empty-img--dark,
+.DarkMode .tk-comments-empty-img--dark,
+[data-user-color-scheme="dark"] .tk-comments-empty-img--dark {
+  display: block;
+}
+.tk-comments-empty-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--heo-secondtext, #666);
+}
+[data-theme="dark"] .tk-comments-empty-text,
+.darkmode .tk-comments-empty-text,
+.night .tk-comments-empty-text,
+.DarkMode .tk-comments-empty-text,
+[data-user-color-scheme="dark"] .tk-comments-empty-text {
+  color: var(--heo-secondtext, #a1a2b8);
+}
+.tk-comments-error-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+.tk-comments-error-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--heo-secondtext, #666);
+}
+[data-theme="dark"] .tk-comments-error-text,
+.darkmode .tk-comments-error-text,
+.night .tk-comments-error-text,
+.DarkMode .tk-comments-error-text,
+[data-user-color-scheme="dark"] .tk-comments-error-text {
+  color: var(--heo-secondtext, #a1a2b8);
+}
+.tk-comments-retry {
+  cursor: pointer;
+  padding: 8px 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--heo-white, #fff);
+  background: var(--heo-main, #425aef);
+  border: none;
+  border-radius: 999px;
+  box-shadow: var(--heo-shadow-border, none);
+  transition: opacity 0.2s;
+}
+.tk-comments-retry:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+@media (hover: hover) {
+.tk-comments-retry:not(:disabled):hover {
+    opacity: 0.85;
+}
+}
+.tk-comments-error {
+  font-size: 12px;
+  color: #ff0000;
+}
+.twikoo div.code-toolbar {
+  position: relative;
+  border-radius: 5px
+}
+.twikoo div.code-toolbar>.toolbar {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+}
+.twikoo div.code-toolbar>.toolbar>.toolbar-item {
+  margin-left: 5px
+}
+.twikoo div.code-toolbar>.toolbar>.toolbar-item>a,
+.twikoo div.code-toolbar>.toolbar>.toolbar-item>button,
+.twikoo div.code-toolbar>.toolbar>.toolbar-item>span {
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+.twikoo div.code-toolbar>.toolbar>.toolbar-item>button {
+  border: 1px solid rgba(128, 128, 128, 0.31);
+}
+@media (hover: hover) {
+.twikoo div.code-toolbar>.toolbar>.toolbar-item>button:hover {
+    cursor: pointer;
+}
+}
+
+.tk-footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #999999;
+  margin-top: 16px;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tk-footer > * {
+  flex-shrink: 0;
+}
+.tk-footer-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tk-footer-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.tk-footer-count,
+.tk-footer-copy {
+  font-size: 14px;
+  color: #999999;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tk-footer-copy {
+  text-align: end;
+}
+.tk-footer-twikoo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+.tk-footer-twikoo img {
+  height: 20px;
+  width: auto;
+  vertical-align: middle;
+}
+.tk-footer-sort {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin-left: 6px;
+  font-size: 14px;
+  color: #999999;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tk-footer-sort-label {
+  color: #999999;
+}
+.tk-footer-sort-item {
+  cursor: pointer;
+  border-radius: 999px;
+  border: var(--style-border-always);
+  padding: 0 8px;
+  line-height: 1.8;
+  color: var(--heo-secondtext);
+  user-select: none;
+}
+.tk-footer-sort-item._active {
+  color: var(--heo-lighttext);
+  background: var(--heo-main-op-light);
+  border-color: var(--heo-main-op);
+}
+@media (hover: hover) {
+.tk-footer-sort-item:hover {
+    color: var(--heo-lighttext);
+    border-color: var(--heo-main-op);
+}
+}
+.tk-icon.__footer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  line-height: 0;
+  cursor: pointer;
+  color: var(--heo-lighttext);
+}
+@media (hover: hover) {
+.tk-icon.__footer:hover {
+    opacity: 0.8;
+}
+}
+
+/* 弹窗 wrapper 背景遮罩：用 :has() 直接匹配包含本弹窗的 wrapper。不设 display 等布局，避免覆盖 Element 关闭时的 display:none */
+.tk-dialog__wrapper:has(.tk-heoid-dialog) {
+  background: var(--heo-maskbgdeep) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+/* 弹窗圆角与评论区一致；宽高距视口各留 16px（合计 32px）。
+   统一为最大尺寸：不随页面/主题变化，只跟视口大小走。
+   !important + max-width/max-height:none 用于抵御站点主题全局 CSS（如 iframe/img 通配规则、dialog 覆盖）导致的“有的页面小”问题 */
+.tk-heoid-dialog.tk-dialog {
+  width: calc(100dvw - 32px) !important;
+  max-width: calc(100dvw - 32px) !important;
+  min-width: 0 !important;
+  height: calc(100dvh - 32px) !important;
+  max-height: calc(100dvh - 32px) !important;
+  min-height: 0 !important;
+  margin: 16px auto !important;
+  flex-shrink: 0 !important;
+  border-radius: var(--tk-comment-input-radius, 16px) !important;
+  overflow: hidden;
+  background-color: #f9fafb;
+  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column;
+}
+.tk-heoid-dialog.tk-dialog .tk-dialog__header {
+  display: none !important;
+}
+.tk-heoid-dialog.tk-dialog .tk-dialog__body {
+  padding: 0 !important;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--tk-comment-input-radius, 16px) !important;
+  background-color: #f9fafb;
+}
+.tk-heoid-login {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.tk-heoid-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: var(--style-border-always, 1px solid rgba(0, 0, 0, 0.08));
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+@media (hover: hover) {
+.tk-heoid-close-btn:hover {
+    background: #fff;
+    color: #000;
+}
+}
+.tk-heoid-close-btn .tk-heoid-close-icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 0;
+  color: #000;
+}
+.tk-heoid-close-btn .tk-heoid-close-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #000;
+}
+.tk-heoid-iframe {
+  width: 100% !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: 100% !important;
+  border: none !important;
+  display: block !important;
+}
+.tk-heoid-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+.tk-heoid-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--heo-lighttext);
+  border-radius: 50%;
+  animation: tk-heoid-spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+.tk-heoid-loading-text {
+  color: var(--heo-lighttext);
+  font-size: 14px;
+}
+.tk-heoid-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--heo-secondtext);
+  font-size: 14px;
+  gap: 16px;
+}
+@keyframes tk-heoid-spin {
+0% { transform: rotate(0deg);
+}
+100% { transform: rotate(360deg);
+}
+}
+
+/* 不支持 dvw/dvh 的浏览器回退 */
+@supports not (width: 100dvw) {
+.tk-heoid-dialog.tk-dialog {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    height: calc(100vh - 32px) !important;
+    max-height: calc(100vh - 32px) !important;
+}
+}
+
+.tk-meta-input {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* 为头像右下角的 HeoID 认证角标预留溢出空间，避免被滚动容器裁剪 */
+  padding: 4px 4px 4px 0;
+  margin: -4px -4px -4px 0;
+}
+.tk-meta-mode-buttons--heoid-only {
+  width: 100%;
+}
+.tk-meta-actions-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: 0;
+}
+.tk-meta-actions-bar > *,
+.tk-meta-actions-bar .tk-btn,
+.tk-meta-actions-bar .tk-btn + .tk-btn {
+  margin-left: 0 !important;
+}
+.tk-meta-mode-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-start;
+  padding: 0;
+  margin-left: 0;
+  height: 32px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tk-meta-mode-buttons > *,
+.tk-meta-mode-buttons .tk-btn,
+.tk-meta-mode-buttons .tk-btn + .tk-btn {
+  margin-left: 0 !important;
+  flex-shrink: 0;
+}
+.tk-meta-mode-buttons .tk-btn {
+  height: 32px;
+  min-height: 32px;
+}
+.tk-heoid-mode-btn {
+  min-width: 200px;
+  height: 32px;
+  min-height: 32px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.tk-heoid-mode-btn .tk-heoid-mode-logo {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  object-fit: contain;
+  display: block;
+}
+.tk-meta-avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+/* HeoID 认证角标：覆盖在头像右下角，带白色描边 */
+.tk-meta-avatar-wrap .heo-twikoo-tip-trigger {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  z-index: 1;
+}
+.tk-meta-input .tk-avatar {
+  margin-right: 0;
+  flex-shrink: 0;
+  height: 32px;
+  width: 32px;
+}
+.tk-meta-input .tk-avatar .tk-avatar-img {
+  height: 32px;
+  width: 32px;
+}
+.tk-meta-input-wrapper {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tk-meta-input-wrapper .tk-input {
+  width: auto;
+  flex: 1;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+.tk-meta-input .tk-input .tk-input-group__prepend {
+  padding: 0 16px;
+}
+.tk-meta-input .tk-input input:invalid {
+  border: 1px solid #f56c6c;
+  box-shadow: none;
+}
+.tk-meta-compact-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+/* 覆盖 Element 相邻按钮默认 margin-left，间距仅由上面 gap: 8px 控制 */
+.tk-meta-compact-bar .tk-btn + .tk-btn {
+  margin-left: 0;
+}
+.tk-meta-compact-bar > * {
+  flex-shrink: 0;
+}
+.tk-meta-nick-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: currentColor;
+  margin-right: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+  min-width: 3em;
+  max-width: 40vw;
+}
+.tk-meta-nick-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+/* 小头像（提交框）：认证标改为蓝色圆点，尺寸更小 */
+.tk-meta-heoid-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8px;
+  height: 8px;
+  line-height: 0;
+  cursor: default;
+  flex-shrink: 0;
+  box-sizing: content-box;
+  background-color: var(--heo-blue);
+  border: 2px solid var(--heo-card-bg, #fff);
+  border-radius: 50%;
+  overflow: hidden;
+}
+.tk-meta-heoid-icon svg {
+  display: none;
+}
+.tk-meta-compact-btn {
+  padding: 0 8px !important;
+  font-size: 12px !important;
+}
+.tk-meta-input .tk-input[disabled] .tk-input__inner {
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: not-allowed;
+}
+.tk-meta-heoid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--heo-main-op-light);
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+.tk-meta-heoid-overlay > * {
+  pointer-events: auto;
+}
+.tk-meta-heoid-tip-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.tk-meta-heoid-tip {
+  font-size: 12px;
+  color: var(--heo-lighttext);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tk-meta-heoid-refresh {
+  color: var(--heo-lighttext) !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: auto !important;
+  line-height: 1 !important;
+}
+.tk-meta-compact-btn .tk-meta-btn-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+  line-height: 0;
+}
+.tk-meta-heoid-refresh .tk-meta-btn-icon + * {
+  margin-left: 0 !important;
+}
+/* 模式确认遮罩弹窗 */
+.tk-mode-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.tk-mode-confirm-dialog {
+  position: relative;
+  width: min(420px, calc(100vw - 32px));
+  background: var(--heo-card-bg, #fff);
+  border: var(--style-border-always);
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  animation: tk-mode-confirm-pop 0.25s ease;
+}
+@keyframes tk-mode-confirm-pop {
+from { opacity: 0; transform: scale(0.92) translateY(12px);
+}
+to { opacity: 1; transform: scale(1) translateY(0);
+}
+}
+.tk-mode-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--heo-main-op-light, rgba(144, 147, 153, 0.1));
+  color: var(--heo-lighttext);
+}
+.tk-mode-confirm-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+.tk-mode-confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: var(--heo-lighttext);
+}
+.tk-mode-confirm-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 20px;
+  color: var(--heo-font);
+  opacity: 0.8;
+}
+.tk-mode-confirm-desc strong {
+  color: var(--heo-lighttext);
+  font-weight: 600;
+}
+.tk-mode-confirm-btn-main.tk-btn {
+  display: block;
+  width: 100%;
+  height: 44px;
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+.tk-mode-confirm-skip {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--heo-font);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.tk-mode-confirm-skip:hover {
+  opacity: 0.85;
+}
+/* 遮罩过渡动画 */
+.tk-mode-confirm-fade-enter-active,
+.tk-mode-confirm-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.tk-mode-confirm-fade-enter-active .tk-mode-confirm-dialog,
+.tk-mode-confirm-fade-leave-active .tk-mode-confirm-dialog {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.tk-mode-confirm-fade-enter-from,
+.tk-mode-confirm-fade-leave-to {
+  opacity: 0;
+}
+.tk-mode-confirm-fade-enter-from .tk-mode-confirm-dialog,
+.tk-mode-confirm-fade-leave-to .tk-mode-confirm-dialog {
+  transform: scale(0.92) translateY(12px);
+  opacity: 0;
+}
+@media (hover: hover) {
+.tk-meta-heoid-refresh:hover {
+    background: transparent !important;
+    color: var(--heo-lighttext) !important;
+}
+}
+.tk-meta-input-wrapper.tk-heoid-logged-in {
+  padding-top: 0;
+}
+.tk-meta-anonymous-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(144, 147, 153, 0.08);
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+.tk-meta-anonymous-tip {
+  font-size: 12px;
+  color: var(--heo-lighttext);
+  font-weight: 500;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+@media screen and (max-width: 767px) {
+.tk-meta-mode-buttons {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    height: 32px;
+    min-height: 32px;
+    align-content: center;
+}
+.tk-meta-mode-buttons .tk-btn:first-child {
+    width: auto;
+}
+.tk-meta-mode-buttons .tk-btn:not(:first-child) {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+.tk-meta-mode-buttons--heoid-only .tk-heoid-mode-btn {
+    width: auto;
+}
+.tk-meta-input {
+    flex-direction: row;
+    align-items: center;
+}
+.tk-meta-input .tk-avatar,
+  .tk-meta-input .tk-meta-avatar-wrap {
+    display: none;
+}
+.tk-meta-input.tk-meta-input--heoid-logged-in .tk-avatar {
+    display: block;
+}
+.tk-meta-input.tk-meta-input--heoid-logged-in .tk-meta-avatar-wrap {
+    display: inline-flex;
+}
+.tk-meta-input-wrapper {
+    width: auto;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+}
+.tk-meta-input-wrapper .tk-input {
+    width: auto;
+    min-width: 120px;
+}
+.tk-meta-actions-bar {
+    margin-left: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+.tk-meta-heoid-overlay,
+  .tk-meta-anonymous-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 4px;
+}
+  /* 回复框：隐藏用户中心、取消/发送横向排列、头像昵称垂直居中 */
+.tk-meta-input.tk-meta-input--reply {
+    align-items: center;
+}
+.tk-meta-input.tk-meta-input--reply .tk-user-center-entry-btn,
+  .tk-meta-input.tk-meta-input--reply .tk-heoid-logout-btn {
+    display: none !important;
+}
+.tk-meta-input.tk-meta-input--reply .tk-meta-compact-bar {
+    align-items: center;
+}
+.tk-meta-input.tk-meta-input--reply .tk-avatar,
+  .tk-meta-input.tk-meta-input--reply .tk-avatar .tk-avatar-img {
+    height: 32px !important;
+    width: 32px !important;
+}
+.tk-meta-input.tk-meta-input--reply .tk-meta-actions-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+}
+
+.tk-mention-wrap[data-v-10f416ae] {
+  position: relative;
+}
+.tk-rich-text-editor[data-v-10f416ae] {
+  min-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background-position: right bottom;
+  background-repeat: no-repeat;
+}
+.tk-rich-text-editor[data-v-10f416ae]::-webkit-scrollbar {
+  display: none;
+}
+.tk-rich-text-editor[data-v-10f416ae]:empty::before,
+.tk-editor-empty[data-v-10f416ae]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--heo-lighttext, #999);
+}
+.tk-rich-text-editor.tk-editor-disabled[data-v-10f416ae] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.tk-rich-text-editor[data-v-10f416ae] .tk-input-emoji {
+  vertical-align: middle;
+  width: 26px;
+  height: 26px;
+}
+.tk-rich-text-editor[data-v-10f416ae] .tk-content-image {
+  max-width: 100%;
+  max-height: 200px;
+  vertical-align: middle;
+}
+.tk-rich-text-editor[data-v-10f416ae] .tk-mention-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  max-width: 100%;
+  margin: 0 1px;
+  padding: 0 7px 0 2px;
+  height: 1.5em;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--heo-theme, #425aef) 14%, transparent);
+  color: var(--heo-theme, #425aef);
+  font-size: inherit;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: middle;
+  transform: translateY(-2px);
+  white-space: nowrap;
+  user-select: none;
+  cursor: default;
+}
+.tk-rich-text-editor[data-v-10f416ae] .tk-mention-chip-avatar {
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+.tk-rich-text-editor[data-v-10f416ae] .tk-mention-chip-text {
+  line-height: 1;
+}
+.tk-mention-panel[data-v-10f416ae] {
+  position: fixed;
+  z-index: 30000;
+  min-width: 220px;
+  max-width: 320px;
+  padding: 8px;
+  background: var(--heo-card-bg, #fff);
+  border: 1px solid var(--heo-card-border, rgba(0, 0, 0, 0.08));
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  pointer-events: auto;
+}
+.tk-mention-list[data-v-10f416ae] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tk-mention-item[data-v-10f416ae] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.tk-mention-item.is-active[data-v-10f416ae],
+.tk-mention-item[data-v-10f416ae]:hover {
+  background: var(--heo-secondbg, rgba(0, 0, 0, 0.04));
+}
+.tk-mention-avatar[data-v-10f416ae] {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.tk-mention-nick[data-v-10f416ae] {
+  font-weight: 600;
+  color: var(--heo-fontcolor, #333);
+  flex-shrink: 0;
+}
+.tk-mention-desc[data-v-10f416ae] {
+  color: var(--heo-lighttext, #999);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tk-submit {
+  display: flex;
+  flex-direction: column;
+}
+.tk-row {
+  display: flex;
+  flex-direction: row;
+}
+.tk-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.tk-input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tk-comment-level-alert {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--tk-comment-input-radius, 12px);
+  background: var(--heo-red-op, rgba(216, 0, 32, 0.1));
+  border: var(--style-border-always, 1px solid var(--heo-red-op-deep, rgba(216, 0, 32, 0.34)));
+  box-shadow: var(--heo-shadow-border, none);
+  color: var(--heo-red, #d80020);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.tk-comment-level-alert-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--heo-red, #d80020);
+  line-height: 0;
+}
+.tk-comment-level-alert-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.tk-comment-level-alert-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--heo-red, #d80020);
+}
+.tk-quote-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: rgba(144, 147, 153, 0.13);
+  border: 1px solid rgba(144, 147, 153, 0.31);
+  border-radius: 8px;
+  font-size: 13px;
+  color: currentColor;
+}
+.tk-quote-label {
+  flex-shrink: 0;
+  color: var(--heo-lighttext);
+}
+.tk-quote-text {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 4.5em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.tk-quote-close {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  opacity: 0.7;
+}
+@media (hover: hover) {
+.tk-quote-close:hover {
+    opacity: 1;
+    background: rgba(144, 147, 153, 0.2);
+}
+}
+.tk-textarea-container {
+  position: relative;
+  flex: 1;
+}
+.tk-textarea-wrapper {
+  position: relative;
+  flex: 1;
+  isolation: isolate;
+}
+.tk-textarea-wrapper.is-ai-generating .tk-rich-text-wrap {
+  position: relative;
+  z-index: 2;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.tk-edge-aura-host {
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: calc(var(--tk-comment-input-radius, 16px) + 6px);
+  overflow: hidden;
+}
+.tk-edge-aura-host .tk-edge-aura-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tk-row.actions {
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+}
+.tk-textarea-container .tk-row-actions-start {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 12px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  pointer-events: none;
+}
+/* 表情面板 / AI 标签面板绝对定位向下展开，打开时避免被工具栏 overflow 裁切 */
+.tk-textarea-container .tk-row-actions-start:has(.OwO-open),
+.tk-textarea-container .tk-row-actions-start:has(.tk-ai-tag-open) {
+  overflow: visible;
+}
+.tk-textarea-container .tk-row-actions-start > * {
+  pointer-events: auto;
+}
+.tk-row-actions-pill {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: 4px 10px;
+  background: var(--heo-maskbg);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: var(--style-border-always);
+  border-radius: 999px;
+  box-shadow: var(--heo-shadow-border);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tk-row-actions-pill .tk-submit-action-icon {
+  margin-right: 0;
+}
+.tk-row-actions-pill .tk-submit-action-icon:last-child {
+  margin-right: 0;
+}
+.tk-submit-action-icon {
+  align-self: center;
+  display: inline-block;
+  width: 20px;
+  line-height: 0;
+  margin-right: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+.tk-submit-action-icon.OwO {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.tk-submit-action-icon.OwO .OwO-logo {
+  width: 20px;
+  height: 20px;
+}
+.tk-submit-action-icon.OwO .OwO-logo svg {
+  width: 20px;
+  height: 20px;
+}
+.tk-submit-action-icon.OwO .OwO-body {
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+}
+@media (hover: hover) {
+.tk-row-actions-pill .tk-submit-action-icon svg:hover {
+    opacity: 0.8;
+}
+}
+.tk-submit-action-icon.__markdown {
+  color: var(--heo-lighttext);
+}
+.tk-ai-comment-btn {
+  min-width: 20px;
+  width: auto;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+.tk-ai-comment-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+/* 与表情、上传图片一致：图标放在固定 20px 容器内，SVG 填满容器 */
+.tk-ai-comment-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 0;
+  flex-shrink: 0;
+}
+.tk-ai-comment-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tk-ai-comment-text {
+  font-size: 12px;
+  color: var(--heo-fontcolor);
+  white-space: nowrap;
+}
+.tk-ai-comment-btn.is-loading {
+  min-width: auto;
+  cursor: not-allowed;
+}
+/* AI 标签选择面板：定位方式参考 OwO 表情面板（相对按钮向下展开） */
+.tk-ai-tag-panel {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  z-index: 1000;
+  width: 340px;
+  min-width: 280px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  padding: 12px 12px 10px;
+  color: var(--heo-fontcolor, #4a4a4a);
+  background-color: var(--heo-card-bg, #fff);
+  border: var(--style-border-always, 1px solid rgba(144,147,153,0.31));
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  white-space: normal;
+  cursor: default;
+  animation: 0.3s ease 0.1s 1 normal both running heo-tk-owo-open;
+}
+.tk-ai-tag-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.tk-ai-tag-hint {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+.tk-ai-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.tk-ai-tag {
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid rgba(144,147,153,0.31);
+  border-radius: 999px;
+  background: rgba(144,147,153,0.063);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+@media (hover: hover) {
+.tk-ai-tag:hover {
+    border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+}
+}
+.tk-ai-tag.is-active {
+  color: var(--heo-card-bg, #fff);
+  background-color: var(--heo-lighttext, #409eff);
+  border-color: var(--heo-lighttext, #409eff);
+}
+.tk-ai-tag-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(144,147,153,0.18);
+}
+.tk-ai-tag-count {
+  font-size: 12px;
+  opacity: 0.65;
+}
+.tk-ai-tag-actions {
+  display: inline-flex;
+  gap: 8px;
+}
+.tk-ai-tag-btn {
+  padding: 5px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  border: 1px solid rgba(144,147,153,0.31);
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+}
+.tk-ai-tag-btn.is-primary {
+  color: var(--heo-card-bg, #fff);
+  background-color: var(--heo-lighttext, #409eff);
+  border-color: var(--heo-lighttext, #409eff);
+}
+.tk-ai-tag-btn.is-primary.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.tk-ai-comment-loading {
+  font-size: 12px;
+  color: var(--heo-lighttext, #999);
+}
+.tk-ai-loading-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tk-ai-loading-icon {
+  animation: tk-ai-loading-spin 1s linear infinite;
+}
+@keyframes tk-ai-loading-spin {
+from { transform: rotate(0deg);
+}
+to { transform: rotate(360deg);
+}
+}
+.tk-error-message {
+  word-break: break-all;
+  color: #ff0000;
+  font-size: 12px;
+  flex-shrink: 1;
+}
+.tk-input-image {
+  display: none;
+}
+.tk-input {
+  flex: 1;
+}
+.tk-rich-text-wrap {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.tk-rich-text-wrap .tk-rich-text-editor {
+  flex: 1;
+}
+.tk-textarea-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  cursor: ns-resize;
+  z-index: 11;
+}
+.tk-textarea-resize-handle::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(144, 147, 153, 0.5);
+  border-bottom: 2px solid rgba(144, 147, 153, 0.5);
+  /* 与输入框右下角圆角一致，见 heo-theme --tk-comment-input-radius */
+  border-radius: 0 0 var(--tk-comment-input-radius, 16px) 0;
+}
+@media (hover: hover) {
+.tk-textarea-resize-handle:hover::after {
+    border-color: rgba(144, 147, 153, 0.8);
+}
+}
+.tk-preview-container {
+  margin-left: 48px;
+  margin-bottom: 16px;
+  padding: 5px 15px;
+  border: 1px solid rgba(128,128,128,0.31);
+  border-radius: 4px;
+  word-break: break-word;
+}
+.tk-submit .tk-cancel,
+.tk-submit .tk-send {
+  margin-left: 0 !important;
+}
+.tk-submit .tk-send {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  min-height: 32px;
+}
+.tk-send .tk-send-inner {
+  display: inline-flex;
+  align-items: center;
+}
+/* 电脑端显示快捷键提示（Remix Icon），移动端隐藏 */
+.tk-send .tk-send-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 6px;
+  opacity: 0.9;
+}
+.tk-send .tk-send-shortcut .tk-send-shortcut-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  line-height: 0;
+}
+.tk-send .tk-send-shortcut .tk-send-shortcut-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tk-send .tk-send-shortcut .tk-send-shortcut-ctrl {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+.tk-send.tk-send--thinking {
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+  box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.35), 0 0 12px rgba(64, 158, 255, 0.2);
+  animation: tk-send-thinking-glow 1.8s ease-in-out infinite;
+}
+.tk-send .tk-send-status {
+  transition: opacity 0.25s ease, letter-spacing 0.25s ease;
+}
+.tk-send .tk-send-status--thinking {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  animation: tk-send-thinking-text 1.15s ease-in-out infinite;
+}
+@keyframes tk-send-thinking-glow {
+0%, 100% {
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.28), 0 0 10px rgba(64, 158, 255, 0.12);
+}
+50% {
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 0.5), 0 0 16px rgba(64, 158, 255, 0.28);
+}
+}
+@keyframes tk-send-thinking-text {
+0%, 100% { opacity: 1;
+}
+50% { opacity: 0.55;
+}
+}
+@media (max-width: 768px) {
+.tk-send .tk-send-shortcut {
+    display: none !important;
+}
+}
+.tk-submit .tk-cancel + .tk-send,
+.tk-submit .tk-send + .tk-cancel {
+  margin-left: 0 !important;
+}
+.tk-fade-in {
+  animation: tkFadeIn .3s;
+}
+@keyframes tkFadeIn {
+0% {
+    opacity: 0
+}
+to {
+    opacity: 1
+}
+}
+
+/**
+ * HeoBlog Twikoo 主题样式
+ * 依赖页面提供 --heo-* 与 --style-border* CSS 变量
+ */
+
+/* ---------- 深色模式公共规则 ---------- */
+[data-theme="dark"] .twikoo,
+.darkmode .twikoo,
+.night .twikoo,
+.DarkMode .twikoo,
+[data-user-color-scheme="dark"] .twikoo {
+  --_reply-hover-color: var(--heo-yellow);
+  --_reply-btn-hover-color: #000;
+  --_level-bg: #555;
+  --_level-color: #e8e8e8;
+  --_tag-green-bg: #c0c23a21;
+  --_reply-bg: var(--heo-card-bg);
+  --_send-disabled-color: rgba(247, 247, 250, 0.92);
+}
+
+/* ---------- 容器 ---------- */
+.twikoo,
+#twikoo {
+  z-index: 102;
+}
+
+/* 隐藏横向滚动条，保留横向滑动能力 */
+.twikoo *::-webkit-scrollbar:horizontal,
+#twikoo *::-webkit-scrollbar:horizontal {
+  height: 0 !important;
+  display: none !important;
+}
+
+.twikoo-info {
+  color: var(--heo-secondtext);
+}
+
+/* ---------- 评论列表 ---------- */
+.twikoo {
+  --tk-comment-card-bg: var(--heo-secondbg);
+  --tk-comment-input-radius: 16px;
+}
+
+.twikoo .tk-comments-container {
+  margin-top: 0;
+  min-height: 96px !important;
+}
+.twikoo .tk-comments-container.tk-loading-parent {
+  min-height: 96px !important;
+}
+.twikoo .tk-comments-container > .tk-loading-mask .tk-loading-spinner {
+  width: 20px;
+  height: 20px;
+}
+.twikoo .tk-expand.tk-loading-parent {
+  min-height: 0;
+}
+.twikoo .tk-expand .tk-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+
+.twikoo .tk-comments-no {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.twikoo .tk-comments-container > .tk-comment {
+  background: var(--tk-comment-card-bg);
+  transition: 0.3s;
+  border-radius: 12px;
+  padding: 1rem;
+  border: var(--style-border-always);
+  box-shadow: var(--heo-shadow-border);
+}
+
+.twikoo .tk-replies > .tk-comment {
+  background: var(--tk-comment-card-bg);
+  border-top: var(--style-border-dashed);
+  border-radius: 12px;
+  padding: 0;
+  transition: 0.3s;
+  margin-top: 0;
+}
+
+.twikoo .tk-replies .tk-content {
+  margin-top: 0 !important;
+}
+
+.twikoo .tk-content p {
+  margin: 0 !important;
+  font-size: 15px !important;
+}
+
+.twikoo .tk-content img:not(.tk-owo-emotion):not(.tk-input-emoji) {
+  cursor: zoom-in;
+}
+
+.twikoo .tk-meta > a > strong {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.twikoo .tk-time {
+  color: var(--heo-secondtext) !important;
+  font-size: 13px;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.twikoo .tk-extra {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--heo-card-bg);
+  border: var(--style-border-always);
+  border-radius: 999px;
+  color: var(--heo-secondtext) !important;
+  line-height: 1 !important;
+}
+
+.twikoo .tk-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  box-sizing: border-box !important;
+  min-height: 20px !important;
+}
+
+.twikoo .tk-tag-with-icon,
+.twikoo .tk-tag-purple {
+  padding: 2px 8px 2px 6px !important;
+}
+
+.twikoo .tk-tag-green,
+.twikoo .tk-tag-yellow {
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  min-height: 20px !important;
+}
+
+[data-theme="dark"] .twikoo .tk-tag-green {
+  background-color: var(--_tag-green-bg);
+}
+
+[data-theme="dark"] .twikoo .tk-user-level,
+.darkmode .twikoo .tk-user-level,
+[data-user-color-scheme="dark"] .twikoo .tk-user-level {
+  background-color: var(--_level-bg) !important;
+  color: var(--_level-color) !important;
+  border-color: transparent !important;
+}
+
+/* ---------- 操作区 ---------- */
+.twikoo .tk-action .tk-action-link:not(.tk-action-link-reply) {
+  display: none;
+}
+
+.twikoo .tk-action-link-reply {
+  background-color: var(--heo-card-bg);
+}
+
+.twikoo .tk-action.randomCommentInfoUserTag {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.twikoo .tk-action-count:empty {
+  margin-left: 0 !important;
+}
+
+.twikoo .tk-actions {
+  display: flex !important;
+  gap: 8px;
+}
+
+.twikoo .tk-submit-action-icon.__markdown {
+  display: none;
+}
+
+.twikoo .tk-submit {
+  margin: 0 !important;
+}
+
+/* 回复框 */
+.twikoo .tk-submit.tk-submit-reply {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  border: var(--style-border-always);
+  box-shadow: var(--heo-shadow-border);
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .twikoo .tk-submit.tk-submit-reply,
+.darkmode .twikoo .tk-submit.tk-submit-reply,
+[data-user-color-scheme="dark"] .twikoo .tk-submit.tk-submit-reply {
+  background: var(--_reply-bg);
+}
+
+/* 发送按钮禁用态 */
+.twikoo .tk-send.tk-btn--primary.is-disabled,
+.twikoo .tk-send.tk-btn--primary.is-disabled:active,
+.twikoo .tk-send.tk-btn--primary.is-disabled:focus,
+.twikoo .tk-send.tk-btn--primary.is-disabled:hover {
+  opacity: 0.4 !important;
+}
+
+[data-theme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled,
+[data-theme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled:active,
+[data-theme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled:focus,
+.darkmode .twikoo .tk-send.tk-btn--primary.is-disabled,
+.darkmode .twikoo .tk-send.tk-btn--primary.is-disabled:active,
+.darkmode .twikoo .tk-send.tk-btn--primary.is-disabled:focus,
+[data-user-color-scheme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled,
+[data-user-color-scheme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled:active,
+[data-user-color-scheme="dark"] .twikoo .tk-send.tk-btn--primary.is-disabled:focus {
+  color: var(--_send-disabled-color) !important;
+}
+
+/* ---------- 展开 / 收起 ---------- */
+.twikoo .tk-expand {
+  width: 100%;
+  cursor: pointer;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.5s;
+  background: var(--tk-comment-card-bg) !important;
+  color: var(--heo-fontcolor) !important;
+  border: var(--style-border-always);
+  box-shadow: var(--heo-shadow-border);
+  border-radius: 12px;
+  user-select: none;
+  position: relative;
+}
+
+.twikoo .tk-comments-container > .tk-expand {
+  margin: 12px;
+  width: calc(100% - 24px) !important;
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+}
+
+.twikoo .tk-comment .tk-expand::after {
+  background: linear-gradient(to bottom, var(--heo-none) 0%, var(--tk-comment-card-bg) 100%);
+  content: '';
+  width: 100%;
+  height: 100px;
+  bottom: 43px;
+  left: 0;
+  display: flex;
+  position: absolute;
+  z-index: -1;
+}
+
+.twikoo .tk-expand._collapse::after {
+  display: none;
+}
+
+.twikoo .tk-expand:active {
+  background-color: rgba(0, 0, 0, 0.19);
+}
+
+/* ---------- 输入框 ---------- */
+.twikoo .tk-input--small .tk-input__inner {
+  padding: 8px;
+  padding-left: 16px;
+  font-size: 16px !important;
+}
+
+.twikoo .tk-input-group__append,
+.twikoo .tk-input-group__prepend {
+  background-color: var(--heo-card-bg) !important;
+  color: var(--heo-fontcolor) !important;
+  border: none !important;
+  font-weight: bold;
+}
+
+.twikoo .tk-input__inner {
+  background: var(--heo-secondbg) !important;
+  border: none !important;
+  color: var(--heo-fontcolor) !important;
+  padding-left: 8px;
+}
+
+.twikoo .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend {
+  border-radius: 12px;
+  background: var(--heo-secondbg);
+  border: var(--style-border-always);
+}
+
+.twikoo .tk-input-group--prepend .tk-input__inner,
+.twikoo .tk-input-group__append {
+  border-radius: 12px !important;
+}
+
+.twikoo .tk-input__inner:focus {
+  border: none !important;
+}
+
+/* 评论正文输入框 */
+.twikoo .tk-rich-text-wrap {
+  border: var(--style-border-always);
+  border-radius: var(--tk-comment-input-radius);
+  overflow: hidden;
+  background: var(--heo-secondbg);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.twikoo .tk-rich-text-wrap:focus-within {
+  border: var(--style-border-hover-always);
+  box-shadow: var(--heo-shadow-main);
+}
+
+.twikoo .tk-textarea-wrapper.is-ai-generating .tk-rich-text-wrap,
+.twikoo .tk-textarea-wrapper.is-ai-generating .tk-rich-text-wrap:focus-within {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.twikoo .tk-rich-text-wrap .tk-rich-text-editor {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  padding: 16px 16px 40px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--heo-fontcolor);
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  outline: none !important;
+  resize: none;
+}
+
+/* 评论列表 @ 提及 chip */
+.twikoo .tk-content .tk-mention-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0 1px;
+  padding: 0 7px 0 2px;
+  height: 1.5em;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--heo-theme, #425aef) 14%, transparent);
+  color: var(--heo-theme, #425aef);
+  font-weight: 600;
+  font-size: inherit;
+  line-height: 1;
+  vertical-align: middle;
+  transform: translateY(-2px);
+  white-space: nowrap;
+}
+.twikoo .tk-content .tk-mention-chip-avatar {
+  width: 1.15em;
+  height: 1.15em;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+.twikoo .tk-content .tk-mention-chip-text {
+  line-height: 1;
+}
+
+@media (hover: hover) {
+  .twikoo .tk-rich-text-wrap:hover {
+    border-color: var(--heo-lighttext);
+  }
+}
+
+.twikoo .tk-textarea__inner {
+  background: var(--heo-secondbg) !important;
+  color: var(--heo-fontcolor) !important;
+  border-radius: 12px !important;
+  min-height: 100px !important;
+  padding: 16px 16px 40px !important;
+  border: var(--style-border-always) !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+}
+
+.twikoo .tk-textarea__inner:focus {
+  border: var(--style-border-hover-always) !important;
+  box-shadow: var(--heo-shadow-main);
+}
+
+.twikoo .tk-textarea .tk-input__count {
+  color: var(--heo-secondtext) !important;
+  user-select: none;
+  bottom: 8px !important;
+  right: 12px !important;
+}
+
+.twikoo .tk-meta-input .tk-input {
+  box-shadow: var(--heo-shadow-border);
+}
+
+.twikoo .tk-meta-input .tk-input .tk-input-group__prepend {
+  user-select: none;
+  border-radius: 12px 0 0 12px;
+  border-right: var(--style-border-always);
+}
+
+/* 昵称 / 邮箱 / 网址输入提示 */
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend {
+  position: relative;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(1)::before {
+  content: '请输入你的昵称';
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(2)::before {
+  content: '收到回复将会发送到你的邮箱';
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(3)::after {
+  content: none;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(3) {
+  opacity: 0.4;
+  transition: 0.3s;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(3):hover,
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:nth-child(3):focus {
+  opacity: 1;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:focus-within::before {
+  display: block;
+  animation: heo-tk-tips-in 0.3s;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend:focus-within::after {
+  display: block;
+  animation: heo-tk-triangle-in 0.3s;
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend::before {
+  display: none;
+  position: absolute;
+  top: -55px;
+  white-space: nowrap;
+  border-radius: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  padding: 14px 18px;
+  background: var(--heo-main-op-deep);
+  color: var(--heo-white);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.twikoo .tk-meta-input-wrapper .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend::after {
+  display: none;
+  content: '';
+  position: absolute;
+  border: 12px solid transparent;
+  border-top-color: var(--heo-main-op-deep);
+  left: 50%;
+  transform: translate(-50%, -46px);
+}
+
+@keyframes heo-tk-tips-in {
+  0% { top: -50px; opacity: 0; }
+  100% { top: -55px; opacity: 1; }
+}
+
+@keyframes heo-tk-triangle-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.twikoo .tk-textarea__inner::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.twikoo .tk-textarea__inner::-webkit-scrollbar-thumb {
+  background: var(--heo-main);
+  border-radius: 8px;
+  border: 2px solid var(--heo-secondbg);
+}
+
+.twikoo .tk-textarea__inner::-webkit-scrollbar-track {
+  background-color: var(--heo-secondbg);
+}
+
+/* ---------- OwO 表情 ---------- */
+.twikoo .tk-owo-emotion,
+.twikoo .OwO-item img {
+  pointer-events: none;
+}
+
+.twikoo .OwO .OwO-body {
+  z-index: 102;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+  border: var(--style-border-always) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  background-color: var(--heo-card-bg) !important;
+  backdrop-filter: saturate(180%) blur(10px);
+  transform: translateZ(0);
+  /* 工具栏 pill 有 white-space: nowrap，需在面板内恢复换行，否则表情会挤成一行 */
+  white-space: normal;
+}
+
+.twikoo .OwO .OwO-body .OwO-bar {
+  border-top: none !important;
+}
+
+.twikoo .OwO .OwO-body .OwO-bar .OwO-packages li {
+  line-height: 45px !important;
+  font-size: 28px !important;
+  margin-right: 0 !important;
+  width: 50px;
+  height: 48px;
+  transition: 0.3s;
+}
+
+.twikoo .OwO-packages {
+  background: var(--heo-background);
+  padding-left: 8px !important;
+}
+
+.twikoo .OwO .OwO-body .OwO-bar .OwO-packages .OwO-package-active {
+  background: var(--heo-card-bg) !important;
+}
+
+.twikoo .OwO .OwO-body .OwO-items-show {
+  margin: 12px 8px !important;
+  min-height: 197px;
+}
+
+.twikoo .OwO .OwO-body .OwO-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.twikoo .OwO .OwO-body .OwO-items::-webkit-scrollbar-track {
+  background: var(--heo-card-bg);
+}
+
+.twikoo .OwO .OwO-body .OwO-items::-webkit-scrollbar-thumb {
+  background: var(--heo-lighttext);
+  border-radius: 4px;
+}
+
+.twikoo .OwO.OwO-open .OwO-body {
+  animation: 0.3s ease 0.1s 1 normal both running heo-tk-owo-open;
+}
+
+@keyframes heo-tk-owo-open {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* blogex.js 悬停表情大图预览 */
+#owo-big {
+  position: fixed;
+  align-items: center;
+  background-color: var(--heo-card-bg);
+  border: var(--style-border-always);
+  border-radius: 10px;
+  z-index: 9999;
+  display: none;
+  transform: translate(0, -105%);
+  overflow: hidden;
+  animation: heo-tk-owo-big-in 0.3s cubic-bezier(0.42, 0, 0.3, 1.11);
+  padding: 1rem;
+}
+
+#owo-big img {
+  width: 100%;
+}
+
+@keyframes heo-tk-owo-big-in {
+  0% { transform: translate(0, -95%); opacity: 0; }
+  100% { transform: translate(0, -105%); opacity: 1; }
+}
+
+/* ---------- 图片预览 ---------- */
+.twikoo .tk-lightbox {
+  z-index: 10086 !important;
+}
+
+.twikoo .tk-lightbox-image {
+  border-radius: 12px;
+}
+
+/* ---------- 桌面悬停 ---------- */
+@media (hover: hover) {
+  .twikoo .tk-expand:hover {
+    background: var(--heo-lighttext) !important;
+    color: var(--heo-card-bg) !important;
+  }
+
+  .twikoo .tk-reply-header .tk-ruser:hover {
+    background: transparent !important;
+    border-radius: 0 !important;
+    color: var(--heo-lighttext) !important;
+    text-decoration: none !important;
+  }
+
+  [data-theme="dark"] .twikoo .tk-reply-header .tk-ruser:hover,
+  .darkmode .twikoo .tk-reply-header .tk-ruser:hover,
+  [data-user-color-scheme="dark"] .twikoo .tk-reply-header .tk-ruser:hover {
+    color: var(--_reply-hover-color) !important;
+  }
+
+  .twikoo .tk-avatar .tk-avatar-img:hover {
+    transform: rotate(360deg);
+  }
+
+  /* 回复按钮 hover 保持官方行为：仅图标切换，不改背景/文字色 */
+
+  .twikoo .OwO .OwO-body .OwO-items .OwO-item:hover {
+    box-shadow: var(--heo-shadow-lightblack) !important;
+    border-radius: 8px;
+  }
+}
+
+/* ---------- 移动端 ---------- */
+@media screen and (max-width: 768px) {
+  .twikoo .tk-rich-text-wrap .tk-rich-text-editor,
+  .twikoo .tk-textarea__inner {
+    font-size: 16px !important;
+  }
+
+  .twikoo .tk-meta-input .tk-input .tk-input-group__prepend {
+    padding: 0 12px !important;
+    font-size: 16px !important;
+  }
+
+  .twikoo .tk-input--small .tk-input__inner {
+    padding-left: 10px;
+  }
+
+  .twikoo .tk-meta-input .tk-input + .tk-input {
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  .twikoo .tk-input.tk-input--small.tk-input-group.tk-input-group--prepend {
+    margin-bottom: 0;
+  }
+}
+
+/* ---------- 自 heoblog 主题迁移的布局规则 ---------- */
+.twikoo .tk-meta-head {
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.twikoo .tk-meta-head > * {
+  flex-shrink: 0;
+}
+
+.twikoo .tk-root > .tk-main {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.twikoo blockquote {
+  background: var(--heo-secondbg);
+  border: var(--style-border);
+  box-shadow: none;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.6rem;
+  color: var(--heo-secondtext);
+  border-radius: 8px;
+}
+
+/*!
+ * OwO v1.0.2
+ * Source: https://github.com/DIYgod/OwO/blob/master/dist/OwO.min.css
+ * Author: DIYgod
+ * Modified by: iMaeGoo
+ * Released under the MIT License.
+ */
+
+.OwO {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.OwO.OwO-open .OwO-body {
+  display: block;
+}
+
+.OwO .OwO-logo {
+  width: 20px;
+  height: 20px;
+  display: flex;
+}
+
+.OwO .OwO-body {
+  display: none;
+  position: absolute;
+  left: 0;
+  width: 500px;
+  max-width: calc(100vw - 32px);
+  min-width: 300px;
+  color: #4a4a4a;
+  background-color: #ffffff;
+  border: 1px solid rgba(144,147,153,0.31);
+  top: 32px;
+  border-radius: 0 4px 4px;
+  z-index: 1000;
+}
+
+.night .OwO .OwO-body,
+.darkmode .OwO .OwO-body,
+.DarkMode .OwO .OwO-body,
+[data-theme="dark"] .OwO .OwO-body,
+[data-user-color-scheme="dark"] .OwO .OwO-body {
+  color: #ffffff;
+  background-color: #4a4a4a;
+}
+
+.OwO .OwO-body .OwO-items {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: none;
+  padding: 10px;
+  padding-right: 0;
+  margin: 0;
+  overflow: auto;
+  font-size: 0;
+  white-space: normal;
+  scrollbar-width: thin;
+  scrollbar-color: var(--heo-secondbg, rgba(144,147,153,0.13)) transparent;
+}
+
+.OwO .OwO-body .OwO-items::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.OwO .OwO-body .OwO-items::-webkit-scrollbar-thumb {
+  background-color: var(--heo-secondbg, rgba(144,147,153,0.13));
+  border-radius: 3px;
+}
+
+.OwO .OwO-body .OwO-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.OwO .OwO-body .OwO-items .OwO-item {
+  list-style-type: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  -webkit-transition: .3s;
+  transition: .3s;
+  text-align: center;
+}
+
+.OwO .OwO-body .OwO-items .OwO-item:hover {
+  background-color: rgba(144,147,153,0.13);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.OwO .OwO-body .OwO-items-emoji .OwO-item {
+  font-size: 20px;
+  line-height: 19px;
+}
+
+.OwO .OwO-body .OwO-items-image .OwO-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 44px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 窄屏时文字 emoji 固定列宽（图片表情由下方 grid 自适应列数，不受影响） */
+@media screen and (max-width: 600px) {
+  #twikoo .OwO-items-emoji > .OwO-item {
+    width: 16%;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  #twikoo .OwO-items-emoji > .OwO-item {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #twikoo .OwO-items-emoji > .OwO-item {
+    width: 25%;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  #twikoo .OwO-items-emoji > .OwO-item {
+    width: 33%;
+  }
+}
+
+/* 图片表情：grid 自适应列数 —— 面板越宽列数越多，表情统一尺寸不缩放 */
+.OwO .OwO-body .OwO-items-image.OwO-items-show {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  align-content: start;
+  gap: 10px;
+  padding: 0;
+}
+
+.OwO .OwO-body .OwO-items-image .OwO-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.OwO .OwO-body .OwO-items-show {
+  display: block;
+}
+
+.OwO .OwO-body .OwO-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(144,147,153,0.31);
+  border-radius: 0 0 4px 4px;
+  background-color: var(--heo-secondbg, rgba(144,147,153,0.13));
+}
+
+.OwO .OwO-body .OwO-bar .OwO-packages {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+}
+
+.OwO .OwO-body .OwO-bar .OwO-packages li {
+  list-style-type: none;
+  display: inline-block;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 10px;
+  cursor: pointer;
+  margin-right: 3px;
+}
+
+.OwO .OwO-body .OwO-bar .OwO-packages li:nth-child(1) {
+  border-radius: 0 0 0 3px;
+}
+
+.OwO .OwO-body .OwO-bar .OwO-packages li:hover {
+  background-color: rgba(144,147,153,0.13);
+}
+
+.OwO .OwO-body .OwO-bar .OwO-packages .OwO-package-active {
+  background-color: rgba(144,147,153,0.13);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.OwO .OwO-body .OwO-bar .OwO-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  width: 44px;
+  font-size: 24px;
+  line-height: 1;
+  color: inherit;
+  cursor: pointer;
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+.OwO .OwO-body .OwO-bar .OwO-close:hover {
+  background-color: rgba(144,147,153,0.13);
+}
+
+/**
+ * Twikoo UI - 轻量自定义组件样式
+ */
+
+/* ==================== Button ==================== */
+.tk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+  line-height: 1;
+  border: 1px solid rgba(144,147,153,0.31);
+  border-radius: 99px;
+  background: rgba(144,147,153,0.063);
+  color: currentColor;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+  box-sizing: border-box;
+  vertical-align: middle;
+  text-decoration: none;
+}
+.tk-btn:focus,
+.tk-btn:active {
+  color: var(--heo-lighttext, #333);
+  background-color: var(--heo-main-op-light, rgba(64,158,255,0.1));
+  border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+}
+@media (hover: hover) {
+  .tk-btn:hover {
+    color: var(--heo-lighttext, #333);
+    background-color: var(--heo-main-op-light, rgba(64,158,255,0.1));
+    border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+  }
+}
+.tk-btn.is-disabled,
+.tk-btn.is-disabled:active,
+.tk-btn.is-disabled:focus {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .tk-btn.is-disabled:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+.tk-btn.is-loading {
+  pointer-events: none;
+  position: relative;
+}
+.tk-btn-loading-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.tk-btn-loading-icon .tk-loading-spinner {
+  width: 14px;
+  height: 14px;
+  border-width: 1.5px;
+}
+
+/* Primary */
+.tk-btn--primary {
+  color: var(--heo-card-bg, #fff);
+  background-color: var(--heo-lighttext, #409eff);
+  border-color: var(--heo-lighttext, #409eff);
+  border: var(--style-border-always, 1px solid #409eff);
+}
+.tk-btn--primary:focus {
+  color: var(--heo-card-bg, #fff);
+  background-color: var(--heo-main-op-deep, #66b1ff);
+  border-color: var(--heo-main-op-deep, #66b1ff);
+}
+@media (hover: hover) {
+  .tk-btn--primary:hover {
+    color: var(--heo-card-bg, #fff);
+    background-color: var(--heo-main-op-deep, #66b1ff);
+    border-color: var(--heo-main-op-deep, #66b1ff);
+  }
+}
+.tk-btn--primary:active {
+  color: var(--heo-card-bg, #fff);
+  background-color: var(--heo-main-op-deep, #66b1ff);
+  border-color: var(--heo-main-op-deep, #66b1ff);
+}
+.tk-btn--primary.is-disabled,
+.tk-btn--primary.is-disabled:active,
+.tk-btn--primary.is-disabled:focus {
+  color: rgba(255,255,255,0.63);
+  background-color: var(--heo-main, #409eff);
+  border-color: transparent;
+  opacity: 1;
+}
+@media (hover: hover) {
+  .tk-btn--primary.is-disabled:hover {
+    color: rgba(255,255,255,0.63);
+    background-color: var(--heo-main, #409eff);
+    border-color: transparent;
+  }
+}
+
+/* Danger */
+.tk-btn--danger {
+  color: #fff;
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+}
+@media (hover: hover) {
+  .tk-btn--danger:hover {
+    color: #fff;
+    background-color: #f78989;
+    border-color: #f78989;
+  }
+}
+
+/* Info */
+.tk-btn--info {
+  color: currentColor;
+  background-color: rgba(144,147,153,0.1);
+  border-color: rgba(144,147,153,0.31);
+}
+@media (hover: hover) {
+  .tk-btn--info:hover {
+    color: var(--heo-lighttext, #333);
+    background-color: var(--heo-main-op-light, rgba(64,158,255,0.1));
+    border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+  }
+}
+
+/* Text */
+.tk-btn--text {
+  background: transparent;
+  border: none;
+  color: var(--heo-lighttext, #409eff);
+  padding: 0;
+  height: auto;
+}
+@media (hover: hover) {
+  .tk-btn--text:hover {
+    color: var(--heo-main, #66b1ff);
+    background: transparent;
+    border: none;
+  }
+}
+
+/* Sizes */
+.tk-btn--small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.tk-btn--mini {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Plain */
+.tk-btn.is-plain:focus {
+  color: var(--heo-lighttext, #333);
+  border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+  background-color: var(--heo-main-op-light, rgba(64,158,255,0.1));
+}
+@media (hover: hover) {
+  .tk-btn.is-plain:hover {
+    color: var(--heo-lighttext, #333);
+    border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+    background-color: var(--heo-main-op-light, rgba(64,158,255,0.1));
+  }
+}
+.tk-btn.is-plain:active {
+  color: var(--heo-lighttext, #333);
+  border-color: var(--heo-main-op, rgba(64,158,255,0.5));
+}
+
+/* ==================== Input ==================== */
+.tk-input {
+  position: relative;
+  font-size: 14px;
+  display: block;
+  width: 100%;
+}
+.tk-input__inner,
+.tk-textarea__inner {
+  display: block;
+  width: 100%;
+  padding: 0 15px;
+  height: 32px;
+  font-size: inherit;
+  color: currentColor;
+  background-color: transparent;
+  border: 1px solid rgba(144,147,153,0.31);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.tk-textarea__inner {
+  height: auto;
+  padding: 5px 15px;
+  resize: vertical;
+  min-height: 40px;
+}
+@media (hover: hover) {
+  .tk-input__inner:hover,
+  .tk-textarea__inner:hover {
+    border-color: rgba(144,147,153,0.50);
+  }
+}
+.tk-input__inner:focus,
+.tk-textarea__inner:focus {
+  border-color: var(--heo-lighttext, #409eff);
+}
+.tk-input.is-disabled .tk-input__inner,
+.tk-input.is-disabled .tk-textarea__inner {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.tk-input--small .tk-input__inner,
+.tk-input--small .tk-textarea__inner {
+  height: 28px;
+  font-size: 12px;
+}
+.tk-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Input Group */
+.tk-input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+.tk-input-group .tk-input-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+.tk-input-group .tk-input__inner,
+.tk-input-group .tk-textarea__inner {
+  border-radius: 0;
+}
+.tk-input-group--prepend .tk-input__inner,
+.tk-input-group--prepend .tk-textarea__inner {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.tk-input-group--append .tk-input__inner,
+.tk-input-group--append .tk-textarea__inner {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.tk-input-group__prepend,
+.tk-input-group__append {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  height: 32px;
+  color: currentColor;
+  background-clip: padding-box;
+  background-color: rgba(144,147,153,0.13);
+  border: 1px solid rgba(144,147,153,0.31);
+  white-space: nowrap;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.tk-input-group__prepend {
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+}
+.tk-input-group__append {
+  border-left: 0;
+  border-radius: 0 12px 12px 0;
+}
+.tk-input-group--small .tk-input-group__prepend,
+.tk-input-group--small .tk-input-group__append {
+  height: 28px;
+  font-size: 12px;
+}
+
+/* ==================== Dialog ==================== */
+.tk-dialog__wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+}
+.tk-dialog {
+  background: var(--heo-card-bg, #fff);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+.tk-dialog__header {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+}
+.tk-dialog__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: currentColor;
+  opacity: 0.6;
+  padding: 4px 8px;
+}
+@media (hover: hover) {
+  .tk-dialog__close:hover {
+    opacity: 1;
+  }
+}
+.tk-dialog__body {
+  padding: 0;
+}
+
+/* ==================== Loading ==================== */
+.tk-loading-parent {
+  position: relative;
+  min-height: 72px;
+}
+.tk-loading-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--heo-card-bg, #fff) 55%, transparent);
+}
+.tk-loading-spinner {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  max-height: 20px;
+  flex-shrink: 0;
+  border: 2px solid color-mix(in srgb, var(--heo-main, var(--heo-theme, #425aef)) 18%, transparent);
+  border-top-color: var(--heo-main, var(--heo-theme, #425aef));
+  border-radius: 50%;
+  animation: tk-loading-spin 0.65s linear infinite;
+}
+@keyframes tk-loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== Transitions ==================== */
+.tk-zoom-in-top-enter-active,
+.tk-zoom-in-top-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center top;
+}
+.tk-zoom-in-top-enter,
+.tk-zoom-in-top-leave-to {
+  transform: scaleY(0.8);
+  opacity: 0;
+}
+
+/* 保留 HeoID 按钮外观；仅隐藏 HeoID 弹层（本站登录由 JS 改文案/跳转） */
+#twikoo-wrap .tk-heoid-dialog,
+#twikoo-wrap .tk-dialog__wrapper:has(.tk-heoid-dialog),
+#twikoo-wrap .tk-heoid-login {
+  display: none !important;
+}
+
+/* 压制主题内 Twikoo 1.x 遗留规则（zhheoblog.css 对头像/展开按钮的绝对定位） */
+#twikoo-wrap .tk-avatar,
+#twikoo-wrap .tk-avatar.tk-has-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 99px !important;
+  margin-right: 16px !important;
+  display: block;
+}
+#twikoo-wrap .tk-avatar .tk-avatar-img,
+#twikoo-wrap img.tk-avatar-img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 99px !important;
+}
+#twikoo-wrap .tk-comment .tk-submit .tk-avatar,
+#twikoo-wrap .tk-replies .tk-avatar,
+#twikoo-wrap .tk-comment .tk-submit .tk-avatar .tk-avatar-img,
+#twikoo-wrap .tk-replies .tk-avatar .tk-avatar-img {
+  width: 26px !important;
+  height: 26px !important;
+}
+#twikoo-wrap .tk-meta-input .tk-avatar,
+#twikoo-wrap .tk-meta-input .tk-avatar .tk-avatar-img {
+  width: 32px !important;
+  height: 32px !important;
+  display: block !important;
+}
+#twikoo-wrap .tk-row .tk-avatar {
+  display: block !important;
+}
+#twikoo-wrap .tk-comments-container > .tk-comment {
+  padding: 1rem !important;
+  border: var(--style-border-always) !important;
+  background: var(--heo-secondbg) !important;
+  box-shadow: var(--heo-shadow-border);
+}
+#twikoo-wrap .tk-comments-container > .tk-expand {
+  position: static !important;
+  width: 100% !important;
+  margin: 12px 0 !important;
+  left: auto !important;
+  bottom: auto !important;
+}
+#twikoo-wrap .tk-expand::after {
+  display: none !important;
+}
+
+/* 移动端兜底（heoblogmw768 加载更后；此处与 zhheoblog 768 断点一致） */
+@media screen and (max-width: 768px) {
+  #twikoo-wrap .tk-comments-container > .tk-comment {
+    padding: 1rem !important;
+    border: var(--style-border-always) !important;
+    box-shadow: var(--heo-shadow-border) !important;
+  }
+
+  #twikoo-wrap .tk-replies > .tk-comment {
+    padding: 0.75rem 0 0 !important;
+    border: none !important;
+    border-top: var(--style-border-dashed) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* 覆盖 Heo 皮肤 767px 的 row，匿名三栏改为纵向 */
+  #twikoo-wrap .tk-meta-input,
+  #twikoo-wrap .tk-meta-input-wrapper {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  #twikoo-wrap .tk-meta-input-wrapper .tk-input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #twikoo-wrap .OwO .OwO-body {
+    width: min(300px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+}

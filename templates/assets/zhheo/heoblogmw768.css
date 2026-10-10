@@ -389,6 +389,192 @@
     animation: none;
 }
 
+/* 文末作者卡 / 评论区移动端（对齐 blog.zhheo.com） */
+#post .post-copyright {
+    margin-top: 64px;
+    padding: 1.2rem 1rem 1rem !important;
+}
+
+#post-comment {
+    margin: 1.25rem 0 0 !important;
+    padding: 0 2px;
+}
+
+#post-comment .comment-head {
+    gap: 6px 8px;
+    margin-bottom: 0.75rem !important;
+    align-items: center;
+}
+
+#post-comment .comment-head .comment-headline {
+    font-size: 1.1rem !important;
+}
+
+#post-comment .comment-randomInfo {
+    width: 100%;
+    margin-left: 0 !important;
+    justify-content: flex-start;
+    order: 3;
+}
+
+#post-comment .comment-tips {
+    order: 4;
+}
+
+#post-comment .comment-wrap {
+    margin: 0;
+}
+
+/* Twikoo 2.x 移动端：对齐 zhheoblog @media 768 评论卡片 */
+#twikoo-wrap .twikoo,
+#twikoo-wrap .tk-comments {
+    gap: 12px;
+}
+
+#twikoo-wrap .tk-comments-container {
+    gap: 12px !important;
+    min-height: 80px !important;
+}
+
+#twikoo-wrap .tk-comments-container > .tk-comment {
+    padding: 1rem !important;
+    margin: 0 0 0.5rem !important;
+    border-radius: 12px !important;
+    border: var(--style-border-always) !important;
+    background: var(--heo-secondbg) !important;
+    box-shadow: var(--heo-shadow-border) !important;
+}
+
+#twikoo-wrap .tk-replies > .tk-comment {
+    padding: 0.75rem 0 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-top: var(--style-border-dashed) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* 仅主评论头像 36px，勿覆盖回复/提交区小头像 */
+#twikoo-wrap .tk-comments-container > .tk-comment > .tk-row > .tk-avatar,
+#twikoo-wrap .tk-comments-container > .tk-comment > .tk-row > .tk-comment-avatar-wrap .tk-avatar,
+#twikoo-wrap .tk-comments-container > .tk-comment > .tk-row > .tk-avatar.tk-has-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    margin-right: 12px !important;
+}
+
+#twikoo-wrap .tk-comments-container > .tk-comment > .tk-row > .tk-avatar .tk-avatar-img,
+#twikoo-wrap .tk-comments-container > .tk-comment > .tk-row > .tk-comment-avatar-wrap .tk-avatar-img {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+#twikoo-wrap .tk-replies .tk-avatar,
+#twikoo-wrap .tk-replies .tk-avatar .tk-avatar-img,
+#twikoo-wrap .tk-comment .tk-submit .tk-avatar,
+#twikoo-wrap .tk-comment .tk-submit .tk-avatar .tk-avatar-img {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+/* 无 HeoID：昵称/邮箱/网址纵向堆叠 */
+#twikoo-wrap .tk-meta-input,
+#twikoo-wrap .tk-meta-input-wrapper {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    flex-wrap: wrap !important;
+}
+
+#twikoo-wrap .tk-meta-input-wrapper .tk-input {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+#twikoo-wrap .tk-meta-input .tk-input .tk-input-group__prepend {
+    padding: 0 10px !important;
+    font-size: 14px !important;
+}
+
+#twikoo-wrap .tk-input--small .tk-input__inner {
+    font-size: 16px !important;
+    padding: 8px 10px !important;
+}
+
+#twikoo-wrap .tk-rich-text-wrap,
+#twikoo-wrap .tk-textarea__inner {
+    border-radius: 12px !important;
+    font-size: 16px !important;
+}
+
+#twikoo-wrap .tk-rich-text-wrap .tk-rich-text-editor {
+    min-height: 96px !important;
+    padding: 12px 12px 36px !important;
+    font-size: 16px !important;
+}
+
+#twikoo-wrap .tk-row-actions-pill {
+    flex-wrap: wrap;
+}
+
+#twikoo-wrap .tk-submit .tk-send,
+#twikoo-wrap .tk-submit .tk-cancel,
+#twikoo-wrap .tk-send.tk-btn,
+#twikoo-wrap .tk-btn.tk-send {
+    min-height: 36px;
+    border-radius: 10px !important;
+}
+
+#twikoo-wrap .tk-send .tk-send-shortcut {
+    display: none !important;
+}
+
+/* OwO：对齐 zhheo 移动端 300px 宽，贴评论区左缘 */
+#twikoo-wrap .OwO .OwO-body,
+#twikoo-wrap .tk-submit-action-icon.OwO .OwO-body {
+    left: 0 !important;
+    right: auto !important;
+    width: min(300px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+    min-width: 0 !important;
+}
+
+#twikoo-wrap .OwO .OwO-body .OwO-items-show {
+    min-height: 160px !important;
+    margin: 8px 4px !important;
+}
+
+#twikoo-wrap .tk-expand {
+    border-radius: 10px !important;
+    margin: 8px 0 !important;
+}
+
+#twikoo-wrap .tk-content p {
+    font-size: 15px !important;
+}
+
+#twikoo-wrap .tk-meta-head {
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    max-width: 100% !important;
+}
+
+/* 本站登录按钮（复用 HeoID 按钮）移动端铺满 */
+#twikoo-wrap .tk-meta-mode-buttons,
+#twikoo-wrap .tk-meta-mode-buttons--heoid-only {
+    width: 100% !important;
+}
+
+#twikoo-wrap .tk-heoid-mode-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-content: center;
+}
+
 .post #article-container,
 .post #footer {
     background: var(--heo-card-bg);

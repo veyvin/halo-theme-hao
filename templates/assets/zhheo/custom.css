@@ -4500,3 +4500,80 @@ p.p.gray,span.p.gray {
 #page-header #nav .back-home-button .back-menu-list-group-flat .back-menu-list:not(:has(.back-menu-item)) {
     display: none;
 }
+
+/* ==================== 评论区容器（Twikoo 2.x 皮肤见 twikoo-v2-heo.css） ==================== */
+#post-comment {
+    margin-top: 2rem;
+}
+
+#post-comment .comment-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 0.75rem;
+}
+
+#post-comment .comment-head .comment-headline {
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#post-comment .comment-randomInfo {
+    margin-left: auto;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#post-comment .comment-randomInfo a {
+    color: var(--heo-secondtext);
+    transition: color 0.2s;
+}
+
+#post-comment .comment-randomInfo a:hover {
+    color: var(--heo-theme);
+}
+
+#post-comment .comment-wrap {
+    width: 100%;
+}
+
+#post-comment .comment-wrap > div {
+    width: 100%;
+}
+
+/* 取消 Twikoo 1.x Element UI 绝对定位，避免干扰 2.x 布局 */
+#twikoo-wrap .tk-comments .el-button--primary,
+#twikoo-wrap .tk-submit .el-button--primary {
+    position: static !important;
+    top: auto !important;
+    height: auto !important;
+    width: auto !important;
+}
+
+#twikoo-wrap .tk-row-actions-start {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+#twikoo-wrap .tk-meta-input {
+    width: 100% !important;
+}
+
+/* 保留 HeoID 按钮外观（文案/跳转由 twikoo.js 改为本站登录）；仅隐藏 HeoID 弹层 */
+#twikoo-wrap .tk-heoid-dialog,
+#twikoo-wrap .tk-dialog__wrapper:has(.tk-heoid-dialog),
+#twikoo-wrap .tk-heoid-login {
+    display: none !important;
+}
+
+#twikoo-wrap input.tk-halo-user-locked {
+    opacity: 0.85;
+    cursor: default;
+}

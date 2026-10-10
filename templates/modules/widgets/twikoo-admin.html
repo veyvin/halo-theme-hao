@@ -1,0 +1,55 @@
+<!-- Twikoo 评论管理面板：仅 Halo 超级管理员渲染（sec:authorize 不通过时整棵子树被移除，
+     管理密码不会出现在任何访客的 HTML 里）。依赖主题设置「Twikoo评论 - 管理密码」。 -->
+<div id="hao-twikoo-admin" style="display:none;"
+     sec:authorize='hasRole("super-role") or hasRole("role-template-super-role")'
+     th:if="${theme.config.comments.commentsEnable
+              and #strings.equals(theme.config.comments.use, 'Twikoo')
+              and not #strings.isEmpty(theme.config.comments.twikoos.envId)
+              and not #strings.isEmpty(theme.config.comments.twikoos.adminPassword)}">
+    <div class="twka-panel" role="dialog" aria-modal="true" aria-label="评论管理">
+        <div class="twka-navbar">
+            <div class="twka-title"><i class="haofont hao-icon-chat--fill"></i> 评论管理</div>
+            <span class="twka-close" id="twka-close" title="关闭" role="button" tabindex="0"><i class="haofont hao-icon-xmark"></i></span>
+        </div>
+
+        <div class="twka-toolbar">
+            <input id="twka-keyword" class="twka-input" type="search" autocomplete="off" placeholder="搜索昵称 / 邮箱 / IP / 内容 / 文章路径">
+            <button id="twka-search" class="twka-btn twka-search" type="button" title="搜索"><i class="haofont hao-icon-search--line"></i></button>
+            <div class="twka-tabs">
+                <span class="twka-tab active" data-type="">全部</span>
+                <span class="twka-tab" data-type="VISIBLE">正常</span>
+                <span class="twka-tab" data-type="HIDDEN">垃圾/隐藏</span>
+                <span class="twka-tab" id="twka-only-cur">只看本页</span>
+            </div>
+        </div>
+
+        <div class="twka-status" id="twka-status"></div>
+
+        <div class="twka-table-wrap">
+            <table class="twka-table">
+                <thead>
+                <tr>
+                    <th class="twka-col-check"><input type="checkbox" id="twka-check-all" title="全选本页"></th>
+                    <th class="twka-col-user">用户</th>
+                    <th>内容</th>
+                    <th class="twka-col-time">时间</th>
+                    <th class="twka-col-act">操作</th>
+                </tr>
+                </thead>
+                <tbody id="twka-body"></tbody>
+            </table>
+        </div>
+
+        <div class="twka-footer">
+            <span class="twka-count">共 <b id="twka-total">0</b> 条</span>
+            <span class="twka-pager">
+                <button id="twka-prev" class="twka-btn" type="button">上一页</button>
+                <span id="twka-page" class="twka-page">1 / 1</span>
+                <button id="twka-next" class="twka-btn" type="button">下一页</button>
+            </span>
+            <button id="twka-batch-del" class="twka-btn is-danger" type="button">删除选中</button>
+        </div>
+    </div>
+    <div class="twka-mask" id="twka-mask"></div>
+</div>
+<script data-pjax th:src="${assets_link + '/js/comment/twikoo-admin.js' + theme_version}"></script>

@@ -261,6 +261,33 @@ var btf = {
         }
     },
 
+    // Twikoo 2.x / Artalk / Waline 评论输入框
+    getCommentInput: () => {
+        const cls = GLOBAL_CONFIG?.source?.comments?.textarea
+        const root = document.getElementById('post-comment') || document
+        return (
+            (cls && root.getElementsByClassName(cls)[0]) ||
+            root.querySelector('.tk-rich-text-editor') ||
+            root.querySelector('.tk-textarea__inner') ||
+            root.querySelector('textarea')
+        )
+    },
+
+    fillCommentText: (text) => {
+        const input = btf.getCommentInput()
+        if (!input) return null
+        if (input.isContentEditable || input.getAttribute('contenteditable') === 'true') {
+            input.focus()
+            input.textContent = text
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+        } else {
+            input.value = text
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+            input.focus()
+            try { input.setSelectionRange(input.value.length, input.value.length) } catch (e) {}
+        }
+        return input
+    },
 
     scrollToDest: (e,t)=>{
         if (e < 0 || t < 0)
