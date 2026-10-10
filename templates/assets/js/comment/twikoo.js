@@ -47,27 +47,194 @@
         })
     }
 
+    /**
+     * 登录用户信息挂在 GLOBAL_CONFIG.source.user 下（见 modules/variables/site-config.html），
+     * 顶层 GLOBAL_CONFIG.user 并不存在；这里做一次解析，兼容两种位置。
+     */
+    const haloUser = () => {
+        const cfg = (typeof GLOBAL_CONFIG !== 'undefined' && GLOBAL_CONFIG) || null
+        if (!cfg) return null
+        return cfg.source && cfg.source.user ? cfg.source.user : (cfg.user || null)
+    }
+
+    const readSavedMeta = () => {
+        try {
+            const raw = JSON.parse(localStorage.getItem('twikoo') || '{}')
+            return raw && typeof raw === 'object' ? raw : {}
+        } catch (e) {
+            return {}
+        }
+    }
+
+    /**
+     * Twikoo 的 convertedLink 走 wc()：只要前 4 个字符不是 "http" 就无脑拼 `http://`。
+ * Halo 的 permalink 是站内相对路径（/authors/xxx），直接传进去会被拼成 http:///authors/xxx，
+ * 昵称链接直接废掉。这里统一转成绝对地址。
+     */
+    const absoluteUrl = (path) => {
+        const p = String(path || '').trim()
+        if (!p) return ''
+        if (/^https?:\/\//i.test(p)) return p
+        return location.origin + (p.charAt(0) === '/' ? p : '/' + p)
+    }
+
+    /**
+     * Twikoo 的 COMMENT_SUBMIT 请求体里没有 avatar 字段：
+     *   t = { nick, mail, link, ua, url, href, title, pageSummary, comment, pid, rid }
+     * 也就是说评论头像由服务端拿 mail 的 md5 去 gravatar 取，客户端传什么都不影响。
+     * 所以这里绝不伪造邮箱 —— 只沿用用户自己填过的真实邮箱（填一次即长期保存在 localStorage），
+     * 昵称/网站则直接取 Halo 账号资料。
+     */
+    const buildHaloMeta = () => {
+        const user = haloUser()
+        if (!user || !user.loggedIn) return null
+        const saved = readSavedMeta()
+        return {
+            nick: user.displayName || user.name || saved.nick || '',
+            mail: saved.mail || '',
+            link: absoluteUrl(user.permalink || saved.link),
+            avatar: user.avatar || saved.avatar || ''
+        }
+    }
+
+    /**
+     * 必须在 twikoo.init() 之前调用：Twikoo 的 initMeta() 只在组件挂载时读一次
+     * localStorage，之后主题再写 localStorage 不会同步进 Vue 的 metaData。
+     */
+    const seedHaloMeta = () => {
+        const meta = buildHaloMeta()
+        if (!meta) return null
+        const saved = readSavedMeta()
+        // 只比对昵称/网站：邮箱由用户自己填，主题不碰，避免把他正在输入的值冲掉
+        const same = (saved.nick || '') === meta.nick && (saved.link || '') === meta.link
+        if (!same) {
+            const payload = { nick: meta.nick, mail: meta.mail, link: meta.link, avatar: meta.avatar }
+            setTwikooMeta(payload)
+        }
+        return meta
+    }
+
+    /** 深度遍历找 tk-meta-input 组件实例（按根节点 class 判定，不依赖组件名） */
+    const findMetaInputVm = () => {
+        const el = document.getElementById('twikoo') || document.getElementById('twikoo-wrap')
+        const vm = el && el.__vue__
+        if (!vm) return null
+        const stack = [vm]
+        while (stack.length) {
+            const c = stack.shift()
+            if (!c) continue
+            const node = c.$el
+            if (node && node.classList && node.classList.contains('tk-meta-input')) return c
+            if (c.$options && c.$options.name === 'TkMetaInput') return c
+            if (c.$children && c.$children.length) stack.push(...c.$children)
+        }
+        return null
+    }
+
+    /**
+     * 昵称来自 Halo 账号资料，不能让 Twikoo 的「QQ 号自动补全邮箱」逻辑插手：
+     * checkQQ() 命中 /^[1-9][0-9]{4,10}$/ 就会把 mail 覆写成 <nick>@qq.com 并去接口改写昵称，
+     * 纯数字昵称的用户（比如 "123456"）会被整条劫持。Vue 初始化时把方法 bind 成实例自有属性，
+     * 所以这里直接覆盖实例上的引用即可生效。
+     */
+    const disableCheckQQ = (vm) => {
+        if (vm._haloCheckQQPatched) return
+        vm._haloCheckQQPatched = true
+        vm.checkQQ = function () {}
+    }
+
+    /**
+     * 登录用户豁免「邮箱必填」。
+     *
+     * 背景：Halo 前端拿不到用户邮箱，而 Twikoo 的 checkValid() 默认要求 nick + mail 都非空；
+     * 服务端配置加载失败时（this.config 为 undefined）REQUIRED_FIELDS 回退成 {nick,mail}，
+     * 邮箱会变成硬性必填，登录用户因此永远发不出。
+     * 这里在登录态把校验放宽到「有昵称即可」，输入框又被 CSS 隐藏，访客无感知。
+     * Vue 初始化时把方法 bind 成实例自有属性，覆盖实例引用即可生效。
+     */
+    const relaxMetaValidation = (vm) => {
+        if (vm._haloValidPatched) return
+        const orig = vm.checkValid
+        if (typeof orig !== 'function') return
+        vm._haloValidPatched = true
+        vm.checkValid = function () {
+            try {
+                const u = haloUser()
+                if (u && u.loggedIn && (this.metaData.nick || '').trim()) return true
+            } catch (e) {}
+            return orig.call(this)
+        }
+        // 立刻重算一次，让 isMetaValid / canSend 同步恢复
+        if (typeof vm.updateMeta === 'function') vm.updateMeta()
+    }
+
+    /**
+     * 直接驱动 Vue 组件把评论身份切到「其他方式」。
+     *
+     * 为什么不能只靠点 DOM：Twikoo 的 initConfig() 是异步的，拿到服务端配置后才 emit('initMeta')，
+     * initMeta() 会无条件把 mode 重置为 'default' —— 也就是发送按钮刚出现又被收走。
+     * 靠 MutationObserver 再点一次属于时序赌博，这里改成直接调组件方法，确定性执行。
+     */
+    const forceHaloMetaMode = (meta) => {
+        const vm = findMetaInputVm()
+        if (!vm) return false
+        disableCheckQQ(vm)
+        relaxMetaValidation(vm)
+        // initMeta/applyModeSwitch 都不搬 avatar，Halo 头像只能直接塞进组件数据
+        if (meta && meta.avatar && vm.metaData) vm.metaData.avatar = meta.avatar
+        if (vm.mode === 'other') return true
+        if (vm.forceHeoid || vm.commentLevelRule) return false
+        if (typeof vm.applyModeSwitch === 'function') {
+            vm.applyModeSwitch('other')
+            return vm.mode === 'other'
+        }
+        return false
+    }
+
     const applyHaloUserToTwikoo = () => {
         clearHeoID()
 
-        const user = GLOBAL_CONFIG && GLOBAL_CONFIG.user
-        if (!user || !user.loggedIn) return
+        const meta = seedHaloMeta()
+        const wrap = getWrap()
+        const root = wrap || document
 
-        let meta = { nick: '', mail: '', link: '', avatar: '' }
-        try {
-            meta = Object.assign(meta, JSON.parse(localStorage.getItem('twikoo') || '{}'))
-        } catch (e) {}
+        if (!meta) {
+            if (wrap) wrap.classList.remove('tk-halo-user')
+            return
+        }
 
-        meta.nick = user.displayName || user.name || meta.nick || ''
-        meta.link = user.permalink || meta.link || ''
-        meta.avatar = user.avatar || meta.avatar || ''
-        // 邮箱前端通常无法取得，保留本地已填；Twikoo 后台建议将邮箱设为选填
-        setTwikooMeta(meta)
-
-        const root = getWrap() || document
         fillField(root, ['nick', '昵称'], meta.nick, true)
         fillField(root, ['link', '网址', 'url', '网站'], meta.link, true)
-        fillField(root, ['mail', '邮箱', 'email'], meta.mail, false)
+        fillField(root, ['mail', '邮箱', 'email'], meta.mail, true)
+
+        if (!wrap) return
+        // 登录态：昵称/邮箱/网站三项全部由本站账号带出且已锁定，配合 CSS 整行隐藏
+        wrap.classList.add('tk-halo-user')
+        const metaBox = wrap.querySelector('.tk-meta-input')
+        if (metaBox) metaBox.setAttribute('data-halo-nick', meta.nick)
+
+        forceHaloMetaMode(meta)
+    }
+
+    /**
+     * DOM 点击兜底：Vue 实例还没接管（__vue__ 拿不到）时，直接点「其他方式」。
+     * 标记打在模式栏节点上——同一个节点只点一次，避免点击无效时与 MutationObserver 互刷；
+     * Vue 重建出的新节点没有标记，仍可再点。
+     */
+    const ensureHaloMetaMode = () => {
+        const wrap = getWrap()
+        if (!wrap) return false
+        let clicked = false
+        wrap.querySelectorAll('.tk-meta-mode-buttons').forEach((bar) => {
+            if (bar._haloSwitched) return
+            const otherBtn = Array.from(bar.querySelectorAll('button'))
+                .find((b) => !b.classList.contains('tk-heoid-mode-btn'))
+            if (!otherBtn) return
+            bar._haloSwitched = true
+            otherBtn.click()
+            clicked = true
+        })
+        return clicked
     }
 
     /** 复用 HeoID 按钮样式：只改文案 + 跳转本站登录；已登录则隐藏该入口 */
@@ -76,7 +243,7 @@
         if (!wrap) return
 
         const cfg = (GLOBAL_CONFIG && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.twikoo) || {}
-        const user = GLOBAL_CONFIG && GLOBAL_CONFIG.user
+        const user = haloUser()
         const loginText = cfg.loginText || '使用本站账号登录发表评论'
         const loginUrl = cfg.loginUrl || '/login'
 
@@ -91,15 +258,18 @@
             })
         }
 
+        if (user && user.loggedIn) {
+            // 已登录：tk-send 只在 metaMode !== 'default' 时渲染，必须把身份切到「其他方式」。
+            // 主路径走 forceHaloMetaMode（直接调组件，扛得住 initMeta 的异步重置），
+            // 这里补一次 DOM 点击兜底。切不过去就保留模式栏，让访客仍可手动选，不要把路堵死。
+            if (!forceHaloMetaMode()) ensureHaloMetaMode()
+            return
+        }
+
         const btn = wrap.querySelector('.tk-heoid-mode-btn')
         if (!btn) return
 
         const modeBar = btn.closest('.tk-meta-mode-buttons') || btn.parentElement
-
-        if (user && user.loggedIn) {
-            if (modeBar) modeBar.style.display = 'none'
-            return
-        }
 
         if (modeBar && modeBar.style.display === 'none') modeBar.style.display = ''
 
@@ -139,6 +309,7 @@
         applyHaloUserToTwikoo()
         patchHaloLoginButton()
         renderAdminTools()
+        overrideOwnCommentAvatar()
         autoSkipModeConfirm()
         typeof Prism === 'object' && Prism.highlightAll()
         if (typeof $ === 'function') {
@@ -224,7 +395,9 @@
         }
         wrap.classList.add('tk-halo-admin')
         wrap.querySelectorAll('.tk-comment[id]').forEach(card => {
-            if (card.querySelector(':scope > .tk-halo-comment-admin')) return
+            // 防重必须按「任意后代」查：按钮挂进了 .tk-extras-row，用 :scope > 查永远命中不了，
+            // 结果就是每次 enhance() 都再插一个。
+            if (card.querySelector('.tk-halo-comment-admin')) return
             const btn = document.createElement('button')
             btn.type = 'button'
             btn.className = 'tk-halo-comment-admin'
@@ -236,7 +409,35 @@
                 e.stopPropagation()
                 deleteComment(card.id, btn, card)
             })
-            card.appendChild(btn)
+            // 挂在底部信息行（系统/浏览器标签那一行）右端，跟「举报」图标排在一起。
+            // 原来的做法是绝对定位到卡片右上角，正好压在点赞/回复按钮上。
+            // 真实评论必然带 os/browser，.tk-extras-row 一定存在；兜底才退回卡片根节点。
+            const host = card.querySelector('.tk-extras-row') || card
+            host.appendChild(btn)
+        })
+    }
+
+    /**
+     * 评论头像由服务端拿 mail 的 md5 去 gravatar 取（COMMENT_SUBMIT 请求体里没有 avatar 字段），
+     * 所以登录用户即使填了邮箱，列表里也未必显示自己的 Halo 头像。
+     * 这里在渲染后把「当前登录用户自己」的评论头像换回 Halo 头像：按昵称匹配，
+     * 并排除机器人评论（isBotComment 的昵称也可能撞车）。
+     */
+    const overrideOwnCommentAvatar = () => {
+        const user = haloUser()
+        if (!user || !user.loggedIn || !user.avatar) return
+        const wrap = getWrap()
+        if (!wrap) return
+        const nick = String(user.displayName || user.name || '').trim()
+        if (!nick) return
+
+        wrap.querySelectorAll('.tk-comment').forEach(card => {
+            if (card.querySelector('.tk-bot-icon')) return
+            const nameEl = card.querySelector('.tk-meta-head .tk-nick, .tk-meta-head .tk-nick-link')
+            if (!nameEl || nameEl.textContent.trim() !== nick) return
+            const img = card.querySelector('img.tk-avatar-img')
+            if (!img || img.src === user.avatar) return
+            img.src = user.avatar
         })
     }
 
@@ -269,7 +470,13 @@
 
     const watchTwikoo = (retry) => {
         ensureObserver()
-        if (!observedWrap && retry > 0) setTimeout(() => watchTwikoo(retry - 1), 200)
+        // twikoo.init() 会把 #twikoo-wrap 替换成 #twikoo。若首帧就 observer 到了占位节点，
+        // 替换后它变成游离节点、不会再有 mutation —— 只看 observedWrap 非空会让重试提前结束，
+        // 这里改成「observer 还没落在真正的 #twikoo 上」才继续重试。
+        const mounted = document.getElementById('twikoo')
+        if (retry > 0 && !(mounted && observedWrap === mounted)) {
+            setTimeout(() => watchTwikoo(retry - 1), 200)
+        }
     }
 
     /** 兜底：按钮已出现但 observer 尚未接管时的点击拦截 */
@@ -280,7 +487,7 @@
             const btn = e.target && e.target.closest && e.target.closest('.tk-heoid-mode-btn')
             if (!btn) return
             const cfg = (GLOBAL_CONFIG && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.twikoo) || {}
-            const user = GLOBAL_CONFIG && GLOBAL_CONFIG.user
+            const user = haloUser()
             if (user && user.loggedIn) return
             e.preventDefault()
             e.stopPropagation()
@@ -292,6 +499,8 @@
     const init = () => {
         clearHeoID()
         observedWrap = null
+        // 先播种 Halo 身份：Twikoo 挂载时的 initMeta() 只读一次 localStorage
+        seedHaloMeta()
         try { twikoo.destroy && twikoo.destroy() } catch (e) {}
         twikoo.init({
             el: '#twikoo-wrap',

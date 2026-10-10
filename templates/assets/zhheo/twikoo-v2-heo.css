@@ -1271,6 +1271,38 @@ to { opacity: 1
   height: 32px;
   width: 32px;
 }
+
+/* 站点已登录：昵称/邮箱/网站三项全部由 Halo 账号带出并锁定（见 js/comment/twikoo.js 的
+   seedHaloMeta + relaxMetaValidation），整行隐藏，只留头像 + 身份提示。
+   注意：tk-send 只在 metaMode !== 'default' 时渲染，所以登录态必须切到「其他方式」。 */
+#twikoo.tk-halo-user .tk-meta-input-wrapper {
+  display: none !important;
+}
+
+/* 隐藏「切换」按钮：它调 switchToDefault() 把 mode 切回 default，
+   而 js 的 forceHaloMetaMode() 会立刻强制切回 other，点下去等于没反应。
+   登录态身份已由 Halo 账号接管，本来也没有可切换的对象。 */
+#twikoo.tk-halo-user .tk-meta-actions-bar > button.tk-btn:not(.tk-send):not(.tk-cancel) {
+  display: none !important;
+}
+
+#twikoo.tk-halo-user .tk-meta-input::after {
+  content: "以 " attr(data-halo-nick) " 的身份发表评论";
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--heo-card-bg);
+  border: var(--style-border-always);
+  color: var(--heo-secondtext);
+  font-size: 13px;
+  /* 块级 + line-height 居中：text-overflow 只对块容器的行内内容生效 */
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tk-meta-input-wrapper {
   position: relative;
   display: flex;
@@ -2389,6 +2421,15 @@ to {
 .twikoo .tk-tag-with-icon,
 .twikoo .tk-tag-purple {
   padding: 2px 8px 2px 6px !important;
+}
+
+/* zhheoblog.css 遗留的 `.tk-tag { transform: translateY(-2px) }` 是 Twikoo 1.x 行内标签微调，
+   在 2.x 的 .tk-meta-head（overflow-y: hidden，用于横向滚动隐藏滚动条）里会把
+   「首评」等标签顶部裁掉一截，这里在 2.x 语境下复位。 */
+.twikoo .tk-meta-head .tk-tag,
+.twikoo .tk-meta-head tk-heo-twikoo-tip .tk-tag,
+.twikoo .tk-meta .tk-tag {
+  transform: none !important;
 }
 
 .twikoo .tk-tag-green,

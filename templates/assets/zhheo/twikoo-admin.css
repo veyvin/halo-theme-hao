@@ -5,22 +5,43 @@
     position: relative;
 }
 
-#twikoo .tk-halo-comment-admin {
+/* 常态（挂在 .tk-extras-row 末尾）：跟着系统/浏览器标签那一行走，
+   和「举报」图标排在一起，不再压住卡片右上角的点赞/回复按钮。 */
+#twikoo .tk-extras-row > .tk-halo-comment-admin {
+    position: static;
+    flex-shrink: 0;
+    align-self: center;
+    margin-left: 8px;
+    opacity: 0.55;
+    width: 24px;
+    height: 24px;
+}
+
+#twikoo .tk-comment:hover .tk-extras-row > .tk-halo-comment-admin,
+#twikoo .tk-halo-comment-admin:focus-visible {
+    opacity: 1;
+}
+
+/* 兜底：.tk-extras-row 不存在时仍挂在卡片根节点，保持绝对定位但挪到右下角空白处 */
+#twikoo .tk-comment > .tk-halo-comment-admin {
     position: absolute;
-    top: 10px;
     right: 10px;
+    bottom: 10px;
     z-index: 3;
+}
+
+#twikoo .tk-halo-comment-admin {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
     padding: 0;
     border: 1px solid var(--heo-border-color, rgba(0, 0, 0, 0.08));
     border-radius: 50%;
     background: var(--heo-white-color, #fff);
     color: var(--heo-gray-color, #909399);
     cursor: pointer;
+    width: 28px;
+    height: 28px;
     opacity: 0;
     transition: opacity 0.2s, color 0.2s, background-color 0.2s;
 }
@@ -68,8 +89,11 @@
         opacity: 1;
         width: 26px;
         height: 26px;
-        top: 8px;
+    }
+
+    #twikoo .tk-comment > .tk-halo-comment-admin {
         right: 8px;
+        bottom: 8px;
     }
 }
 
