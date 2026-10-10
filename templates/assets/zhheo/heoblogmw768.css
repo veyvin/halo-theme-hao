@@ -1,56 +1,213 @@
 /* ==========================================================================
-   移动端样式 —— 对齐 blog.zhheo.com
-   --------------------------------------------------------------------------
-   置于 zhheoblog.css / custom.css 之后加载，移动端规则拥有最终决定权；
-   2026-10-08 重构：文章卡片改为单列大卡片（原双列网格），对齐 zhheo.com。
+   移动端样式 —— 置于 zhheoblog.css / custom.css 之后，拥有最终决定权
    ========================================================================== */
 
-/* ---------------- 首页文章卡片 ---------------- */
+/* ---------------- 首页文章卡片：清掉桌面 absolute / 固定高度 ---------------- */
 
-/* 封面图跟随卡片圆角 */
-#recent-posts > .recent-post-item .post_cover img.post_bg {
-    border-radius: 0 !important;
+#recent-posts {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 0 16px !important;
 }
 
-/* 信息区高度自适应（单列大卡片，不再固定裁切） */
-#recent-posts > .recent-post-item > .recent-post-info {
+#recent-posts > .recent-post-item {
+    display: flex !important;
+    flex-direction: column !important;
     height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 18px !important;
+    overflow: hidden;
+    background: var(--heo-card-bg) !important;
+    border: 1px solid var(--heo-card-border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* 时间回到正常文档流（不再绝对定位到右上角） */
+#recent-posts > .recent-post-item .post_cover {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+    order: 1 !important;
+    border-radius: 0 !important;
+    overflow: hidden;
+}
+
+#recent-posts > .recent-post-item .post_cover img.post_bg,
+#recent-posts > .recent-post-item .post_cover .post_bg.post_art_bg {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    border-radius: 0 !important;
+    transform: none !important;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: 100% !important;
+    order: 2 !important;
+    padding: 14px 16px 14px !important;
+    gap: 0;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top {
+    position: static !important;
+    top: auto !important;
+    padding: 0 !important;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top-tips {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0 !important;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top-tips .original,
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top-tips .lastestpost {
+    font-size: 12px;
+    color: var(--heo-secondtext);
+    margin: 0;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info .article-title,
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top .article-title {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 1.05rem !important;
+    line-height: 1.45 !important;
+    font-weight: 700;
+    color: var(--heo-fontcolor);
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+/* 移动端文章卡片不显示摘要 content */
+#recent-posts > .recent-post-item > .recent-post-info .content,
+#recent-posts > .recent-post-item > .recent-post-info .recent-post-info-top .content {
+    display: none !important;
+}
+
+/* 元信息：取消 absolute，放在摘要下方 */
+#recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap {
+    position: static !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 12px !important;
+    padding: 10px 0 0 !important;
+    border-top: 1px solid var(--heo-card-border);
+    white-space: nowrap;
+    font-size: 12px !important;
+    color: var(--heo-secondtext);
+}
+
+#recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-comment {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .article-meta.tags {
+    display: none !important;
+}
+
+#recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap .post-meta-date {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center;
+    margin-left: auto;
+    text-align: right;
+}
+
 #recent-posts > .recent-post-item > .recent-post-info > .article-meta-wrap time {
     position: static !important;
+    display: inline !important;
+    right: auto !important;
 }
 
-/* ---------------- 首页轮播：淡入淡出堆叠 → 横向 scroll-snap 卡片 ---------------- */
+#recent-posts > .recent-post-item .unvisited-post {
+    display: none !important;
+}
+
+#recent-posts > .recent-post-item .sticky-warp {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ---------------- 走马灯：整卡滑动 + 标题不截断 ---------------- */
+
+#home_top {
+    padding: 0 16px !important;
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
+}
 
 #home_center {
-    padding: 0 1rem;
-    margin-top: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.home-center {
+    border-radius: 18px !important;
+    overflow: hidden;
 }
 
 .home-center-content {
-    height: auto;
+    display: block !important;
+    height: auto !important;
     overflow: hidden;
     border-radius: 18px;
+}
+
+.home-center-right {
+    display: none !important;
 }
 
 .home-center-left {
     position: relative;
     width: 100%;
     overflow: hidden;
+    border-radius: 18px;
 }
 
-/* 基础样式里 .home-center-banner-item 是 position:absolute + opacity:0 的堆叠结构。
-   只放开 opacity 会让全部卡片纵向平铺（实测容器高度 222px → 1293px），
-   必须同时把容器改为 flex 横向排列、把 item 改为 position:relative。 */
 .home-center-banner {
-    display: flex;
-    height: 200px;
-    min-height: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    border-radius: 18px;
+    position: relative !important;
+    display: flex !important;
+    height: min(52vw, 220px) !important;
+    min-height: 180px !important;
+    max-height: 240px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-radius: 18px !important;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -58,83 +215,129 @@
 }
 
 .home-center-banner::-webkit-scrollbar {
-    /* 无障碍：隐藏滚动条改为细条而非 display:none，保持可用性 */
     width: 0;
     height: 0;
 }
 
 .home-center-banner-item {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    min-width: 100%;
-    padding: 16px;
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
     flex-shrink: 0;
     scroll-snap-align: start;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    overflow: hidden;
 }
 
 .home-center-banner-item::after {
-    display: none;
+    display: none !important;
 }
 
-.home-center-cover {
-    width: 100%;
-    max-width: 100%;
+.home-center-cover,
+.home-center-cover-img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover;
+    display: block;
 }
 
 .home-center-banner-item.has-banner-cover .home-center-cover-img {
-    object-position: 70% center;
+    object-position: center;
 }
 
-/* 标题浮在卡片左下角，避免横向滑动时被切掉 */
-.home-center-left .home-center-title {
-    bottom: 1rem;
-    left: 1rem;
-    width: calc(100% - 2rem);
-    max-width: calc(100% - 2rem);
+.home-center-mask {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.55) 100%) !important;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 标题叠在当前可见区域底部：最多两行，左右留白 */
+.home-center-left .home-center-title,
+.home-center-title {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 3;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 20px 16px 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    background: none !important;
     pointer-events: none;
 }
 
-.home-center-left .home-center-title a {
-    display: block;
-    font-size: 18px;
-    line-height: unset;
-    -webkit-line-clamp: unset;
-    line-clamp: unset;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    pointer-events: none;
-}
-
-.home-center-title a {
-    font-size: 1.2rem;
+.home-center-left .home-center-title a,
+.home-center-title > a {
+    display: block !important;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 1.05rem !important;
+    line-height: 1.35 !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    text-decoration: none;
     pointer-events: auto;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* 标题上方标签在移动端隐藏，但改用 visibility（而非 display:none）保持可聚焦性，辅助无障碍 */
+.home-center-left .home-center-title a span,
+.home-center-title > a > span {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    overflow: hidden !important;
+    white-space: normal !important;
+    text-overflow: unset !important;
+    word-break: break-word;
+}
+
+.home-center-title-bottom {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px;
+    width: 100%;
+}
+
 .home-center-title-tag {
-    display: none;
-    visibility: hidden;
+    display: none !important;
 }
 
 .home-center-indicators {
-    margin-top: 10px;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    margin: 0 !important;
+    pointer-events: auto;
 }
 
 .home-center-indicator {
-    width: 6px;
-    height: 6px;
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.45) !important;
 }
 
 .home-center-indicator.active {
-    width: 20px;
+    width: 18px !important;
+    background: #fff !important;
 }
 
-/* ---------------- 分类栏：靠横向滚动浏览，隐藏「更多」与箭头 ---------------- */
+/* ---------------- 分类栏 ---------------- */
 
 .category-bar-items {
     gap: 6px;
@@ -152,21 +355,32 @@
     display: none;
 }
 
-/* ---------------- 通用：移动端隐藏不适用的浮层 ---------------- */
+/* ---------------- 通用浮层 ---------------- */
 
-/* 右侧悬浮按钮（主题定制，参考站无此元素） */
+/* 右下角悬浮按钮：移动端恢复显示（原先被 display:none 隐藏） */
 #rightside {
-    display: none;
+    display: block !important;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 110;
 }
 
-/* 自定义背景图在移动端不再铺满 */
+#rightside > div > a,
+#rightside > div > button {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* 移动端无侧栏，隐藏「双栏切换」 */
+#rightside #hide-aside-btn {
+    display: none !important;
+}
+
 #web_bg {
     background: 0 0 !important;
-}
-
-/* 助手/客服浮标 */
-.needEndHide {
-    display: none !important;
 }
 
 /* ---------------- 文章页 ---------------- */
@@ -188,13 +402,11 @@
     justify-content: center;
 }
 
-/* 正文排版：移动端加大标题字号与段距 */
 #article-container.post-content h2 {
     font-size: 28px;
     margin-top: 2rem;
 }
 
-/* 去掉正文链接的横向内边距，避免长链接撑破屏幕 */
 #article-container a {
     padding: 0;
 }

@@ -153,21 +153,43 @@ var btf = {
     },
 
     snackbarShow: (text, showActionFunction = false, duration = 2000, actionText = false) => {
-        const { position, bgLight, bgDark } = GLOBAL_CONFIG.Snackbar;
+        if (!text) return;
+        const cfg = (typeof GLOBAL_CONFIG !== 'undefined' && GLOBAL_CONFIG.Snackbar) ? GLOBAL_CONFIG.Snackbar : {};
+        const position = cfg.position || 'top-center';
+        const bgLight = cfg.bgLight || '#49b1f5';
+        const bgDark = cfg.bgDark || '#1f1f1f';
         const bg = document.documentElement.getAttribute("data-theme") === "light" ? bgLight : bgDark;
-        const root = document.querySelector(":root");
-        root.style.setProperty("--heo-snackbar-time", duration + "ms");
 
-        Snackbar.show({
-            text: text,
-            backgroundColor: bg,
-            onActionClick: showActionFunction,
-            actionText: actionText,
-            showAction: actionText,
-            duration: duration,
-            pos: position,
-            customClass: "snackbar-css",
-        });
+        if (typeof Snackbar !== 'undefined') {
+            const root = document.querySelector(":root");
+            if (root) root.style.setProperty("--heo-snackbar-time", duration + "ms");
+            Snackbar.show({
+                text: text,
+                backgroundColor: bg,
+                onActionClick: showActionFunction,
+                actionText: actionText,
+                showAction: !!actionText,
+                duration: duration,
+                pos: position,
+                customClass: "snackbar-css",
+            });
+            return;
+        }
+
+        // 库未加载时的兜底提示（避免复制成功等操作无反馈）
+        let tip = document.getElementById('hao-toast-fallback');
+        if (!tip) {
+            tip = document.createElement('div');
+            tip.id = 'hao-toast-fallback';
+            tip.setAttribute('role', 'status');
+            tip.style.cssText = 'position:fixed;left:50%;top:24px;transform:translateX(-50%);z-index:99999;padding:10px 16px;border-radius:8px;color:#fff;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.18);pointer-events:none;opacity:0;transition:opacity .2s';
+            document.body.appendChild(tip);
+        }
+        tip.textContent = text;
+        tip.style.background = bg;
+        tip.style.opacity = '1';
+        clearTimeout(tip._haoTimer);
+        tip._haoTimer = setTimeout(function () { tip.style.opacity = '0'; }, duration);
     },
 
     initJustifiedGallerys: function (selector) {

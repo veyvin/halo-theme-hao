@@ -15,6 +15,7 @@ function coverColor() {
     if (path !== undefined) {
 
         // 获取颜色 https://github.com/fast-average-color/fast-average-color
+        if (typeof FastAverageColor === 'undefined') return;
         const fac = new FastAverageColor();
 
         fac.getColorAsync(path, {
@@ -602,7 +603,8 @@ function listenToPageInputPress() {
 function initBlog() {
     // 图片主色
     GLOBAL_CONFIG.source.post.dynamicBackground && coverColor(),
-    GLOBAL_CONFIG.rightMenuEnable && addRightMenuClickEvent(),
+    // 右键菜单由 rightmenu.js 自行绑定；此处仅作兼容兜底，避免未加载时抛 ReferenceError
+    GLOBAL_CONFIG.rightMenuEnable && typeof addRightMenuClickEvent === 'function' && addRightMenuClickEvent(),
         percent(),
         listenToPageInputPress(),
         setBodyDataType(),

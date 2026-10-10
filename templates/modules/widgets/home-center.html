@@ -48,24 +48,25 @@
                             </div>
                         </th:block>
                     </th:block>
-                    <div class="home-center-title">
-                        <a id="home-center-active-link"
-                           th:href="@{${firstPost.status.permalink}}"
-                           th:attr="onclick='heo.handlePostClick(\'' + @{${firstPost.status.permalink}} + '\', event)'">
-                            <span th:text="${firstPost.spec.title}"></span>
-                        </a>
-                        <div class="home-center-title-bottom">
-                            <div class="home-center-title-tag">
-                                <i class="banner-icon haofont hao-icon-star-smile-fill"></i>
-                                <span th:text="${tagText}"></span>
-                            </div>
-                            <div class="home-center-indicators">
-                                <span class="home-center-indicator"
-                                      th:each="item,iter : ${homeCenterItems}"
-                                      th:classappend="${iter.index == 0 ? ' active' : ''}"
-                                      th:if="${not #strings.isEmpty(item.post)}"
-                                      th:attr="data-index=${iter.index}"></span>
-                            </div>
+                </div>
+                <!-- 标题放在 banner 外：移动端横向滑动时不会被当成额外一页 -->
+                <div class="home-center-title">
+                    <a id="home-center-active-link"
+                       th:href="@{${firstPost.status.permalink}}"
+                       th:attr="onclick='heo.handlePostClick(\'' + @{${firstPost.status.permalink}} + '\', event)'">
+                        <span th:text="${firstPost.spec.title}"></span>
+                    </a>
+                    <div class="home-center-title-bottom">
+                        <div class="home-center-title-tag">
+                            <i class="banner-icon haofont hao-icon-star-smile-fill"></i>
+                            <span th:text="${tagText}"></span>
+                        </div>
+                        <div class="home-center-indicators">
+                            <span class="home-center-indicator"
+                                  th:each="item,iter : ${homeCenterItems}"
+                                  th:classappend="${iter.index == 0 ? ' active' : ''}"
+                                  th:if="${not #strings.isEmpty(item.post)}"
+                                  th:attr="data-index=${iter.index}"></span>
                         </div>
                     </div>
                 </div>

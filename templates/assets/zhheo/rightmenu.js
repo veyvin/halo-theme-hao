@@ -202,33 +202,36 @@ rm.switchDarkMode = function () {
 }
 
 rm.copyUrl = function (id) {
-    $("body").after("<input id='copyVal'></input>");
     var text = id;
-    var input = document.getElementById("copyVal");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(function () {
+            var input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, input.value.length);
+            document.execCommand("copy");
+            input.remove();
+        });
+        return;
+    }
+    var input = document.createElement('input');
     input.value = text;
+    document.body.appendChild(input);
     input.select();
     input.setSelectionRange(0, input.value.length);
     document.execCommand("copy");
-    $("#copyVal").remove();
+    input.remove();
 }
 
 function stopMaskScroll() {
-    if (document.getElementById("rightmenu-mask")) {
-        let xscroll = document.getElementById("rightmenu-mask");
-        xscroll.addEventListener("mousewheel", function (e) {
-            //阻止浏览器默认方法
-            rm.hideRightMenu();
-            // e.preventDefault();
-        }, false);
-    }
-    if (document.getElementById("rightMenu")) {
-        let xscroll = document.getElementById("rightMenu");
-        xscroll.addEventListener("mousewheel", function (e) {
-            //阻止浏览器默认方法
-            rm.hideRightMenu();
-            // e.preventDefault();
-        }, false);
-    }
+    if (window.__haoRightMenuWheelBound) return;
+    window.__haoRightMenuWheelBound = true;
+    var onWheel = function () { rm.hideRightMenu(); };
+    var opts = { passive: true, capture: true };
+    document.addEventListener("wheel", function (e) {
+        if (e.target && (e.target.closest('#rightmenu-mask') || e.target.closest('#rightMenu'))) onWheel();
+    }, opts);
 }
 
 rm.rightmenuCopyText = function (txt) {
@@ -241,7 +244,9 @@ rm.rightmenuCopyText = function (txt) {
 rm.copyPageUrl = function () {
     var url = window.location.href;
     rm.copyUrl(url);
-    btf.snackbarShow('复制本页链接地址成功', false, 2000);
+    if (window.btf && typeof btf.snackbarShow === 'function') {
+        btf.snackbarShow('复制本页链接地址成功', false, 2000);
+    }
     rm.hideRightMenu();
 }
 
@@ -347,58 +352,53 @@ rm.copyLink = function () {
 }
 
 function addRightMenuClickEvent() {
-    // 添加点击事件
-    $('#menu-backward').on('click', function () {
-        window.history.back();
+    if (window.__haoRightMenuClickBound) return;
+    window.__haoRightMenuClickBound = true;
+    // 委托到 document：pjax 换掉菜单节点后点击仍有效
+    var on = function (sel, fn) {
+        document.addEventListener('click', function (e) {
+            var el = e.target && e.target.closest && e.target.closest(sel);
+            if (!el) return;
+            fn(e, el);
+        });
+    };
+    on('#menu-backward', function () { window.history.back(); rm.hideRightMenu(); });
+    on('#menu-forward', function () { window.history.forward(); rm.hideRightMenu(); });
+    on('#menu-refresh', function () { window.location.reload(); });
+    on('#menu-top', function () {
+        if (window.btf && typeof btf.scrollToDest === 'function') btf.scrollToDest(0, 500);
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
         rm.hideRightMenu();
     });
-    $('#menu-forward').on('click', function () {
-        window.history.forward();
-        rm.hideRightMenu();
-    });
-    $('#menu-refresh').on('click', function () {
-        window.location.reload();
-    });
-    $('#menu-top').on('click', function () {
-        btf.scrollToDest(0, 500);
-        rm.hideRightMenu();
-    });
-    $('.menu-link').on('click', rm.hideRightMenu);
-    $('#menu-home').on('click', function () {
-        window.location.href = window.location.origin;
-    });
-    $('#menu-randomPost').on('click', function () {
-        toRandomPost()
-    });
-    $('#menu-commentBarrage').on('click', heo.switchCommentBarrage);
-    $('#rightmenu-mask').on('click', rm.hideRightMenu);
-    $('#rightmenu-mask').contextmenu(function () {
-        rm.hideRightMenu();
-        return false;
-    });
-    $('#menu-copy').on('click', rm.copyPageUrl);
-    $('#menu-pastetext').on('click', rm.pasteText);
-    $('#menu-copytext').on('click', function () {
+    on('.menu-link', function () { rm.hideRightMenu(); });
+    on('#menu-home', function () { window.location.href = window.location.origin; });
+    on('#menu-randomPost', function () { typeof toRandomPost === 'function' && toRandomPost(); });
+    on('#menu-commentBarrage', function () { typeof heo !== 'undefined' && heo.switchCommentBarrage(); });
+    on('#rightmenu-mask', function () { rm.hideRightMenu(); });
+    on('#menu-copy', function () { rm.copyPageUrl(); });
+    on('#menu-pastetext', function () { rm.pasteText(); });
+    on('#menu-copytext', function () {
         rm.rightmenuCopyText(selectTextNow);
         btf.snackbarShow('复制成功，复制和转载请标注本文地址');
     });
-    $('#menu-commenttext').on('click', function () {
-        rm.rightMenuCommentText(selectTextNow);
+    on('#menu-commenttext', function () { rm.rightMenuCommentText(selectTextNow); });
+    on('#menu-newwindow', function () { window.open(domhref); rm.hideRightMenu(); });
+    on('#menu-copylink', function () { rm.copyLink(); });
+    on('#menu-downloadimg', function () { heo.downloadImage(domImgSrc, 'hao'); });
+    on('#menu-newwindowimg', function () { window.open(domImgSrc, "_blank"); rm.hideRightMenu(); });
+    on('#menu-copyimg', function () { rm.writeClipImg(domImgSrc); });
+    on('#menu-searchBaidu', function () { rm.searchBaidu(); });
+    document.addEventListener('contextmenu', function (e) {
+        if (e.target && e.target.closest && e.target.closest('#rightmenu-mask')) {
+            e.preventDefault();
+            rm.hideRightMenu();
+        }
     });
-    $('#menu-newwindow').on('click', function () {
-        window.open(domhref);
-        rm.hideRightMenu();
-    });
-    $('#menu-copylink').on('click', rm.copyLink);
-    $('#menu-downloadimg').on('click', function () {
-        heo.downloadImage(domImgSrc, 'hao');
-    });
-    $('#menu-newwindowimg').on('click', function () {
-        window.open(domImgSrc, "_blank");
-        rm.hideRightMenu();
-    });
-    $('#menu-copyimg').on('click', function () {
-        rm.writeClipImg(domImgSrc);
-    });
-    $('#menu-searchBaidu').on('click', rm.searchBaidu);
+}
+
+// 自身初始化：不依赖 blogex.js 的 defer 执行顺序（blogex 在文档中更靠前时会先跑 initBlog）
+if (document.readyState !== 'loading') {
+    addRightMenuClickEvent();
+} else {
+    document.addEventListener('DOMContentLoaded', addRightMenuClickEvent);
 }

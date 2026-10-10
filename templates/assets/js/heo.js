@@ -272,17 +272,16 @@ var heo = {
 
     // 二维码
     qrcodeCreate: function () {
-        if (document.getElementById('qrcode')) {
-            document.getElementById("qrcode").innerHTML = "";
-            var qrcode = new QRCode(document.getElementById("qrcode"), {
-                text: window.location.href,
-                width: 250,
-                height: 250,
-                colorDark: "#000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
+        if (!document.getElementById('qrcode') || typeof QRCode === 'undefined') return;
+        document.getElementById("qrcode").innerHTML = "";
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 250,
+            height: 250,
+            colorDark: "#000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
     },
 
     // 刷新即刻短文瀑布流（masonry-layout 替代已停更的 waterfall.js）

@@ -24,13 +24,14 @@ if(GLOBAL_CONFIG.htmlType!='comments' && document.querySelector('#post-comment')
     var commentInterval = null;
     var hoverOnCommentBarrage = false;
 
-    $(".comment-barrage").hover(function () {
-        hoverOnCommentBarrage = true;
-        //console.log("热评悬浮");
-    }, function () {
-        hoverOnCommentBarrage = false;
-        //console.log("停止悬浮");
-    });
+    function bindCommentBarrageHover() {
+        if (typeof window.jQuery === 'undefined') return;
+        $(".comment-barrage").hover(function () {
+            hoverOnCommentBarrage = true;
+        }, function () {
+            hoverOnCommentBarrage = false;
+        });
+    }
 
     function initCommentBarrage() {
         //console.log("开始创建热评")
@@ -224,21 +225,27 @@ if(GLOBAL_CONFIG.htmlType!='comments' && document.querySelector('#post-comment')
         }, 1000)
     }
 
-    initCommentBarrage();
+    function bootCommentBarrage() {
+        if (typeof window.jQuery === 'undefined') {
+            document.addEventListener('DOMContentLoaded', bootCommentBarrage, { once: true });
+            return;
+        }
+        bindCommentBarrageHover();
+        initCommentBarrage();
 
-    if (localStorage.getItem('commentBarrageSwitch') !== 'false') {
-        $(".comment-barrage").show();
-        $(".menu-commentBarrage-text").text("关闭热评");
-        document.querySelector("#consoleCommentBarrage").classList.add("on");
-
-    } else {
-        $(".comment-barrage").hide();
-        $(".menu-commentBarrage-text").text("显示热评");
-        document.querySelector("#consoleCommentBarrage").classList.remove("on");
-
-
+        var consoleBarrage = document.querySelector("#consoleCommentBarrage");
+        if (localStorage.getItem('commentBarrageSwitch') !== 'false') {
+            $(".comment-barrage").show();
+            $(".menu-commentBarrage-text").text("关闭热评");
+            consoleBarrage && consoleBarrage.classList.add("on");
+        } else {
+            $(".comment-barrage").hide();
+            $(".menu-commentBarrage-text").text("显示热评");
+            consoleBarrage && consoleBarrage.classList.remove("on");
+        }
     }
 
+    bootCommentBarrage();
 
     document.addEventListener('pjax:send', function () {
         clearInterval(commentInterval);

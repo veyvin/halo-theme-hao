@@ -12,47 +12,51 @@
     <!-- perf-1: DNS 预解析外部域名，减少首次外联耗时 -->
     <link rel="preconnect" th:href="${theme.config.comments.twikoos.envId}" th:if="${theme.config.comments.use == 'Twikoo' and not #strings.isEmpty(theme.config.comments.twikoos.envId)}" crossorigin>
     <link rel="preconnect" th:href="${'https://' + theme.config.comments.artalks.server}" th:if="${theme.config.comments.use == 'Artalk' and not #strings.isEmpty(theme.config.comments.artalks.server)}" crossorigin>
+    <!-- pjax 要求这些 meta 在所有页面数量一致（new/old 都为 1）；标签始终输出，内容可为空 -->
     <th:block th:if="${theme.config.basics.seo.enable_metadata}">
         <!-- 文章页 -->
-        <th:block th:if="${htmlType == 'post' && post != null}">
+        <th:block th:if="${htmlType == 'post' && post != null}"
+                  th:with="ogImg=${post.spec.cover ?: site.logo ?: theme.config.other.opengraph.image ?: ''}">
             <link rel="canonical" th:href="@{${site.url + post.status.permalink}}"/>
             <meta property="og:type" content="article"/>
             <meta property="og:title" th:content="${post.spec.title}"/>
             <meta property="og:url" th:content="${site.url + post.status.permalink}"/>
-            <meta property="og:description" th:content="${post.status.excerpt}"/>
-            <meta property="og:image" th:if="${post.spec.cover ?: site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${post.spec.cover ?: site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta property="og:description" th:content="${post.status.excerpt ?: ''}"/>
+            <meta property="og:image" th:content="${ogImg}"/>
             <meta name="twitter:card" content="summary_large_image"/>
             <meta name="twitter:title" th:content="${post.spec.title}"/>
-            <meta name="twitter:description" th:content="${post.status.excerpt}"/>
-            <meta name="twitter:image" th:if="${post.spec.cover ?: site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${post.spec.cover ?: site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta name="twitter:url" th:content="${site.url + post.status.permalink}"/>
+            <meta name="twitter:description" th:content="${post.status.excerpt ?: ''}"/>
+            <meta name="twitter:image" th:content="${ogImg}"/>
         </th:block>
         <!-- 独立页面（含自定义页面模板，变量为 singlePage） -->
-        <th:block th:if="${htmlType == 'page' && singlePage != null}">
+        <th:block th:if="${htmlType == 'page' && singlePage != null}"
+                  th:with="ogImg=${site.logo ?: theme.config.other.opengraph.image ?: ''}">
             <link rel="canonical" th:href="@{${site.url + singlePage.status.permalink}}"/>
             <meta property="og:type" content="article"/>
             <meta property="og:title" th:content="${singlePage.spec.title}"/>
             <meta property="og:url" th:content="${site.url + singlePage.status.permalink}"/>
-            <meta property="og:description" th:content="${singlePage.status.excerpt}"/>
-            <meta property="og:image" th:if="${site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta property="og:description" th:content="${singlePage.status.excerpt ?: ''}"/>
+            <meta property="og:image" th:content="${ogImg}"/>
             <meta name="twitter:card" content="summary_large_image"/>
             <meta name="twitter:title" th:content="${singlePage.spec.title}"/>
-            <meta name="twitter:description" th:content="${singlePage.status.excerpt}"/>
-            <meta name="twitter:image" th:if="${site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta name="twitter:url" th:content="${site.url + singlePage.status.permalink}"/>
+            <meta name="twitter:description" th:content="${singlePage.status.excerpt ?: ''}"/>
+            <meta name="twitter:image" th:content="${ogImg}"/>
         </th:block>
-        <!-- 站点级页面（首页 / 归档 / 分类 / 标签 / 作者）：只输出基础分享信息 -->
-        <th:block th:if="${htmlType != 'post' && !(htmlType == 'page' && singlePage != null)}">
+        <!-- 站点级页面（首页 / 归档 / 分类 / 标签 / 作者）：与文章页同一套 meta，避免 pjax 数量不一致 -->
+        <th:block th:if="${htmlType != 'post' && !(htmlType == 'page' && singlePage != null)}"
+                  th:with="ogImg=${site.logo ?: theme.config.other.opengraph.image ?: ''}">
             <meta property="og:type" content="website"/>
             <meta property="og:title" th:content="${siteTitle}"/>
-            <meta property="og:image" th:if="${site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta property="og:url" th:content="${site.url}"/>
+            <meta property="og:description" th:content="${site.subtitle ?: siteTitle}"/>
+            <meta property="og:image" th:content="${ogImg}"/>
             <meta name="twitter:card" content="summary_large_image"/>
             <meta name="twitter:title" th:content="${siteTitle}"/>
-            <meta name="twitter:image" th:if="${site.logo ?: theme.config.other.opengraph.image}"
-                  th:content="${site.logo ?: theme.config.other.opengraph.image}"/>
+            <meta name="twitter:url" th:content="${site.url}"/>
+            <meta name="twitter:description" th:content="${site.subtitle ?: siteTitle}"/>
+            <meta name="twitter:image" th:content="${ogImg}"/>
         </th:block>
     </th:block>
     <style th:if="${not #strings.isEmpty(theme.config.style.fontFamily)}" th:utext="|body{font-family:${theme.config.style.fontFamily}}|"></style>
@@ -61,6 +65,9 @@
 
     <!-- jQuery：defer 不阻塞解析；依赖方（blogex/rightmenu/main/console）均已改为 defer/DOMContentLoaded/load 回调内使用，顺序由 defer 保证 -->
     <script defer th:src="${assets_link + '/libs/jquery/jquery.min.js'}"></script>
+    <!-- tocbot 放 head：任意页首屏即就绪，避免首页 pjax 进文章时库未加载 -->
+    <script defer th:src="${assets_link + '/libs/tocbot/4.18.2/tocbot.min.js'}"></script>
+    <link rel="stylesheet" th:href="${assets_link + '/libs/tocbot/4.18.2/tocbot.css'}">
 
     <!-- perf-2: defer 非首屏关键脚本；首屏主题切换逻辑已内联在下方（带 heo 存在性守卫），defer 脚本就绪后会补调 initThemeColor -->
     <script defer th:src="${assets_link + '/js/heo.js' + theme_version}"></script>
@@ -96,18 +103,31 @@
     <!-- swiper 仅瞬间插件存在时加载（perf-5：未安装时 fallback 用 CSS 轮换，省 144KB+CSS） -->
     <link th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" rel="stylesheet" th:href="${assets_link + '/libs/swiper/swiper-bundle.min.css'}"/>
     
-    <!-- 右下角通知：仅开启隐私弹窗时加载 -->
-    <link th:if="${theme.config.tool.snackbar.switch}" th:href="${assets_link + '/libs/node-snackbar/snackbar.min.css'}"
+    <!-- 右下角通知样式：复制成功等 toast 依赖；与隐私弹窗开关解耦 -->
+    <link th:unless="${(theme.config.other.perf?.disableSnackbar) ?: false}"
+          th:href="${assets_link + '/libs/node-snackbar/snackbar.min.css'}"
           media="print"
           onload='this.media="all"'
           rel="stylesheet"
     />
 
-    <!-- perf-4: 代码高亮二选一：插件存在用 PluginPrismJS，否则用本地 prism（首页无 <pre 时省 ~850KB） -->
-    <th:block th:if="${(htmlType == 'post' && #strings.contains(post.content.content, '<pre')) ||
-                        (htmlType == 'page' && #strings.contains(singlePage.content.content, '<pre'))}">
-        <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
-        <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
+    <!-- perf-4: 代码高亮二选一。条件必须层层拆开：Halo 2.26 Reactive SpEL 对 || / && 可能两侧都求值，
+         #strings.contains(null) 会 500（/links）或截断 chunked HTML -->
+    <th:block th:if="${htmlType == 'post'}">
+        <th:block th:if="${not #strings.isEmpty(post?.content?.content)}">
+            <th:block th:if="${#strings.contains(post.content.content, '<pre')}">
+                <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
+                <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
+            </th:block>
+        </th:block>
+    </th:block>
+    <th:block th:if="${htmlType == 'page'}">
+        <th:block th:if="${not #strings.isEmpty(singlePage?.content?.content)}">
+            <th:block th:if="${#strings.contains(singlePage.content.content, '<pre')}">
+                <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
+                <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
+            </th:block>
+        </th:block>
     </th:block>
 
     <!-- 页脚内容-样式一 -->

@@ -1,5 +1,5 @@
-<!-- 右键菜单 -->
-<div class="js-pjax"  th:if="${theme.config.tool.rightMenu.rightMenuEnable}">
+<!-- 右键菜单：不要放进 .js-pjax，否则换页会换掉节点、点击事件丢失 -->
+<div th:if="${theme.config.tool.rightMenu.rightMenuEnable}">
     <div id="rightMenu">
         <div class="rightMenu-group rightMenu-small">
             <div class="rightMenu-item" id="menu-backward"><i class="haofont hao-icon-arrow-left"></i></div>
@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="rightMenu-group rightMenu-line rightMenuOther">
-            <a class="rightMenu-item menu-link" id="menu-randomPost" onclick="toRandomPost()">
+            <a class="rightMenu-item menu-link" id="menu-randomPost">
                 <i class="haofont hao-icon-shuffle"></i>
                 <span th:text="${#messages.msg('rightMenu.randomPost')}"></span>
             </a>

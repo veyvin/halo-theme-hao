@@ -1,5 +1,1 @@
-<!-- Tocbot 目录生成：仅文章页且启用目录时加载 -->
-<th:block th:if="${htmlType == 'post' and theme.config.post.toc.enable}">
-    <script defer th:src="${assets_link + '/libs/tocbot/4.18.2/tocbot.min.js'}"></script>
-    <link th:href="${assets_link + '/libs/tocbot/4.18.2/tocbot.css'}" rel="stylesheet">
-</th:block>
+<!-- tocbot 已改到 modules/head.html 全站预加载；保留空片段以免 layout 引用报错 -->

@@ -18,9 +18,18 @@
     <script th:if="${pluginFinder.available('plugin-katex')}" defer=""
             src="/plugins/plugin-katex/assets/static/katex.min.js"></script>
     <!-- P0-3：custom.js 仅含自定义元素（hao-tabs/hao-grid/hao-collapse），按需加载 -->
-    <script defer th:if="${(htmlType == 'post' and #strings.contains(post.content.content, 'hao-')) or
-                          (htmlType == 'page' and #strings.contains(singlePage.content.content, 'hao-'))}"
-            th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
+    <th:block th:if="${htmlType == 'post'}">
+        <th:block th:if="${not #strings.isEmpty(post?.content?.content)}">
+            <script defer th:if="${#strings.contains(post.content.content, 'hao-')}"
+                    th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
+        </th:block>
+    </th:block>
+    <th:block th:if="${htmlType == 'page'}">
+        <th:block th:if="${not #strings.isEmpty(singlePage?.content?.content)}">
+            <script defer th:if="${#strings.contains(singlePage.content.content, 'hao-')}"
+                    th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
+        </th:block>
+    </th:block>
     <th:block th:if="${head != null}">
         <th:block th:replace="${head}"/>
     </th:block>
@@ -81,24 +90,28 @@
     </style>
 </th:block>
 
-<!-- perf-7: 随机文章只取最新 20 篇（原 listAll 全表查询，文章上千后每页都慢）。
-     判空必须放在 th:with 内部：th:if 先于 th:with 执行，同标签 th:with 定义的变量在 th:if 里不存在，
-     用 th:if 判空会恒为假，整个脚本不渲染，toRandomPost 变成未定义（导航/右键菜单/Shift+R 全挂） -->
+<!-- 随机文章：输出最新 50 篇 permalink，每次点击在前端随机（原先服务端写死 1 条导致永远跳同一篇） -->
 <script th:inline="javascript"
-        th:with="allPostList=${postFinder.list({page: 1, size: 20, sort: {'spec.publishTime,desc'}}).items},
-    randomIndex=${allPostList == null || #lists.isEmpty(allPostList) ? 0 : T(java.lang.Math).floor(T(java.lang.Math).random()*#lists.size(allPostList))},
-    postPermalink=${allPostList == null || #lists.isEmpty(allPostList) ? '/' : allPostList[randomIndex].status.permalink}"
->
+        th:with="randPosts=${postFinder.list({page: 1, size: 50, sort: {'spec.publishTime,desc'}}).items},
+                 randLinks=${randPosts != null ? randPosts.![status.permalink] : null}">
+    window.__haoRandomPosts = /*[[${randLinks}]]*/ [];
+    if (!Array.isArray(window.__haoRandomPosts)) window.__haoRandomPosts = [];
     function toRandomPost() {
-        // 随机跳转全站的一篇文章
-        let permalink = /*[[${postPermalink}]]*/ "/";
-
-        // 当前窗口打开
-        //window.location.href = permalink;
-        pjax.loadUrl(permalink);
-        // window.open(permalink);
+        var list = window.__haoRandomPosts;
+        if (!list.length) {
+            if (typeof pjax !== 'undefined' && pjax.loadUrl) pjax.loadUrl('/');
+            else window.location.href = '/';
+            return;
+        }
+        var cur = (window.location.pathname || '/').replace(/\/$/, '') || '/';
+        var pool = list.filter(function (p) {
+            return (String(p || '').replace(/\/$/, '') || '/') !== cur;
+        });
+        if (!pool.length) pool = list;
+        var permalink = pool[Math.floor(Math.random() * pool.length)];
+        if (typeof pjax !== 'undefined' && typeof pjax.loadUrl === 'function') pjax.loadUrl(permalink);
+        else window.location.href = permalink;
     }
-
 </script>
 
 <!-- 正文必须先于中控台/侧栏输出：后两者查询失败时会截断 HTML，否则整页白屏 -->
@@ -123,9 +136,23 @@
 <div th:replace="~{modules/widgets/right-menu}"/>
 
 <div>
+    <!-- 库脚本必须排在 blogex/commentBarrage 之前：defer 按文档顺序执行，
+         blogex 在 readyState=interactive 时会立刻 initBlog，晚加载的 QRCode/FAC/Snackbar 会未定义 -->
+    <!-- Snackbar 用于复制成功等提示；勿绑在隐私弹窗开关上，否则关闭隐私弹窗后所有 toast 失效 -->
+    <script defer th:unless="${(theme.config.other.perf?.disableSnackbar) ?: false}"
+            th:src="${assets_link + '/libs/node-snackbar/snackbar.min.js'}"></script>
+    <script defer data-pjax th:if="${htmlType == 'post'}" th:src="${assets_link + '/libs/qrcode/qrcode.min.js'}"></script>
+    <script defer data-pjax th:if="${htmlType == 'post' and theme.config.post.dynamicBackground}"
+            th:src="${assets_link + '/libs/fast-average-color/index.browser.min.js'}"></script>
+    <script defer th:if="${htmlType == 'moments'}" th:src="${assets_link + '/libs/masonry/masonry.pkgd.min.js'}"></script>
+    <script defer th:if="${isLazyload}" th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
+
     <script defer th:src="${assets_link + '/js/utils.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/halo.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/main.js' + theme_version}"></script>
+    <!-- 右键菜单须在 blogex.js 之前：二者均为 defer，按文档顺序执行；initBlog 会调用 addRightMenuClickEvent -->
+    <script defer th:if="${theme.config.tool.rightMenu.rightMenuEnable}"
+            th:src="${assets_link + '/zhheo/rightmenu.js' + theme_version}"></script>
     <script charset="utf-8" data-pjax defer th:src="${assets_link + '/zhheo/blogex.js' + theme_version}"></script>
     <script defer th:if="${theme.config.style.translate.translateEnable}" th:src="${assets_link + '/js/tw_cn.js' + theme_version}"></script>
     <!-- 预加载 https://github.com/GoogleChromeLabs/quicklink（替代 instant.page，viewport 内链接空闲预取） -->
@@ -156,11 +183,6 @@
             } catch (e) {}
         });
     </script>
-
-    <script defer th:if="${isLazyload}" th:src="${assets_link + '/libs/vanilla-lazyload/lazyload.iife.min.js'}"></script>
-
-    <!-- 右下角通知 https://www.polonel.com/snackbar/ -->
-    <script defer th:if="${theme.config.tool.snackbar.switch}" th:src="${assets_link + '/libs/node-snackbar/snackbar.min.js'}"></script>
     
     <div class="js-pjax">
         <!-- 动态标题 -->
@@ -176,18 +198,6 @@
     
     <canvas th:if="${theme.config.style.universe}" id="universe" width="1312" height="880"></canvas>
     <script th:if="${theme.config.style.universe}" async="" th:src="${assets_link + '/libs/canvas/dark.js'}"></script>
-    
-    <!-- https://davidshimjs.github.io/qrcodejs/ 生成二维码 -->
-    <!-- 仅文章页分享使用 -->
-    <script defer data-pjax th:if="${htmlType == 'post'}" th:src="${assets_link + '/libs/qrcode/qrcode.min.js'}" ></script>
-
-    <!-- 瀑布流 https://masonry.desandro.com/（替代已停更的 waterfall.js，仅 moments 页用到） -->
-    <script defer th:if="${htmlType == 'moments'}" th:src="${assets_link + '/libs/masonry/masonry.pkgd.min.js'}"></script>
-
-    <!-- 获取主色 https://lokeshdhakar.com/projects/color-thief/ -->
-    <!--<script th:src="@{/assets/libs/color-thief/color-thief.umd.js}"></script>-->
-    <script defer th:if="${htmlType == 'post' and theme.config.post.dynamicBackground}" th:src="${assets_link + '/libs/fast-average-color/index.browser.min.js'}"></script>
-
 
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
 
@@ -198,26 +208,20 @@
     <script defer th:if="${theme.config.top.moment && pluginFinder.available('PluginMoments')}" data-pjax
             th:src="${assets_link + '/libs/swiper/swiper-bundle.min.js'}"></script>
 
-    <!-- 右键菜单：defer，保证 jQuery（head defer）先执行 -->
-    <script defer th:if="${theme.config.tool.rightMenu.rightMenuEnable}"
-            th:src="${assets_link + '/zhheo/rightmenu.js'}"></script>
-    
-    <!-- 评论弹幕 -->
-    <script th:if="${ ( ( not #strings.isEmpty(theme.config.comments.twikoos.envId)  && not #strings.isEmpty(theme.config.comments.twikoos.accessToken) ) ||
+    <!-- 评论弹幕：必须 defer，排在 head 的 jQuery 之后执行，避免 $ is not defined -->
+    <script defer data-pjax th:if="${ ( ( not #strings.isEmpty(theme.config.comments.twikoos.envId)  && not #strings.isEmpty(theme.config.comments.twikoos.accessToken) ) ||
         ( not #strings.isEmpty(theme.config.comments.artalks.server) && not #strings.isEmpty(theme.config.comments.artalks.siteName)) ||
           (#strings.equals(theme.config.comments.use, 'Waline') && not #strings.isEmpty(theme.config.comments.walines.serverURL)) )
         && theme.config.comments.commentBarrageConfig.commentBarrageEnable
-        && theme.config.comments.commentsEnable}" data-pjax=""
-            th:src="${assets_link + '/zhheo/commentBarrage.js'}"></script>
+        && theme.config.comments.commentsEnable}"
+            th:src="${assets_link + '/zhheo/commentBarrage.js' + theme_version}"></script>
     
     <!-- Tocbot 目录生成 start -->
     <th:block th:replace="~{modules/common/toc-bot}"/>
     
     <script>
+        // 不把 og/twitter meta 列入 pjax：Halo 会在部分页额外注入 og:description，数量不一致会直接 switch fail
         let pjaxSelectors = ['title', '#config-diff', '#body-wrap', '#rightside-config-hide', '#rightside-config-show', '.js-pjax', '#site-config']
-        
-        pjaxSelectors.unshift('meta[property="og:type"]', 'meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]', 'meta[property="og:description"]'
-                , 'meta[name="twitter:title"]', 'meta[name="twitter:url"]', 'meta[name="twitter:description"]', 'meta[name="twitter:image"]')
         
         var pjax = new Pjax({
             elements: 'a:not([target="_blank"])',
@@ -240,44 +244,51 @@
         })
         
         document.addEventListener('pjax:complete', function () {
-            window.refreshFn()
-            
-            document.querySelectorAll('script[data-pjax]').forEach(item => {
-                            const newScript = document.createElement('script')
-                            const content = item.text || item.textContent || item.innerHTML || ""
-                            Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
-                            newScript.appendChild(document.createTextNode(content))
-                            item.parentNode.replaceChild(newScript, item)
-                        }
-            )
-            
-            GLOBAL_CONFIG.lazyload.enable && window.lazyLoadInstance.update()
-            
-            typeof chatBtnFn === 'function' && chatBtnFn()
-            
-            // google analytics（由 Halo 插件或主题配置注入 gtag；未配置时跳过）
-            typeof gtag === 'function' && typeof GA_ID !== 'undefined' && GA_ID && gtag('config', GA_ID, {
-                'page_path': window.location.pathname
-            });
-            
-            // baidu analytics
-            typeof _hmt === 'object' && _hmt.push(['_trackPageview', window.location.pathname]);
+            // 先重跑 data-pjax 脚本（含 tocbot/qrcode 等），再 refreshFn，避免库未就绪
+            var scripts = Array.prototype.slice.call(document.querySelectorAll('script[data-pjax]'))
+            var waiters = scripts.map(function (item) {
+                return new Promise(function (resolve) {
+                    var newScript = document.createElement('script')
+                    Array.from(item.attributes).forEach(function (attr) {
+                        newScript.setAttribute(attr.name, attr.value)
+                    })
+                    var content = item.text || item.textContent || item.innerHTML || ''
+                    var hasSrc = !!item.src
+                    if (hasSrc) {
+                        newScript.onload = function () { resolve() }
+                        newScript.onerror = function () { resolve() }
+                    } else {
+                        newScript.appendChild(document.createTextNode(content))
+                    }
+                    item.parentNode.replaceChild(newScript, item)
+                    if (!hasSrc) resolve()
+                })
+            })
+            Promise.all(waiters).then(function () {
+                typeof window.refreshFn === 'function' && window.refreshFn()
 
-            // Analytics
-            if (false) {
-                MtaH5.pgv()
-            }
-            
-            // prismjs
-            typeof Prism === 'object' && Prism.highlightAll()
-            
-            typeof preloader === 'object' && preloader.endLoading()
+                GLOBAL_CONFIG.lazyload.enable && window.lazyLoadInstance && window.lazyLoadInstance.update()
+
+                typeof chatBtnFn === 'function' && chatBtnFn()
+
+                typeof gtag === 'function' && typeof GA_ID !== 'undefined' && GA_ID && gtag('config', GA_ID, {
+                    'page_path': window.location.pathname
+                })
+
+                typeof _hmt === 'object' && _hmt.push(['_trackPageview', window.location.pathname])
+
+                typeof Prism === 'object' && Prism.highlightAll()
+
+                typeof preloader === 'object' && preloader.endLoading()
+            })
         })
         
         document.addEventListener('pjax:error', (e) => {
-                    // 所有 4xx/5xx（含源站临时 502/503）都回退整页跳转，否则 loading 遮罩会一直转
-                    if (e.request.status >= 400) {
-                        window.location.href = e.request.responseURL;
+                    // 4xx/5xx 以及传输中断（status 0：ERR_INCOMPLETE_CHUNKED_ENCODING）都回退整页
+                    var req = e.request
+                    var status = req ? req.status : 0
+                    if (status === 0 || status >= 400) {
+                        window.location.href = (req && req.responseURL) || window.location.href
                     }
                 }
         )

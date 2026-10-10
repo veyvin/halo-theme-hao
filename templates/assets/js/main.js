@@ -144,30 +144,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     *  toc
+     *  toc：库可能尚未加载（旧页缓存 / pjax 从非文章页切入），缺失时按需拉取
      */
     const tocFn = function () {
         const postContent = document.querySelector('.post-content');
         if (postContent == null) return;
         const titles = postContent.querySelectorAll('h1,h2,h3,h4,h5,h6');
-        // 没有 toc 目录，则直接移除
         if (titles.length === 0 || !titles) {
-            const cardToc = document.getElementById("card-toc");
-            cardToc?.remove();
+            document.getElementById("card-toc")?.remove();
             const $mobileTocButton = document.getElementById("mobile-toc-button")
             if ($mobileTocButton) {
                 $('#mobile-toc-button').attr('style', 'display: none');
             }
-        } else {
-            // 粘贴的 raw HTML 标题没有 id 会导致目录链接为 "#" 点不动，先补上
-            titles.forEach((h, i) => {
-                if (!h.id) {
-                    let n = i + 1, id = 'hao-toc-' + n;
-                    while (document.getElementById(id)) { n++; id = 'hao-toc-' + n; }
-                    h.id = id;
-                }
-            });
-            tocbot.init({
+            return;
+        }
+
+        titles.forEach((h, i) => {
+            if (!h.id) {
+                let n = i + 1, id = 'hao-toc-' + n;
+                while (document.getElementById(id)) { n++; id = 'hao-toc-' + n; }
+                h.id = id;
+            }
+        });
+
+        const runInit = function () {
+            if (typeof window.tocbot === 'undefined') return;
+            window.tocbot.init({
                 tocSelector: '.toc-content',
                 contentSelector: '.post-content',
                 headingSelector: 'h1,h2,h3,h4,h5,h6',
@@ -180,9 +182,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             const $cardTocLayout = document.getElementById('card-toc')
+            if (!$cardTocLayout) return;
             const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0]
+            if (!$cardToc) return;
 
-            // toc元素點擊：改用原生平滑滚动（合成器驱动，不逐帧跑 JS），对标 zhheo 的顺滑体验
             $cardToc.addEventListener('click', (ele) => {
                 const link = ele.target.closest('.toc-link')
                 if (link) {
@@ -195,8 +198,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     $cardTocLayout.classList.remove("open");
                 }
             })
+        };
 
+        if (typeof window.tocbot !== 'undefined') {
+            runInit();
+            return;
         }
+        const src = GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.tocbot;
+        if (!src) return;
+        if (!window.__haoTocbotWaiters) {
+            window.__haoTocbotWaiters = [];
+            const s = document.createElement('script');
+            s.src = src;
+            s.onload = function () {
+                const q = window.__haoTocbotWaiters || [];
+                window.__haoTocbotWaiters = null;
+                q.forEach(function (fn) { fn(); });
+            };
+            s.onerror = function () { window.__haoTocbotWaiters = null; };
+            document.head.appendChild(s);
+        }
+        window.__haoTocbotWaiters.push(runInit);
     }
 
 
