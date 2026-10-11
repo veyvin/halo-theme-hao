@@ -153,6 +153,12 @@
     <script defer th:src="${assets_link + '/js/utils.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/halo.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/main.js' + theme_version}"></script>
+    <!-- WebMCP：polyfill 须排在 hao-webmcp.js 之前（均为 defer，按文档顺序执行）；
+         polyfill 检测到原生 document.modelContext 会自行短路，故可长期保留 -->
+    <script defer th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false}"
+            th:src="${assets_link + '/libs/webmcp/webmcp-polyfill.js' + theme_version}"></script>
+    <script defer th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false}"
+            th:src="${assets_link + '/js/hao-webmcp.js' + theme_version}"></script>
     <!-- 右键菜单须在 blogex.js 之前：二者均为 defer，按文档顺序执行；initBlog 会调用 addRightMenuClickEvent -->
     <script defer th:if="${theme.config.tool.rightMenu.rightMenuEnable}"
             th:src="${assets_link + '/zhheo/rightmenu.js' + theme_version}"></script>

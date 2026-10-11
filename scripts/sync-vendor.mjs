@@ -11,6 +11,9 @@
 //   prism 全语言包  — npm 只有 core，需官网 download.html 定制，保持本地 prism.min.js
 //   fcircle         — 无 npm 包，保留本地
 //   no3d/vue.min.js — 已删除（与顶层 vue@2.6.14 重复）
+//   webmcp/webmcp-polyfill.js — 无 npm 包，手动从
+//     https://raw.githubusercontent.com/GoogleChromeLabs/webmcp-tools/main/demos/shared/webmcp-polyfill.js
+//     下载（Apache-2.0）；上游删了文件需手动删本地副本
 import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

@@ -3157,6 +3157,20 @@ spec:
                   value: false
                   help: 关闭简体繁体转换（translate/tw_cn）
         - $formkit: group
+          name: webmcp
+          label: WebMCP
+          key: webmcp
+          help: 按 WebMCP 规范把站内能力暴露给 AI Agent（读取当前页 / 搜索文章 / 切换配色 / 随机文章）
+          value:
+            webmcpEnable: false
+          children:
+            - $formkit: switch
+              name: webmcpEnable
+              key: webmcpEnable
+              label: 启用 WebMCP
+              value: false
+              help: 需要 HTTPS；浏览器尚未原生支持时由主题内置 polyfill 兜底，可用 Model Context Tool Inspector 扩展验证
+        - $formkit: group
           name: error_500
           label: 500 页面
           value:

@@ -111,6 +111,14 @@
                 modeName: /*[[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? '' : theme.config.post.aiDescription.mode}]]*/,
                 switchBtn: [[${htmlType != 'post' || !theme.config.post.aiDescription.aiDescriptionEnable ? false : theme.config.post.aiDescription.switchBtn}]]
             },
+            /* WebMCP 工具描述：随 #site-config 一起被 pjax 换页刷新，
+               故 hao-webmcp.js 在 pjax:complete 时重建工具时能拿到新值 */
+            webmcp: {
+                readPage: /*[[${#messages.msg('webmcp.readPage')}]]*/ 'Read the content of the page the user is currently viewing.',
+                searchPosts: /*[[${#messages.msg('webmcp.searchPosts')}]]*/ 'Search posts published on this blog by keyword.',
+                setThemeMode: /*[[${#messages.msg('webmcp.setThemeMode')}]]*/ 'Switch this site between dark and light colour scheme.',
+                randomPost: /*[[${#messages.msg('webmcp.randomPost')}]]*/ 'Open a random post from this blog.'
+            },
             img: {
                 src: [[${isLazyload ? 'data-lazy-src' : 'src' }]]
             },
