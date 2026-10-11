@@ -1,0 +1,81 @@
+name: Deploy theme
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**"
+      - "!**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # 未启用 setup-node 缓存：.gitignore 里忽略了 package-lock.json，
+      # setup-node 的 cache:'npm' 找不到 lock 文件会直接失败。
+      # 若希望加回缓存，把 package-lock.json 从 .gitignore 移除并提交后再启用。
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      # 更新主题版本号，控制台里能直接认出当前跑的是哪个 commit。
+      # 原仓库版本是 "1.10.39"（带引号），这里保留引号以免 YAML 解析歧义。
+      - name: Update theme version
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          sed -i -E "s/^(\s*version:\s*).*$/\1\"0.0.0-${SHORT_SHA}\"/" theme.yaml
+          grep -nE '^[[:space:]]*version:' theme.yaml
+
+      - name: Install dependencies
+        run: npm install
+
+      # 等价于本地 package.bat 的流程：sync-vendor → patch-twikoo → package
+      - name: Build distribution
+        run: |
+          npm run build
+          npm run package
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: theme-hao
+          path: dist/*.zip
+          retention-days: 7
+
+      - name: Install Halo CLI
+        run: npm install -g @halo-dev/cli
+
+      - name: Upgrade theme via Halo CLI
+        env:
+          HALO_CLI_CONFIG_DIR: ${{ runner.temp }}/halo-cli
+          HALO_TOKEN: ${{ secrets.HALO_TOKEN }}
+          THEME_NAME: theme-hao
+          HALO_URL: https://veyvin.com
+        run: |
+          THEME_ZIP="$(echo dist/*.zip)"
+
+          if [ ! -f "$THEME_ZIP" ]; then
+            echo "Theme zip file not found in dist/"
+            exit 1
+          fi
+
+          echo "Upgrading $THEME_NAME on $HALO_URL with $THEME_ZIP"
+
+          halo auth login \
+            --profile ci \
+            --url "$HALO_URL" \
+            --auth-type bearer \
+            --token "$HALO_TOKEN"
+
+          halo theme upgrade "$THEME_NAME" \
+            --profile ci \
+            --file "$THEME_ZIP"
