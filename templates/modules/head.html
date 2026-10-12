@@ -7,6 +7,18 @@
     <!-- theme-color：浏览器主题色，CSS 变量在 media 标签中无效，用实际 hex 值 -->
     <meta name="theme-color" th:content="${theme.config.style.themeLightSkin ?: '#ffffff'}">
     <meta name="theme-color" th:content="${theme.config.style.themeDarkSkin ?: '#1d1b20'}" media="(prefers-color-scheme: dark)">
+    <!-- WebMCP origin trial：浏览器内置 Agent 只认原生 document.modelContext，
+         polyfill 只在页面 world 里造假，Agent 读不到。线上必须靠这两个 meta 开启原生实现。
+         Chrome 与 Edge 的 token 互不通用，需分别申请，各自填一项即可（缺哪个就不输出哪个）。
+         注意：Edge 内置 reader 的界面仍要求 #enable-webmcp-testing 才显示工具，那是浏览器侧的
+         UI 门槛，站点无法绕开；但原生 API 与工具注册本身已经生效，Agent 扩展能正常读到。
+         token 到期后需回到对应控制台续期。 -->
+    <th:block th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false}">
+        <meta http-equiv="origin-trial" th:content="${theme.config.other.webmcp?.chromeTrialToken}"
+              th:if="${not #strings.isEmpty(theme.config.other.webmcp?.chromeTrialToken)}"/>
+        <meta http-equiv="origin-trial" th:content="${theme.config.other.webmcp?.edgeTrialToken}"
+              th:if="${not #strings.isEmpty(theme.config.other.webmcp?.edgeTrialToken)}"/>
+    </th:block>
     <!-- description / keywords / favicon / generator / robots 由 Halo 自动注入，主题不再重复输出 -->
     <!-- canonical + Open Graph + Twitter Card：Halo 未统一生成，由主题按开关提供 -->
     <!-- perf-1: DNS 预解析外部域名，减少首次外联耗时 -->

@@ -233,7 +233,12 @@ var haoWebmcp = (function () {
   function start() {
     // WebMCP 需安全上下文；非 HTTPS（如 http://localhost）直接不注册，避免脚本白跑
     if (!window.isSecureContext) return;
-    if (!modelContext()) return;
+    if (!modelContext()) {
+      // 排查提示：没开 origin trial、浏览器版本太低、或 polyfill 开关没打开
+      console.info('[webmcp] 未检测到 document.modelContext，本页不会注册任何工具。' +
+        '请确认已启用 WebMCP 开关、已填 Origin Trial Token，且浏览器支持原生 WebMCP。');
+      return;
+    }
 
     sync();
 
@@ -244,8 +249,13 @@ var haoWebmcp = (function () {
   }
 
   if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
-    else start();
+    // 必须等 DOMContentLoaded：defer 脚本执行时 readyState 是 'interactive' 而非 'loading'，
+    // 此时排在后面的 polyfill 还没跑，直接 start() 会误判成「浏览器不支持」
+    if (document.readyState === 'loading' || document.readyState === 'interactive') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
   }
 
   return {

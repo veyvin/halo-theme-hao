@@ -153,9 +153,10 @@
     <script defer th:src="${assets_link + '/js/utils.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/halo.js' + theme_version}"></script>
     <script defer th:src="${assets_link + '/js/main.js' + theme_version}"></script>
-    <!-- WebMCP：polyfill 须排在 hao-webmcp.js 之前（均为 defer，按文档顺序执行）；
-         polyfill 检测到原生 document.modelContext 会自行短路，故可长期保留 -->
-    <script defer th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false}"
+    <!-- WebMCP：polyfill 排在 hao-webmcp.js 之前（均为 defer，按文档顺序执行）；
+         hao-webmcp.js 全程 feature-detect，原生实现不存在时静默空转；
+         polyfill 仅供本地控制台自查，默认关闭（线上开了也没用，Agent 读不到页面 world 的假实现） -->
+    <script defer th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false and ((theme.config.other.webmcp?.polyfillEnable) ?: false)}"
             th:src="${assets_link + '/libs/webmcp/webmcp-polyfill.js' + theme_version}"></script>
     <script defer th:if="${(theme.config.other.webmcp?.webmcpEnable) ?: false}"
             th:src="${assets_link + '/js/hao-webmcp.js' + theme_version}"></script>

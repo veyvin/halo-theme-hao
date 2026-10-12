@@ -3114,62 +3114,83 @@ spec:
               aspectRatio: "16/9"
               label: 背景图片
               help: 404 页面的背景图片
-            - $formkit: group
-              name: perf
-              label: 性能优化
-              key: perf
-              help: 性能相关开关，关闭前请先在本地测试 Lighthouse
-              value:
-                disablePace: false
-                disableSnackbar: false
-                disableQuicklink: false
-                disableUniverse: false
-                disableTranslate: false
-              children:
-                - $formkit: switch
-                  name: disablePace
-                  key: disablePace
-                  label: 关闭 Pace 加载进度条
-                  value: false
-                  help: 关闭页面顶部的加载进度条（Pace），仅在不需要时开启
-                - $formkit: switch
-                  name: disableSnackbar
-                  key: disableSnackbar
-                  label: 关闭 Snackbar 通知
-                  value: false
-                  help: 关闭右下角通知弹窗（node-snackbar）
-                - $formkit: switch
-                  name: disableQuicklink
-                  key: disableQuicklink
-                  label: 关闭 quicklink 预取
-                  value: false
-                  help: 关闭空闲预取 viewport 链接，省流量但略降体验
-                - $formkit: switch
-                  name: disableUniverse
-                  key: disableUniverse
-                  label: 关闭深色粒子背景
-                  value: false
-                  help: 关闭深色模式下的粒子特效 canvas（universe）
-                - $formkit: switch
-                  name: disableTranslate
-                  key: disableTranslate
-                  label: 关闭简繁转换
-                  value: false
-                  help: 关闭简体繁体转换（translate/tw_cn）
+        - $formkit: group
+          name: perf
+          label: 性能优化
+          key: perf
+          help: 性能相关开关，关闭前请先在本地测试 Lighthouse
+          value:
+            disablePace: false
+            disableSnackbar: false
+            disableQuicklink: false
+            disableUniverse: false
+            disableTranslate: false
+          children:
+            - $formkit: switch
+              name: disablePace
+              key: disablePace
+              label: 关闭 Pace 加载进度条
+              value: false
+              help: 关闭页面顶部的加载进度条（Pace），仅在不需要时开启
+            - $formkit: switch
+              name: disableSnackbar
+              key: disableSnackbar
+              label: 关闭 Snackbar 通知
+              value: false
+              help: 关闭右下角通知弹窗（node-snackbar）
+            - $formkit: switch
+              name: disableQuicklink
+              key: disableQuicklink
+              label: 关闭 quicklink 预取
+              value: false
+              help: 关闭空闲预取 viewport 链接，省流量但略降体验
+            - $formkit: switch
+              name: disableUniverse
+              key: disableUniverse
+              label: 关闭深色粒子背景
+              value: false
+              help: 关闭深色模式下的粒子特效 canvas（universe）
+            - $formkit: switch
+              name: disableTranslate
+              key: disableTranslate
+              label: 关闭简繁转换
+              value: false
+              help: 关闭简体繁体转换（translate/tw_cn）
         - $formkit: group
           name: webmcp
           label: WebMCP
           key: webmcp
-          help: 按 WebMCP 规范把站内能力暴露给 AI Agent（读取当前页 / 搜索文章 / 切换配色 / 随机文章）
+          help: 按 WebMCP 规范把站内能力暴露给 AI Agent。浏览器内置 Agent 只认原生实现，需 origin trial 或 #enable-webmcp-testing
           value:
             webmcpEnable: false
+            chromeTrialToken: ''
+            edgeTrialToken: ''
+            polyfillEnable: false
           children:
             - $formkit: switch
               name: webmcpEnable
               key: webmcpEnable
               label: 启用 WebMCP
               value: false
-              help: 需要 HTTPS；浏览器尚未原生支持时由主题内置 polyfill 兜底，可用 Model Context Tool Inspector 扩展验证
+              help: 打开后注册 hao_read_page / hao_search_posts / hao_set_theme_mode / hao_random_post 四个工具
+            - $formkit: textarea
+              name: chromeTrialToken
+              key: chromeTrialToken
+              label: Chrome Origin Trial Token
+              placeholder: 在 developer.chrome.com/origintrials 申请 WebMCP token 后粘贴到此处
+              help: 仅对 Chrome 生效。需先用同一 Google 账号在 Search Console 验证域名所有权
+            - $formkit: textarea
+              name: edgeTrialToken
+              key: edgeTrialToken
+              label: Edge Origin Trial Token
+              placeholder: 在 developer.microsoft.com/microsoft-edge/origin-trials 申请 WebMCP token 后粘贴到此处
+              help: 仅对 Edge 生效，GitHub 账号登录，与 Chrome 的 token 不通用。Edge 的 token 默认 6 周过期，需定期续期
+            - $formkit: switch
+              name: polyfillEnable
+              key: polyfillEnable
+              label: 启用 polyfill（仅本地调试用）
+              value: false
+              help: 在页面里造一个假的 document.modelContext，仅用于浏览器控制台自查工具。浏览器 Agent 只读原生注册表，读不到这个假实现，所以线上开它没有任何作用，还会多约 22KB 流量
         - $formkit: group
           name: error_500
           label: 500 页面

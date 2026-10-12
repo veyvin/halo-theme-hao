@@ -3967,12 +3967,12 @@ p.p.gray,span.p.gray {
     }
 
     /* 最新角标 */
-    #recent-posts > .recent-post-item .lastestpost {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #fff;
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 4px;
+    /* 移动端隐藏：渐变胶囊角标在窄屏列表里抢眼且信息量低（发布时间已紧随其后）。
+       必须用 ID 选择器压过 zhheoblog.css:6924 的 .recent-post-item .recent-post-info
+       .recent-post-info-top .lastestpost —— 那条特异性 (0,4,0) 高于普通类选择器，
+       靠加载顺序赢不了。 */
+    #recent-posts .lastestpost {
+        display: none;
     }
 
     /* 未读标记 */

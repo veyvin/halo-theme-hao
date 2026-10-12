@@ -167,6 +167,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // tocbot 判定激活的条件：标题绝对位置 <= scrollTop + headingsOffset + 10
+        // （即标题进入视口顶部下方该距离后即高亮）
+        //
+        // 必须与下方 TOC 点击跳转的落点对齐，否则会出现「点了目录跳过去了、高亮却停在上一段」。
+        // 点击跳转最终落点 = 标题位置 - 70（btf.scrollToDest 内写死），要让它正好越过激活线，
+        // 需 headingsOffset >= 60；取 60 使两者恰好相等，余量用 tocbot 自带的 10px 容差。
+        const TOC_HEADINGS_OFFSET = 60;
+
         const runInit = function () {
             if (typeof window.tocbot === 'undefined') return;
             window.tocbot.init({
@@ -176,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 listItemClass: 'toc-item',
                 activeLinkClass: 'active',
                 activeListItemClass: 'active',
-                headingsOffset: -400,
+                headingsOffset: TOC_HEADINGS_OFFSET,
                 scrollSmooth: false,
                 tocScrollOffset: 50,
             });
@@ -192,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ele.preventDefault()
                     const targetId = decodeURIComponent((link.getAttribute('href') || '').substring(1))
                     const targetEl = targetId && document.getElementById(targetId)
+                    // scrollToDest 内部固定再减 70，落点 = 标题位置 - 70，与 TOC_HEADINGS_OFFSET 对齐
                     if (targetEl) btf.scrollToDest(btf.getEleTop(targetEl), 300)
                 }
                 if (window.innerWidth < 900) {
