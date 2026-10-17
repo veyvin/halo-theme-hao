@@ -1,0 +1,24 @@
+// Cloudflare Worker 部署配置（源站零改动，见 README「🤖 robots.txt 与 AI 内容信号」）
+//
+// 部署：Workers & Pages → Create → Worker，然后在 edge/ 目录执行
+//   npx wrangler deploy
+// 再到该 Worker 的 Settings → Triggers → Routes 绑定到 你的域名/*
+//
+// 说明：本 Worker 不是 Agent。它只是把 Markdown 和 Link 头补给 Agent 客户端，
+// 自己不发任何模型请求，所以这里没有 agent turn 可埋点，也就不存在
+// 「要不要落 LLM 消息 / 工具载荷」这个开关。下面开的是 Workers 平台侧的
+// 请求级 tracing，用来排查 fetch 回源与内容协商这条链路。
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "hao-agent-discovery",
+  "main": "agent-discovery-worker.js",
+  "compatibility_date": "2025-04-01",
+  "observability": {
+    "traces": {
+      "enabled": true,
+      // 不写 head_sampling_rate 即默认 1（全量采样，每个请求都采）。
+      // 要降采样在这里显式加，例如 "head_sampling_rate": 0.05。
+      // 注意 0 表示完全不产生 trace。
+    }
+  }
+}

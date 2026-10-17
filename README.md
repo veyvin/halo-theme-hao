@@ -111,6 +111,150 @@ Hao 是一款适用于 [Halo 2.x](https://github.com/halo-dev/halo) 的博客主
 - 朋友圈页：设置 → 页面-朋友圈 → **朋友圈数据 API**（默认内置地址）+ **友链每页数量**。
 - 图库页：设置 → 页面-图库 → **返回地址**（默认 `/album`，相册页已移除，可按需改为任意地址）。
 
+## 🤖 robots.txt 与 AI 内容信号
+
+主题在 `templates/assets/robots.txt` 提供了一份开箱即用的 `robots.txt`，启用主题后即可访问：
+
+```
+https://你的域名/themes/theme-hao/assets/robots.txt
+```
+
+**注意：Halo 主题无法在站点根路径注册路由**，所以这个地址不会自动变成 `https://你的域名/robots.txt`。需要在反向代理或 CDN 层做一次映射，搜索引擎和 AI 爬虫只会读根路径那一份。
+
+### 1. 修改偏好
+
+编辑 `templates/assets/robots.txt` 里的一行，三个字段逗号分隔，取值 `yes` / `no`：
+
+```
+Content-Signal: ai-train=no, search=yes, ai-input=no
+```
+
+| 字段 | 含义 | 默认值 |
+| --- | --- | --- |
+| `ai-train` | 是否允许把本站内容用于 AI 模型训练或微调 | `no` |
+| `search` | 是否允许被搜索引擎收录并展示标题、摘要 | `yes` |
+| `ai-input` | 是否允许被 AI 检索 / RAG 实时取用来生成答案 | `no` |
+
+规范见 [contentsignals.org](https://contentsignals.org/) 与 IETF draft `draft-ietf-aipref-vocab`。默认策略是**允许被搜索引擎收录，但禁止训练和 RAG 实时取用**。
+
+> 内容信号是给 AI 爬虫的**声明**，对不遵守的爬虫不具强制力。若要硬性拦截（如 `GPTBot`、`CCBot`），仍需额外加对应的 `User-agent` + `Disallow` 段。
+
+### 2. 映射到根路径
+
+**Nginx**（放在 `server` 块内，且要早于转发到 Halo 的 `location /`）：
+
+```nginx
+location = /robots.txt {
+    alias /path/to/halo/themes/theme-hao/templates/assets/robots.txt;
+    default_type text/plain;
+    add_header Cache-Control "public, max-age=3600";
+}
+```
+
+> `alias` 指向**服务器磁盘上**的路径。容器部署时路径要用容器内路径，或改用 `proxy_pass http://127.0.0.1:8090/themes/theme-hao/assets/robots.txt;` 让 Halo 自己返回。
+
+**Caddy**：
+
+```caddyfile
+example.com {
+    @robots path /robots.txt
+    rewrite @robots /themes/theme-hao/assets/robots.txt
+    reverse_proxy 127.0.0.1:8090
+}
+```
+
+**Apache**（`.htaccess`）：
+
+```apache
+RewriteEngine On
+RewriteRule ^robots\.txt$ /themes/theme-hao/assets/robots.txt [L]
+```
+
+**Cloudflare**：不用改源站，直接在 **Rules → Transform Rules → Modify Response Header**，或 **Workers** 里对 `/robots.txt` 请求回源到主题资源地址即可；也可以在 **AI Crawl Control** 面板里直接配置 Content Signals。
+
+**Docker**：把文件挂进容器，或用上面任一反向代理方案。Halo 官方镜像不含 Web 服务器，根路径的 `robots.txt` 需要你在前面那层解决。
+
+改完记得清掉 CDN 与浏览器缓存。
+
+### 3. 校验 Content Signals
+
+```bash
+curl -fsSL https://你的域名/robots.txt | grep -i 'content-signal'
+```
+
+期望输出 `Content-Signal: ai-train=no, search=yes, ai-input=no`。
+
+再用 [isitagentready.com](https://isitagentready.com/) 扫一下站点，确认 `checks.botAccessControl.contentSignals.status` 为 `pass`：
+
+```bash
+curl -X POST https://isitagentready.com/api/scan \
+  -H 'Content-Type: application/json' \
+  -d '{"url":"https://你的域名"}'
+```
+
+### 4. Agent 发现：Link 头与 Markdown 协商
+
+有两件事主题做不到，只能在边缘补：
+
+- **HTTP 响应头**：Thymeleaf 没有设置响应头的能力，主题发不了 `Link` 头。
+- **`text/markdown` 协商**：Halo 的 `SinglePageRoute` 要求 `Accept: text/html`，
+  且渲染出来的一定是 HTML，主题无法按内容协商返回 Markdown。
+
+仓库里带了一个 Cloudflare Worker（`edge/agent-discovery-worker.js`），源站零改动：
+
+1. 客户端 `Accept` 明确带 `text/markdown` 时，返回正文 Markdown。
+   浏览器发的是 `text/html` 加通配类型，不含 `text/markdown`，**不受影响**。
+2. 其它 HTML 响应补上 `Link` 头，只指向真实存在的资源：
+
+```
+Link: </rss.xml>; rel="alternate"; type="application/rss+xml"
+Link: </sitemap.xml>; rel="related"; type="application/xml"
+```
+
+Markdown 响应带 `Vary: Accept`，避免 CDN 把 Markdown 喂给浏览器。
+
+主题本身已在 `<head>` 输出 RSS 的 `rel="alternate"` 链接
+（受 `设置 → SEO → 输出 canonical 和社交分享标签` 控制，检测到 `PluginFeed` 才输出），
+未装订阅插件时不会暴露 404 地址。
+
+**本地先跑测试**（纯逻辑都在 `edge/lib/*.mjs`，不依赖 Workers 运行时）：
+
+```bash
+npm run test:edge                            # 49 项断言
+node edge/test/run-tests.mjs --update        # 刷新真实页面快照
+```
+
+快照取自 `veyvin.com` 的真实渲染结果，覆盖标题层级、表格、shiki 代码块、
+嵌套列表、引用块、脚本不泄漏，以及「浏览器 Accept 不被切换」这类回归。
+
+**部署**（Workers & Pages → Create → Worker）。Worker 名和配置都在
+`edge/wrangler.jsonc` 里，直接在该目录执行：
+
+```bash
+cd edge
+npx wrangler deploy
+```
+
+再到该 Worker 的 **Settings → Triggers → Routes** 绑定到 `你的域名/*`。
+
+**校验**：
+
+```bash
+curl -I https://你的域名/                        # 应有 Link 头
+curl -s -H 'Accept: text/markdown' https://你的域名/ | head -30
+curl -sI https://你的域名/ | grep -i vary       # 应含 Vary: Accept
+```
+
+`edge/wrangler.jsonc` 里开了 `observability.traces`（默认全量采样），
+调试回源与内容协商时到 Worker 的 **Observability → Traces** 看请求级链路。
+注意这里记的是 HTTP 请求，不含任何 LLM 消息或工具载荷 —— 本 Worker 不发模型请求。
+
+> ⚠️ Worker **不会**替你生成 API Catalog、OAuth / OIDC discovery、
+> A2A Agent Card、MCP Server Card、Web Bot Auth 或 DNS-AID。
+> 那些端点是「我提供这套基础设施」的对外声明；博客发布它们等于宣告一个
+> 自己并不控制的 issuer 和端点，只会让 Agent 在鉴权或调用中途失败。
+> 站上真有 OAuth 服务端或 MCP Server 时，再按对应规范补。
+
 ## ⌨️ 快捷键
 
 需先在中控台开启快捷键（默认关闭）。输入框聚焦时不触发。

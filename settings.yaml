@@ -45,7 +45,7 @@ spec:
             - $formkit: checkbox
               name: enable_metadata
               label: 输出 canonical 和社交分享标签
-              help: "Halo 已自动注入 description / keywords / favicon，主题不再重复输出；此开关仅控制 canonical、Open Graph、Twitter Card"
+              help: "Halo 已自动注入 description / keywords / favicon，主题不再重复输出；此开关控制 canonical、Open Graph、Twitter Card，以及 RSS 订阅发现链接"
             - $formkit: checkbox
               name: enable_structured_data
               label: 输出文章结构化数据

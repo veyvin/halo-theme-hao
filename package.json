@@ -9,6 +9,7 @@
     "patch-twikoo": "node scripts/patch-twikoo-heo-hosts.mjs && node scripts/patch-twikoo-heo-mode-confirm.mjs",
     "update-vendor": "npm update && npm run sync-vendor && npm run patch-twikoo",
     "build": "npm run sync-vendor && npm run patch-twikoo",
+    "test:edge": "node edge/test/run-tests.mjs",
     "package": "theme-package"
   },
   "dependencies": {

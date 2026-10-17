@@ -70,6 +70,15 @@
             <meta name="twitter:description" th:content="${site.subtitle ?: siteTitle}"/>
             <meta name="twitter:image" th:content="${ogImg}"/>
         </th:block>
+        <!-- 订阅发现（RFC 8288 的 HTML 形态）：RSS 由 PluginFeed 提供，
+             未安装该插件时不输出，避免向爬虫暴露一个 404 的订阅地址。
+             条件与页脚订阅入口一致，两处不会出现数量差异，pjax 安全。
+             说明：Halo 主题无法设置 HTTP 响应头，真正的 Link 响应头需由
+             边缘 Worker 或反向代理补，见 README「🤖 robots.txt 与 AI 内容信号」。 -->
+        <link th:if="${pluginFinder.available('PluginFeed')}"
+              rel="alternate" type="application/rss+xml"
+              th:title="${site.title}"
+              th:href="${site.url + '/rss.xml'}"/>
     </th:block>
     <style th:if="${not #strings.isEmpty(theme.config.style.fontFamily)}" th:utext="|body{font-family:${theme.config.style.fontFamily}}|"></style>
     <title th:text="${siteTitle}"></title>

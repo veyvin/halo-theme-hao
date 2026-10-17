@@ -1,0 +1,37 @@
+# robots.txt — Halo + theme-hao
+#
+# 本文件随主题一起打包，启用主题后可直接访问：
+#   https://你的域名/themes/theme-hao/assets/robots.txt
+#
+# Halo 主题无法在站点根路径注册路由，所以还需要按 README
+# 「🤖 robots.txt 与 AI 内容信号」一节的说明，用反向代理 / CDN
+# 把这个文件暴露为 https://你的域名/robots.txt。
+#
+# ── AI 内容信号 ──────────────────────────────────────────────
+# 规范：https://contentsignals.org/ （IETF draft-ietf-aipref-vocab）
+# 三个字段写在同一行、逗号分隔，取值 yes / no：
+#   ai-train   是否允许把本站内容用于 AI 模型训练或微调
+#   search     是否允许被搜索引擎收录，并在结果里展示标题与摘要
+#   ai-input   是否允许被 AI 检索 / RAG 实时取用，用于生成答案
+#
+# 默认策略：允许被搜索引擎收录，但不允许训练，也不允许 RAG 实时取用。
+# 改完记得清掉 CDN / 浏览器缓存，再按下文命令校验。
+
+User-agent: *
+Content-Signal: ai-train=no, search=yes, ai-input=no
+
+# Halo 管理端与内部接口，无需进入索引
+Disallow: /console/
+Disallow: /apis/
+Disallow: /actuator/
+Disallow: /oauth2/
+Disallow: /login
+Disallow: /logout
+Disallow: /uc/
+
+# 站内搜索结果页是重复内容，不进索引（未装搜索插件时删掉这行也无影响）
+Disallow: /search
+
+# 站点地图：Halo 核心不带 sitemap，需自行生成或安装相关插件，
+# 拿到真实地址后填进来并取消注释
+# Sitemap: https://example.com/sitemap.xml
