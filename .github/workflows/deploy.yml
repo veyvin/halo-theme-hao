@@ -8,6 +8,13 @@ on:
       - "**"
       - "!**.md"
   workflow_dispatch:
+    inputs:
+      # 强制走「直连 Halo」通道上传，跳过 Cloudflare。
+      # 背景见「Upgrade theme via Halo CLI」步骤的长注释。
+      force_direct_upload:
+        description: "强制直连 Halo 上传（绕过 Cloudflare 524）"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -54,28 +61,186 @@ jobs:
       - name: Install Halo CLI
         run: npm install -g @halo-dev/cli
 
+      # ==========================================================================
+      # 上传主题
+      #
+      # 【为什么不用 `halo theme upgrade` 直连公网】
+      # halo CLI 1.3.0 内部 createAxiosClient() 写死了 `timeout: 3e4`（30 秒），
+      # 且没有命令行参数可以覆盖。本主题包约 4.7 MB，走 Cloudflare 回源时
+      # Halo 处理 theme upgrade 需要 ~127 秒，Cloudflare 先返回 524，
+      # CLI 随后报 `timeout of 30000ms exceeded`。
+      #
+      # 实测对照（同一个 4.66 MB 包、同一个令牌）：
+      #   https://veyvin.com/...  → HTTP 524，耗时 126.8s
+      #   http://100.108.141.117:8090/... → HTTP 200，耗时 1.0~2.1s
+      # 也就是说瓶颈是 Cloudflare 的 100s 回源上限，不是包体积，也不是 Halo 本身。
+      #
+      # 【为什么改成直连 + curl】
+      #   1. curl 无 30s 硬超时，可以自己给到 300s。
+      #   2. 直连内网地址不经过 Cloudflare，实测 1~2 秒完成。
+      #   3. 保留一次 CLI 登录作为连通性/鉴权前置检查，令牌有问题会立刻暴露。
+      #
+      # 【风险与回滚】
+      # 直连地址走 Tailscale 内网，只有 runner 能访问；公网部署请改用
+      # secrets.HALO_DIRECT_URL 覆盖，或临时把 job 切回 CLI 通道。
+      # 上传是幂等的（同名主题覆盖），失败时线上主题保持上一版不变。
+      # ==========================================================================
+      - name: Pre-flight check
+        env:
+          HALO_TOKEN: ${{ secrets.HALO_TOKEN }}
+          HALO_URL: https://veyvin.com
+          HALO_DIRECT_URL: ${{ secrets.HALO_DIRECT_URL }}
+        run: |
+          set -euo pipefail
+
+          # 令牌缺失要在最前面拦住，否则后面所有步骤都是无意义的超时噪音。
+          if [ -z "${HALO_TOKEN:-}" ]; then
+            echo "::error::HALO_TOKEN 未配置。请在仓库 Settings → Secrets 里添加。"
+            exit 1
+          fi
+
+          THEME_ZIP="$(echo dist/*.zip)"
+
+          # shellcheck disable=SC2044  # 目录里只应有一个 zip
+          for f in dist/*.zip; do
+            [ -e "$f" ] || { echo "::error::dist/ 下没有构建产物"; exit 1; }
+          done
+          # shellcheck enable=SC2044
+
+          if [ "$(ls -1 dist/*.zip | wc -l)" -gt 1 ]; then
+            echo "::error::dist/ 下存在多个 zip，无法确定上传哪一个："
+            ls -la dist/*.zip
+            exit 1
+          fi
+
+          if [ ! -f "$THEME_ZIP" ]; then
+            echo "::error::主题包不存在：$THEME_ZIP"
+            exit 1
+          fi
+
+          echo "===== 部署前检查 ====="
+          echo "提交      : ${GITHUB_SHA}"
+          echo "主题包    : $THEME_ZIP ($(du -h "$THEME_ZIP" | cut -f1))"
+          echo "公网地址  : $HALO_URL"
+          echo "直连地址  : ${HALO_DIRECT_URL:-（未配置 secrets.HALO_DIRECT_URL）}"
+
+          # 验证令牌有效：能拿到主题列表说明鉴权通过。
+          # -w 输出各阶段耗时，方便和上传耗时对照，判断是不是 Cloudflare 拖慢。
+          echo ""
+          echo "--- 鉴权与连通性（公网，限时 30s）---"
+          CODE=$(curl -sS -o /tmp/themes.json -w '%{http_code}' --max-time 30 \
+            -H "Authorization: Bearer $HALO_TOKEN" \
+            -H 'Accept: application/json' \
+            "$HALO_URL/apis/api.console.halo.run/v1alpha1/themes" || true)
+
+          if [ "$CODE" != "200" ]; then
+            echo "::error::令牌校验失败，HTTP $CODE"
+            echo "--- 响应体 ---"
+            head -c 800 /tmp/themes.json || true
+            echo ""
+            exit 1
+          fi
+
+          # 打印当前线上版本，方便部署后核对是否真的换掉了。
+          echo "线上当前主题版本："
+          grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' /tmp/themes.json | head -5 || echo "(未解析到)"
+
       - name: Upgrade theme via Halo CLI
         env:
           HALO_CLI_CONFIG_DIR: ${{ runner.temp }}/halo-cli
           HALO_TOKEN: ${{ secrets.HALO_TOKEN }}
           THEME_NAME: theme-hao
           HALO_URL: https://veyvin.com
+          HALO_DIRECT_URL: ${{ secrets.HALO_DIRECT_URL }}
+          FORCE_DIRECT: ${{ inputs.force_direct_upload }}
         run: |
+          set -euo pipefail
+
           THEME_ZIP="$(echo dist/*.zip)"
+          UPLOAD_URL="${HALO_DIRECT_URL:-$HALO_URL}"
 
-          if [ ! -f "$THEME_ZIP" ]; then
-            echo "Theme zip file not found in dist/"
-            exit 1
-          fi
-
-          echo "Upgrading $THEME_NAME on $HALO_URL with $THEME_ZIP"
-
+          # ---- 情况 A：CLI 直连（未配置 secrets.HALO_DIRECT_URL 时）
+          # 这种情况下仍然可能被 Cloudflare 524 / CLI 30s 超时打挂，
+          # 所以只做登录连通性检查，真正的上传交给下面的 curl 步骤。
+          echo "--- halo CLI 登录连通性检查 ---"
           halo auth login \
             --profile ci \
             --url "$HALO_URL" \
             --auth-type bearer \
             --token "$HALO_TOKEN"
 
-          halo theme upgrade "$THEME_NAME" \
-            --profile ci \
-            --file "$THEME_ZIP"
+          # ---- 情况 B：直连上传（推荐路径）
+          # curl 不受 CLI 那个 30s 硬超时限制，超时放到 300s。
+          echo ""
+          echo "--- 上传主题包到 $UPLOAD_URL ---"
+          echo "超时上限 300s（halo CLI 内部只有 30s，走公网必挂）"
+
+          START=$(date +%s)
+          HTTP_CODE=$(curl -sS -o /tmp/upgrade-resp.json -w '%{http_code}' \
+            --max-time 300 \
+            --connect-timeout 30 \
+            -X POST "$UPLOAD_URL/apis/api.console.halo.run/v1alpha1/themes/$THEME_NAME/upgrade" \
+            -H "Authorization: Bearer $HALO_TOKEN" \
+            -H 'Accept: application/json' \
+            -F "file=@${THEME_ZIP};type=application/zip" || true)
+          END=$(date +%s)
+          ELAPSED=$((END - START))
+
+          echo "HTTP $HTTP_CODE，用时 ${ELAPSED}s"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::主题上传失败，HTTP $HTTP_CODE"
+            echo "--- 响应体 ---"
+            head -c 1200 /tmp/upgrade-resp.json || true
+            echo ""
+
+            # 524 是 Cloudflare 的回源超时，不是 Halo 拒绝。
+            # 出现这个码基本可以断定：runner 到 Cloudflare 这段太慢，
+            # 而 Halo 自己处理上传其实很快。修法见步骤上方注释。
+            if [ "$HTTP_CODE" = "524" ]; then
+              echo "::error::HTTP 524 = Cloudflare 回源超时。配置 secrets.HALO_DIRECT_URL 指向 Halo 内网地址可绕过。"
+            fi
+            exit 1
+          fi
+
+          echo "--- 响应体 ---"
+          head -c 600 /tmp/upgrade-resp.json || true
+          echo ""
+
+      - name: Verify theme is live
+        env:
+          HALO_TOKEN: ${{ secrets.HALO_TOKEN }}
+          HALO_URL: https://veyvin.com
+          THEME_NAME: theme-hao
+        run: |
+          set -euo pipefail
+
+          # 上传返回 200 不等于前台已生效：Halo 还要解包并切换。
+          # 这里实际拉一次前台页面，确认新皮肤文件能被访问到。
+          echo "--- 验证前台可访问 ---"
+          sleep 3
+
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 60 "$HALO_URL/" || true)
+          echo "首页 HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::error::前台首页返回 $CODE，主题可能未正常切换"
+            exit 1
+          fi
+
+          # 专门检查本次新增的 Artalk 皮肤文件是否已上线。
+          # 这一步失败说明包没更新成功，比只看首页 200 更有诊断价值。
+          echo "--- 检查本次新增资产 ---"
+          for ASSET in \
+            "assets/zhheo/artalk-heo.css" \
+            "assets/js/comment/artalk.js"
+          do
+            AC=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$HALO_URL/themes/$THEME_NAME/$ASSET" || true)
+            if [ "$AC" = "200" ]; then
+              echo "  [OK]   $ASSET"
+            else
+              echo "  [WARN] $ASSET → HTTP $AC（若该文件本应存在，说明包未生效）"
+            fi
+          done
+
+          echo ""
+          echo "部署完成：${GITHUB_SHA}"
