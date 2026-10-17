@@ -102,6 +102,9 @@
           th:if="${theme.config.comments.commentsEnable && #strings.equals(theme.config.comments.use, 'Twikoo') && not #strings.isEmpty(theme.config.comments.twikoos.envId)}"
           th:href="${assets_link + '/zhheo/twikoo-v2-heo.css' + theme_version}">
 
+    <!-- Artalk 的 Heo 皮肤（zhheo/artalk-heo.css）由 js/comment/artalk.js 在 Artalk.css 之后动态注入，
+         保证覆盖顺序；不要在此处用 link 引入，否则会被 Artalk.css 运行时注入的样式盖掉。 -->
+
     <!-- 移动端样式：media 断点 + 置于 Twikoo 皮肤之后，移动端拥有最终决定权 -->
     <link rel="stylesheet" media="screen and (max-width: 768px)"
           th:href="${assets_link + '/zhheo/heoblogmw768.css' + theme_version}">

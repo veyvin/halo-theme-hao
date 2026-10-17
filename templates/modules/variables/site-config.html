@@ -136,6 +136,9 @@
             artalk: {
                 js: /*[[${not #strings.isEmpty(theme.config.comments.artalks.artalkJs) ? theme.config.comments.artalks.artalkJs : assets_link +'/libs/artalk/Artalk.js'}]]*/,
                 css: /*[[${not #strings.isEmpty(theme.config.comments.artalks.artalkCss) ? theme.config.comments.artalks.artalkCss : assets_link +'/libs/artalk/Artalk.css'}]]*/,
+                /* Heo 皮肤：必须在 Artalk.css 之后加载（Artalk.css 由下方 js/comment/artalk.js 运行时注入），
+                   否则同为单类选择器时皮肤会被 Artalk.css 覆盖。 */
+                skin: /*[[${assets_link + '/zhheo/artalk-heo.css' + theme_version}]]*/,
                 artalkUrl: "[(${theme.config.comments.artalks.server})]",
                 siteName: "[(${theme.config.comments.artalks.siteName})]",
             },

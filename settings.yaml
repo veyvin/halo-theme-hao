@@ -1993,8 +1993,8 @@ spec:
           id: use
           key: use
           if: $get(commentsEnable).value
-          value: commentWidget
-          help: 选择评论系统，支持默认、Twikoo、Artalk 和 Waline
+          value: Artalk
+          help: 选择评论系统，支持默认、Twikoo、Artalk 和 Waline（选中 Artalk 后下方出现 Artalk 评论配置）
           options:
             - label: 默认
               value: commentWidget
@@ -2026,15 +2026,15 @@ spec:
               name: server
               key: artalkServer
               label: Artalk评论 - 后端URL
-              placeholder: 请输入后端URL
-              help: 详情请查看文档 (后缀带 / )
+              placeholder: 请输入后端URL，例如：https://artalk.example.com/
+              help: 需自建 Artalk 服务端（Docker 一键部署），填站点可访问到的后端地址，后缀带 / 。验证：浏览器打开 该地址 + api/v2/conf 能返回 JSON 即配置正确。文档：https://artalk.js.org/guide/backend/install.html
               validation: required
             - $formkit: text
               name: siteName
               key: siteName
               label: 站点名称
               placeholder: 请输入 Artalk 站点名称
-              help: Artalk 中显示的站点名称
+              help: 必须与 Artalk 后台「站点设置」里的站点名称（Site Name）完全一致，否则拉不到评论
               validation: required
             - $formkit: text
               name: artalkJs

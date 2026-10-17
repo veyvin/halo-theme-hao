@@ -1,0 +1,1077 @@
+@charset "UTF-8";
+/* Artalk Heo 皮肤 — 对标 twikoo.heo.min.js 内联的「HeoBlog Twikoo 主题样式」+ twikoo-v2-heo.css
+ *
+ * 视觉规范来源（twikoo.heo.min.js chunk@67727 / twikoo-v2-heo.css）：
+ *   卡片      background --heo-secondbg / radius 12px / padding 1rem
+ *             border --style-border-always / box-shadow --heo-shadow-border
+ *   输入框    background --heo-secondbg / radius 12px / 正文框 radius 16px
+ *   标签      pill 999px / 12px / min-height 20px
+ *   时间      --heo-secondtext / 13px
+ *   正文      15px / margin 0
+ *   头像      40px 圆形 / hover 旋转一圈
+ *   分割线    --style-border-dashed
+ *
+ * Twikoo → Artalk DOM 映射：
+ *   tk-comments-container      → .atk-list-comments-wrap
+ *   tk-comments > tk-comment   → .atk-comment-wrap > .atk-comment   （顶层评论 = 卡片）
+ *   tk-replies                 → .atk-comment-children             （回复 = 虚线顶边变体）
+ *   tk-avatar / tk-avatar-img  → .atk-avatar > img
+ *   tk-meta-head               → .atk-header
+ *   tk-nick                    → .atk-nick
+ *   tk-tag / tk-extra          → .atk-badge / .atk-region-badge / .atk-ua
+ *   tk-time                    → .atk-date
+ *   tk-content                 → .atk-content
+ *   tk-expand                  → .atk-list-read-more
+ *   tk-action-link             → .atk-common-action-btn
+ *   tk-submit / tk-meta-input  → .atk-main-editor > .atk-header input
+ *   tk-rich-text-wrap          → .atk-textarea-wrap
+ *   tk-send (btn--primary)     → .atk-send-btn
+ *   blockquote                 → .atk-content blockquote
+ *
+ * 所有颜色取自 zhheoblog.css 的 heo token，亮/暗色随 [data-theme] 自动切换，
+ * 因此不启用 Artalk 自带的 atk-dark-mode（它会用自己的变量覆盖本映射）。
+ */
+
+/* ========== 1. 主题变量映射（对标 twikoo 的 heo token 用法） ========== */
+.artalk,
+.atk-layer-wrap {
+    --at-color-font: var(--heo-fontcolor);
+    --at-color-deep: var(--heo-fontcolor);
+    --at-color-sub: var(--heo-secondtext);
+    --at-color-grey: var(--heo-secondtext);
+    --at-color-meta: var(--heo-secondtext);
+    --at-color-border: var(--heo-card-border);
+    --at-color-light: var(--heo-blue);
+    --at-color-bg: var(--heo-secondbg);
+    --at-color-bg-transl: var(--heo-maskbgdeep);
+    --at-color-bg-grey: var(--heo-secondbg);
+    --at-color-bg-grey-transl: var(--heo-maskbg);
+    --at-color-bg-light: var(--heo-main-op-light);
+    --at-color-main: var(--heo-lighttext);
+    --at-color-red: #f56c6c;
+    --at-color-pink: #fa5a57;
+    --at-color-yellow: #e6a23c;
+    --at-color-green: #67c23a;
+    --at-color-gradient: linear-gradient(180deg, transparent, var(--heo-secondbg));
+
+    /* 本皮肤内部变量，与 Twikoo 同名同值 */
+    --atk-comment-card-bg: var(--heo-secondbg);
+    --atk-comment-radius: 12px;
+    --atk-comment-input-radius: 16px;
+    --atk-pill-radius: 999px;
+}
+
+.artalk {
+    position: relative;
+    z-index: 102;
+    width: 100%;
+}
+
+.artalk svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+/* 隐藏横向滚动条，保留横向滑动能力（与 Twikoo 一致） */
+.artalk *::-webkit-scrollbar:horizontal {
+    height: 0 !important;
+    display: none !important;
+}
+
+/* 浮层挂在 body 上，必须有实底 */
+.atk-layer-wrap {
+    --at-color-bg: var(--heo-card-bg);
+}
+
+.atk-layer-wrap .atk-layer-mask {
+    background: var(--heo-maskbgdeep);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.artalk .atk-loading,
+.artalk .atk-full-layer,
+.artalk .atk-error-layer {
+    background: var(--heo-card-bg);
+}
+
+/* ========== 2. 列表骨架（对标 tk-comments） ========== */
+.artalk {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.artalk > .atk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+/* 顶部标题行：条数 + 管理入口。Heo 皮肤里 Twikoo 的「评论 N 条」由 zhheoblog.css 调小字号，
+   这里保持同样的弱化处理，避免与主题自带的 #post-comment .comment-head 标题打架 */
+.artalk > .atk-list > .atk-list-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    font-size: 14px;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-comment-count {
+    font-size: 14px;
+    color: var(--heo-secondtext);
+}
+
+.artalk > .atk-list > .atk-list-header .atk-comment-count .atk-comment-count-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--heo-fontcolor);
+    margin-right: 4px;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-right-action {
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-right-action > span {
+    color: var(--heo-secondtext);
+    font-size: 13px;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-right-action > span.atk-on,
+.artalk > .atk-list > .atk-list-header .atk-right-action > span.atk-on * {
+    color: var(--heo-lighttext);
+}
+
+.artalk > .atk-list > .atk-list-header .atk-dropdown {
+    background-color: var(--heo-card-bg);
+    border: var(--style-border-always) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--heo-shadow-border);
+    backdrop-filter: saturate(180%) blur(10px);
+}
+
+.artalk > .atk-list > .atk-list-footer .atk-copyright {
+    color: var(--heo-secondtext);
+    font-size: 12px;
+    padding-right: 0;
+}
+
+.artalk > .atk-list > .atk-list-footer .atk-copyright a {
+    color: var(--heo-lighttext);
+    text-decoration: none;
+}
+
+.artalk .atk-list-comments-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 96px;
+}
+
+.artalk .atk-list-body {
+    min-height: 96px;
+}
+
+/* ========== 3. 评论卡片（对标 tk-comments-container > tk-comment） ========== */
+.artalk .atk-comment-wrap {
+    border-bottom: none;
+}
+
+/* 布局基线对所有层级生效（顶层 + 回复），否则回复会退化成 block 导致正文被挤成一条 */
+.artalk .atk-comment {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    word-break: break-word;
+    scroll-margin-top: 80px;
+}
+
+/* 卡片外观只给顶层评论（tk-comments-container > tk-comment 的直接对应） */
+.artalk .atk-list-comments-wrap > .atk-comment-wrap > .atk-comment {
+    background: var(--atk-comment-card-bg);
+    border: var(--style-border-always);
+    border-radius: var(--atk-comment-radius);
+    box-shadow: var(--heo-shadow-border);
+    padding: 1rem;
+    transition: 0.3s;
+}
+
+/* Artalk 的「整条可点开」态会盖一层灰底，Heo 皮肤下改为极轻的强调色 */
+.artalk .atk-comment-wrap.atk-openable:hover {
+    background: color-mix(in srgb, var(--heo-lighttext) 4%, transparent);
+}
+
+/* ========== 4. 头像（对标 tk-avatar，hover 旋转一圈） ========== */
+.artalk .atk-comment > .atk-avatar {
+    float: none;
+    flex-shrink: 0;
+    padding: 0;
+    margin-right: 16px;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.artalk .atk-comment > .atk-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 99px;
+    object-fit: cover;
+    background-color: rgba(144, 147, 153, 0.13);
+    color: #c0c4cc;
+    transition: transform 0.5s;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-comment > .atk-avatar img:hover {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========== 5. 主体布局：昵称行 + 操作同排，正文独占一行 ========== */
+.artalk .atk-comment > .atk-main {
+    margin-left: 0;
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "meta     actions"
+        "body     body"
+        "children children"
+        "editor   editor";
+    column-gap: 12px;
+    row-gap: 8px;
+    align-items: center;
+}
+
+.artalk .atk-comment > .atk-main > .atk-header {
+    grid-area: meta;
+}
+
+.artalk .atk-comment > .atk-main > .atk-footer {
+    grid-area: actions;
+    justify-self: end;
+    align-self: center;
+    margin-top: 0;
+}
+
+.artalk .atk-comment > .atk-main > .atk-body {
+    grid-area: body;
+    min-width: 0;
+}
+
+.artalk .atk-comment > .atk-main > .atk-comment-children {
+    grid-area: children;
+}
+
+/* 回复时 Artalk 会把编辑器搬进当前评论，必须整行铺满而不是塞进右侧 auto 列 */
+.artalk .atk-comment > .atk-main > .atk-main-editor {
+    grid-area: editor;
+    margin: 4px 0 0;
+}
+
+.artalk .atk-comment > .atk-main > .atk-editor-travel-placeholder {
+    grid-area: editor;
+    display: none;
+}
+
+/* ========== 6. 昵称行（对标 tk-meta-head + tk-time） ========== */
+.artalk .atk-comment > .atk-main > .atk-header {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    margin-bottom: 0;
+    font-size: 13px;
+    line-height: 1;
+    /* 徽章多时允许横向滚动，避免换行把卡片撑高 */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.artalk .atk-comment .atk-header > * {
+    flex-shrink: 0;
+}
+
+.artalk .atk-comment .atk-header .atk-item {
+    margin: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    color: var(--heo-secondtext);
+    font-size: 13px;
+    line-height: 1;
+}
+
+/* 昵称：单行截断（同 tk-meta > a > strong 的 line-clamp） */
+.artalk .atk-comment .atk-header .atk-item.atk-nick,
+.artalk .atk-comment .atk-header .atk-item.atk-nick a {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 12em;
+    color: var(--heo-fontcolor);
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1;
+    text-decoration: none;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-comment .atk-header .atk-item.atk-nick a:hover {
+        color: var(--heo-lighttext);
+    }
+}
+
+/* 时间：弱化 + 单行截断（对标 tk-time） */
+.artalk .atk-comment .atk-header .atk-item.atk-date {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--heo-secondtext) !important;
+    font-size: 13px;
+}
+
+/* ========== 7. 标签（对标 tk-tag / tk-extra：pill + 12px） ========== */
+.artalk .atk-comment .atk-header .atk-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.artalk .atk-comment .atk-header .atk-badge-wrap > * {
+    margin-right: 0 !important;
+}
+
+/* 只定几何，不碰配色：Artalk 会用行内 style 写 badge_color（用户自定义徽章色），
+   这里若加 background/color !important 会把用户的颜色吃掉 */
+.artalk .atk-comment .atk-header .atk-badge,
+.artalk .atk-comment .atk-header .atk-pinned-badge,
+.artalk .atk-comment .atk-header .atk-region-badge,
+.artalk .atk-comment .atk-header .atk-ua {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    min-height: 20px;
+    padding: 2px 8px;
+    border-radius: var(--atk-pill-radius) !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+}
+
+/* 无自定义色时（Artalk 把空色写成行内 backgroundColor:""）才给中性底 */
+.artalk .atk-comment .atk-header .atk-badge-wrap > .atk-badge:not([style*="background-color"]) {
+    background: var(--heo-card-bg);
+    border: var(--style-border-always);
+    color: var(--heo-secondtext);
+}
+
+/* 地区 / 浏览器系统：Twikoo 的 tk-ua 是弱化纯文字，这里保持一致，
+   不给胶囊底，否则三四个 UA 胶囊会把昵称行撑爆 */
+.artalk .atk-comment .atk-header .atk-region-badge,
+.artalk .atk-comment .atk-header .atk-ua {
+    padding: 0;
+    min-height: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0 !important;
+    color: var(--heo-secondtext);
+    font-weight: 400;
+}
+
+/* UA 组整体收窄，避免与昵称抢视觉权重 */
+.artalk .atk-comment .atk-header .atk-ua-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* 置顶沿用 Heo 的红色胶囊（tk-tag-red） */
+.artalk .atk-comment .atk-header .atk-pinned-badge {
+    padding: 2px 8px 2px 6px;
+    color: #f56c6c !important;
+    background: rgba(245, 108, 108, 0.13) !important;
+    border: 1px solid rgba(245, 108, 108, 0.5);
+}
+
+/* ========== 8. 正文（对标 tk-content） ========== */
+.artalk .atk-comment > .atk-main > .atk-body {
+    position: relative;
+    overflow: hidden;
+    color: var(--heo-fontcolor);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.artalk .atk-comment .atk-content p {
+    margin: 0 !important;
+    font-size: 15px !important;
+}
+
+.artalk .atk-comment .atk-content > *:first-child {
+    margin-top: 0;
+}
+
+.artalk .atk-comment .atk-content > *:last-child {
+    margin-bottom: 0;
+}
+
+/* 插图可点开灯箱；表情不可（同 tk-content img:not(...)） */
+.artalk .atk-comment .atk-content img:not([atk-emoticon]) {
+    max-width: min(300px, 100%);
+    height: auto;
+    vertical-align: middle;
+    cursor: zoom-in;
+}
+
+/* 行内表情按字号走，明显小于插图 */
+.artalk .atk-comment .atk-content img[atk-emoticon] {
+    width: auto;
+    height: 26px;
+    max-width: 30px;
+    max-height: 26px;
+    vertical-align: -0.25em;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* 引用（同 Twikoo blockquote 规则） */
+.artalk .atk-comment .atk-content blockquote {
+    background: var(--heo-secondbg);
+    border: var(--style-border);
+    box-shadow: none;
+    margin: 0 0 0.5rem;
+    padding: 0.6em 0.8em;
+    font-size: 0.6rem;
+    color: var(--heo-secondtext);
+    border-radius: 8px;
+}
+
+.artalk .atk-comment .atk-content blockquote p {
+    font-size: inherit !important;
+}
+
+/* 行内代码 */
+.artalk .atk-comment .atk-content code {
+    background: var(--heo-card-btn-bg);
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 0.85em;
+}
+
+/* 引用被回复的原评论（flat 模式），对标 tk-reply-header。
+   嵌套模式（.atk-comment-children）已经用缩进表达了归属，此时再整段引用会重复，
+   因此只保留「回复 @昵称」这一行。 */
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to {
+    border-left: none;
+    margin: 0 0 6px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--heo-secondtext);
+}
+
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-meta {
+    font-size: 13px;
+    color: var(--heo-secondtext);
+}
+
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-nick {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 6px;
+    color: var(--heo-fontcolor);
+    background: var(--heo-card-bg);
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-nick:hover {
+        background: transparent !important;
+        color: var(--heo-lighttext) !important;
+        text-decoration: none !important;
+    }
+}
+
+/* 被引用正文：flat 模式下（移动端）没有缩进，只能靠这段引用表达归属，
+   所以保留但限制为两行——原评论再长也不能盖过本次回复本身。
+   同时压掉内部 blockquote/code 的额外留白，避免嵌套出三层缩进。 */
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-content {
+    margin-top: 2px;
+    opacity: 0.85;
+    font-size: 13px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-content > * {
+    margin: 0 !important;
+}
+
+.artalk .atk-comment > .atk-main > .atk-body > .atk-reply-to .atk-content blockquote {
+    margin: 0 !important;
+    padding: 0.25em 0.5em;
+    font-size: inherit !important;
+}
+
+/* 嵌套回复里隐藏被引用正文：留一行「回复 @xxx」即可 */
+.artalk .atk-comment-children .atk-reply-to .atk-content {
+    display: none;
+}
+
+/* 待审核 / 折叠 / 展开更多 */
+.artalk .atk-comment .atk-pending {
+    color: #e6a23c;
+    background: rgba(230, 162, 60, 0.13);
+    border: 1px solid rgba(230, 162, 60, 0.5);
+    border-left-width: 1px;
+    border-radius: var(--atk-comment-radius);
+    margin: 0 0 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.artalk .atk-comment .atk-content.atk-type-collapsed {
+    border: none;
+    background: var(--heo-card-bg);
+    border-radius: var(--atk-comment-radius);
+    margin-bottom: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.artalk .atk-comment .atk-collapsed {
+    background: transparent;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    color: var(--heo-secondtext);
+}
+
+.artalk .atk-comment .atk-collapsed .atk-show-btn {
+    color: var(--heo-lighttext);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.artalk .atk-comment .atk-height-limit-btn {
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-secondtext);
+    border-radius: var(--atk-pill-radius);
+    padding: 4px 18px;
+    font-size: 13px;
+    bottom: 10px;
+}
+
+/* 未读标记：Heo 强调色竖条 */
+.artalk .atk-comment-wrap.atk-unread:before {
+    background: var(--heo-lighttext);
+    border-radius: 0 3px 3px 0;
+    top: 12%;
+    height: 76%;
+}
+
+/* ========== 9. 操作按钮（对标 tk-action-link 胶囊） ========== */
+.artalk .atk-comment > .atk-main > .atk-footer .atk-actions {
+    display: flex !important;
+    flex-flow: nowrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.artalk .atk-comment .atk-actions > span:not(:last-child):not(.atk-hide) {
+    margin-right: 0 !important;
+}
+
+.artalk .atk-comment .atk-common-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 32px;
+    min-width: 32px;
+    padding: 0 8px;
+    border-radius: var(--atk-pill-radius);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-lighttext);
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-comment .atk-common-action-btn:hover {
+        background: var(--heo-main-op-light);
+        border-color: var(--heo-main-op);
+        color: var(--heo-lighttext);
+    }
+}
+
+/* Artalk 原生这几个状态用了 !important，必须同权重才能接管 */
+.artalk .atk-comment .atk-common-action-btn.atk-btn-confirm,
+.artalk .atk-comment .atk-common-action-btn.atk-btn-warn {
+    color: var(--heo-lighttext) !important;
+    background: var(--heo-main-op-light);
+    border-color: var(--heo-main-op);
+}
+
+.artalk .atk-comment .atk-common-action-btn.atk-btn-error {
+    color: #f56c6c !important;
+}
+
+.artalk .atk-comment .atk-common-action-btn.atk-btn-success {
+    color: #67c23a !important;
+}
+
+/* ========== 10. 回复区（对标 tk-replies：同卡片底 + 虚线顶边） ========== */
+.artalk .atk-comment-children {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+/* 卡片外观挂在 wrap 上，内层 .atk-comment 只留 padding，
+   否则 Artalk 内置的 .atk-comment{border-bottom:1px solid transparent} 会多出一条线 */
+.artalk .atk-comment-children > .atk-comment-wrap {
+    border: none;
+    border-radius: var(--atk-comment-radius);
+    background: var(--atk-comment-card-bg);
+    box-shadow: var(--heo-shadow-border);
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+}
+
+/* tk-replies 的虚线顶边：用 background-image 画虚线，避免 border 把圆角撑破 */
+.artalk .atk-comment-children > .atk-comment-wrap::before {
+    content: "";
+    display: block;
+    height: 1px;
+    background-image: linear-gradient(to right, var(--heo-card-border) 50%, transparent 50%);
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+}
+
+.artalk .atk-comment-children > .atk-comment-wrap > .atk-comment {
+    padding: 12px 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.artalk .atk-comment-children .atk-comment > .atk-avatar {
+    margin-right: 12px;
+}
+
+.artalk .atk-comment-children .atk-comment > .atk-avatar img {
+    width: 26px;
+    height: 26px;
+}
+
+.artalk .atk-comment-children .atk-comment > .atk-main > .atk-body {
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+/* ========== 11. 输入区（对标 tk-submit + tk-rich-text-wrap） ========== */
+.artalk .atk-main-editor {
+    background: transparent;
+    border: none;
+    border-radius: var(--atk-comment-input-radius);
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+/* 回复态：Artalk 把编辑器搬进评论内，此时包一层卡片（同 tk-submit-reply） */
+.artalk .atk-comment > .atk-main > .atk-main-editor,
+.artalk .atk-main-editor.editor-traveling {
+    background: var(--heo-card-bg);
+    border: var(--style-border-always);
+    border-radius: var(--atk-comment-input-radius);
+    box-shadow: var(--heo-shadow-border);
+    box-sizing: border-box;
+    padding: 12px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.artalk .atk-comment > .atk-main > .atk-main-editor > .atk-textarea-wrap > .atk-textarea {
+    min-height: 80px;
+}
+
+/* 昵称 / 邮箱 / 网址 */
+.artalk .atk-main-editor > .atk-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 0 8px;
+}
+
+.artalk .atk-main-editor > .atk-header input {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    color: var(--heo-fontcolor);
+    background: var(--heo-secondbg) !important;
+    border: var(--style-border-always) !important;
+    border-radius: var(--atk-comment-radius) !important;
+    box-shadow: none;
+    outline: none;
+    padding: 8px 12px;
+    font-size: 16px !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.artalk .atk-main-editor > .atk-header input:not(:last-child) {
+    margin-right: 0;
+}
+
+.artalk .atk-main-editor > .atk-header input:focus {
+    border: var(--style-border-hover-always) !important;
+    box-shadow: var(--heo-shadow-main);
+}
+
+.artalk .atk-main-editor > .atk-header input::placeholder {
+    color: var(--heo-secondtext);
+}
+
+/* 正文输入框：聚焦时边框换强调色 + 主题投影（同 tk-rich-text-wrap:focus-within） */
+.artalk .atk-main-editor > .atk-textarea-wrap {
+    position: relative;
+    background: var(--heo-secondbg);
+    border: var(--style-border-always);
+    border-radius: var(--atk-comment-input-radius);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.artalk .atk-main-editor > .atk-textarea-wrap:focus-within {
+    border: var(--style-border-hover-always);
+    box-shadow: var(--heo-shadow-main);
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-main-editor > .atk-textarea-wrap:hover {
+        border-color: var(--heo-lighttext);
+    }
+}
+
+.artalk .atk-main-editor > .atk-textarea-wrap > .atk-textarea {
+    color: var(--heo-fontcolor);
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    width: 100%;
+    min-height: 100px !important;
+    margin: 0;
+    padding: 16px 16px 40px !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    resize: none;
+}
+
+/* 表情 / 预览面板 */
+.artalk .atk-main-editor > .atk-plug-panel-wrap {
+    border: var(--style-border-always);
+    border-top: none;
+    border-radius: 0 0 var(--atk-comment-input-radius) var(--atk-comment-input-radius);
+    background: var(--heo-card-bg);
+    backdrop-filter: saturate(180%) blur(10px);
+}
+
+.artalk .atk-main-editor > .atk-plug-panel-wrap .atk-editor-plug-emoticons {
+    scrollbar-width: thin;
+}
+
+/* 底部工具条 */
+.artalk .atk-main-editor > .atk-bottom {
+    padding: 10px 0 0;
+    row-gap: 8px;
+    border-top: none;
+}
+
+.artalk .atk-main-editor > .atk-bottom > .atk-item {
+    flex-direction: row;
+    align-items: center;
+    display: flex;
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-plug-btn {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    border-radius: var(--atk-pill-radius);
+    font-size: 14px;
+    color: var(--heo-secondtext);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-plug-btn:not(:last-child) {
+    margin-right: 6px;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-main-editor > .atk-bottom .atk-plug-btn:hover {
+        background: var(--heo-main-op-light);
+        border-color: var(--heo-main-op);
+        color: var(--heo-lighttext);
+    }
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-plug-btn.active {
+    color: var(--heo-lighttext);
+    background: var(--heo-main-op-light);
+    border-color: var(--heo-main-op);
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-plug-btn.active svg.markdown path {
+    fill: var(--heo-lighttext);
+}
+
+/* 「正在回复 @xxx」胶囊 */
+.artalk .atk-main-editor > .atk-bottom .atk-state-btn {
+    height: 32px;
+    border-radius: var(--atk-pill-radius);
+    background: var(--heo-main-op-light);
+    color: var(--heo-lighttext);
+    font-size: 14px;
+    border: 1px solid var(--heo-main-op);
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-state-btn .atk-text-wrap {
+    max-width: 12em;
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-state-btn .atk-cancel {
+    background: transparent;
+    height: 100%;
+    padding: 0 10px;
+    border-radius: var(--atk-pill-radius);
+}
+
+/* 发送按钮（同 tk-send btn--primary：主题色实心 + 卡片色文字） */
+.artalk .atk-main-editor > .atk-bottom .atk-send-btn {
+    min-width: 7.3em;
+    height: 34px;
+    margin: 0;
+    padding: 0 20px;
+    border: var(--style-border-always);
+    border-radius: var(--atk-pill-radius);
+    background: var(--heo-lighttext);
+    color: var(--heo-card-bg);
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-main-editor > .atk-bottom .atk-send-btn:hover {
+        background: var(--heo-main-op-deep);
+        color: var(--heo-card-bg);
+    }
+}
+
+.artalk .atk-main-editor > .atk-bottom .atk-send-btn:active {
+    opacity: 0.9;
+}
+
+/* 提示气泡 */
+.artalk .atk-main-editor > .atk-notify-wrap {
+    background: var(--heo-card-bg);
+    border-radius: 8px;
+    color: var(--heo-fontcolor);
+}
+
+/* ========== 12. 分页 / 读更多（对标 tk-expand 卡片 + tk-footer-sort 胶囊） ========== */
+.artalk .atk-list-read-more {
+    border-top: none;
+    margin-top: 16px;
+    padding-bottom: 0;
+}
+
+.artalk .atk-list-read-more .atk-list-read-more-inner {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 12px;
+    text-align: center;
+    border-radius: var(--atk-comment-radius);
+    border: var(--style-border-always);
+    background: var(--atk-comment-card-bg) !important;
+    box-shadow: var(--heo-shadow-border);
+    color: var(--heo-fontcolor) !important;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.5s;
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-list-read-more .atk-list-read-more-inner:hover {
+        background: var(--heo-lighttext) !important;
+        color: var(--heo-card-bg) !important;
+    }
+}
+
+.artalk .atk-list-read-more .atk-list-read-more-inner > .atk-text {
+    color: inherit;
+}
+
+.artalk .atk-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0 0;
+}
+
+.artalk .atk-pagination > :not(:last-child) {
+    margin-right: 0;
+}
+
+.artalk .atk-pagination > .atk-btn,
+.artalk .atk-pagination > .atk-input {
+    height: 32px;
+    width: auto;
+    min-width: 56px;
+    padding: 0 12px;
+    border-radius: var(--atk-pill-radius);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-secondtext);
+    font-size: 14px;
+}
+
+.artalk .atk-pagination > .atk-input:focus {
+    border-color: var(--heo-lighttext);
+}
+
+@media (hover: hover) {
+
+    .artalk .atk-pagination > .atk-btn:hover {
+        background: var(--heo-main-op-light);
+        border-color: var(--heo-main-op);
+        color: var(--heo-lighttext);
+    }
+}
+
+.artalk .atk-pagination > .atk-btn.atk-disabled,
+.artalk .atk-pagination > .atk-btn.atk-disabled:hover {
+    background: var(--heo-card-bg);
+    border-color: var(--heo-card-border);
+    color: var(--heo-secondtext);
+    opacity: 0.5;
+    cursor: default;
+}
+
+.artalk .atk-list-no-comment {
+    height: auto;
+    min-height: 96px;
+    font-size: 14px;
+    color: var(--heo-secondtext);
+}
+
+/* ========== 13. 侧栏 / 灯箱 ========== */
+.artalk .atk-sidebar-layer {
+    background: var(--heo-card-bg);
+}
+
+.artalk .atk-sidebar-close {
+    color: var(--heo-secondtext);
+}
+
+/* ========== 14. 移动端 ========== */
+@media screen and (max-width: 768px) {
+
+    /* 操作按钮移到正文下方，避免和昵称挤在一行 */
+    .artalk .atk-comment > .atk-main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "meta"
+            "body"
+            "actions"
+            "children"
+            "editor";
+        row-gap: 6px;
+    }
+
+    .artalk .atk-comment > .atk-main > .atk-footer {
+        justify-self: start;
+    }
+
+    .artalk .atk-comment > .atk-main > .atk-header {
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+
+    /* iOS 聚焦不缩放：输入类控件字号必须 ≥16px */
+    .artalk .atk-main-editor > .atk-header input,
+    .artalk .atk-main-editor > .atk-textarea-wrap > .atk-textarea {
+        font-size: 16px !important;
+    }
+
+    .artalk .atk-main-editor > .atk-header input {
+        flex: 1 1 100%;
+    }
+
+    .artalk .atk-list-comments-wrap > .atk-comment-wrap > .atk-comment,
+    .artalk .atk-comment-children > .atk-comment-wrap > .atk-comment {
+        padding: 12px;
+    }
+
+    .artalk .atk-comment > .atk-avatar img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .artalk .atk-comment > .atk-avatar {
+        margin-right: 12px;
+    }
+}
