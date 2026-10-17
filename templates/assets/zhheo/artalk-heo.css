@@ -663,8 +663,10 @@
     flex-direction: column;
     gap: 12px;
     margin-top: 12px;
-    margin-left: 0;
-    padding-left: 0;
+    margin-left: 8px;
+    padding-left: 16px;
+    border-left: 1px dashed transparent;
+    border-image: repeating-linear-gradient(to bottom, var(--heo-card-border) 0 2px, transparent 2px 6px) 1;
 }
 
 /* 卡片外观挂在 wrap 上，内层 .atk-comment 只留 padding，
@@ -739,15 +741,51 @@
     min-height: 80px;
 }
 
-/* 昵称 / 邮箱 / 网址 */
+/* 昵称 / 邮箱 / 网址：对标 tk-meta-input，标签和输入合成一粒胶囊，窄屏横向滑动而不是立刻折成三行 */
 .artalk .atk-main-editor > .atk-header {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 8px;
     padding: 0 0 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 
-.artalk .atk-main-editor > .atk-header input {
+.artalk .atk-main-editor > .atk-header::-webkit-scrollbar {
+    display: none;
+}
+
+.artalk .atk-meta-field {
+    display: flex;
+    align-items: center;
+    flex: 1 1 0;
+    min-width: 148px;
+    box-sizing: border-box;
+    background: var(--heo-secondbg);
+    border: var(--style-border-always);
+    border-radius: var(--atk-comment-radius);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.artalk .atk-meta-field:focus-within {
+    border: var(--style-border-hover-always);
+    box-shadow: var(--heo-shadow-main);
+}
+
+.artalk .atk-meta-label {
+    flex-shrink: 0;
+    padding: 0 4px 0 12px;
+    color: var(--heo-fontcolor);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    user-select: none;
+}
+
+.artalk .atk-main-editor > .atk-header input,
+.artalk .atk-meta-field input {
     flex: 1 1 0;
     min-width: 0;
     width: auto;
@@ -762,11 +800,20 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.artalk .atk-meta-field input {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 8px 12px 8px 4px;
+}
+
 .artalk .atk-main-editor > .atk-header input:not(:last-child) {
     margin-right: 0;
 }
 
-.artalk .atk-main-editor > .atk-header input:focus {
+/* 未 wrap 时的兜底；包进 .atk-meta-field 后由 :focus-within 接管 */
+.artalk .atk-main-editor > .atk-header > input:focus {
     border: var(--style-border-hover-always) !important;
     box-shadow: var(--heo-shadow-main);
 }
@@ -1013,9 +1060,29 @@
 
 .artalk .atk-list-no-comment {
     height: auto;
-    min-height: 96px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
     font-size: 14px;
     color: var(--heo-secondtext);
+    background: var(--atk-comment-card-bg);
+    border: var(--style-border-always);
+    border-radius: var(--atk-comment-radius);
+    box-shadow: var(--heo-shadow-border);
+}
+
+/* 表情包拉取失败时 Artalk 会在面板里铺一层绝对定位的错误层，盖住整块面板。
+   收成普通提示，避免评论区看起来像整页报错。 */
+.artalk .atk-plug-panel-wrap .atk-error-layer,
+.artalk .atk-editor-plug-emoticons .atk-error-layer {
+    position: static;
+    min-height: 48px;
+    padding: 12px;
+    background: transparent;
+    color: var(--heo-secondtext);
+    font-size: 13px;
 }
 
 /* ========== 13. 侧栏 / 灯箱 ========== */
@@ -1057,10 +1124,6 @@
         font-size: 16px !important;
     }
 
-    .artalk .atk-main-editor > .atk-header input {
-        flex: 1 1 100%;
-    }
-
     .artalk .atk-list-comments-wrap > .atk-comment-wrap > .atk-comment,
     .artalk .atk-comment-children > .atk-comment-wrap > .atk-comment {
         padding: 12px;
@@ -1073,5 +1136,20 @@
 
     .artalk .atk-comment > .atk-avatar {
         margin-right: 12px;
+    }
+}
+
+/* 真正的窄屏才把三项折成一列；平板宽度保持和 Twikoo 一样的横排胶囊 */
+@media screen and (max-width: 520px) {
+
+    .artalk .atk-main-editor > .atk-header {
+        flex-wrap: wrap;
+        overflow-x: visible;
+    }
+
+    .artalk .atk-meta-field,
+    .artalk .atk-main-editor > .atk-header > input {
+        flex: 1 1 100%;
+        min-width: 0;
     }
 }

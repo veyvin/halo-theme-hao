@@ -91,37 +91,29 @@
                 window.pjax && window.pjax.refresh($dom)
             }
             
-            let artalkUrl = '';
-            const getArtalkUrl = () => {
-                fetch("[(${theme.config.comments.artalks.server})]" + 'api/v2/conf')
-                        .then(response => response.json())
-                        .then(d => {
-                            artalkUrl = '/api/v2/stats/latest_comments'
-                        })
-                        .catch(e => {
-                            artalkUrl = '/api/stat'
-                        })
-            }
-            
+            // 最近评论接口。
+            // 主题内置的是 Artalk 2.10.0（v2 API），所以直接固定用 v2 路径：
+            //   /api/v2/stats/latest_comments —— 只接受 GET（POST 会返回
+            //   {"msg":"Error: Method Not Allowed"}），参数走 query string。
+            //
+            // 【不要再做版本探测】
+            // 之前这里先 fetch /api/v2/conf 来判断版本，但该请求同样受 CORS 约束：
+            // 一旦被浏览器拦掉（NetworkError），catch 会把它误判成「旧版本」，
+            // 回退到 Artalk 1.x 的 /api/stat —— 而该接口在 2.x 早已删除（404），
+            // 于是拼出 ".../api/stat" 这种必然失败的请求。
+            // 正确做法是：主题既然打包了 2.x，就直接用 2.x 的接口。
+            const ATK_SERVER = "[(${theme.config.comments.artalks.server})]".replace(/\/+$/, '');
+            const LATEST_COMMENTS_API = ATK_SERVER + '/api/v2/stats/latest_comments'
+                + '?site_name=' + encodeURIComponent(GLOBAL_CONFIG.source.artalk.siteName)
+                + '&limit=20';
+
             const getComment = () => {
-                const statheaderList = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Origin': window.location.origin
-                    },
-                    body: new URLSearchParams({
-                        'site_name': GLOBAL_CONFIG.source.artalk.siteName,
-                        'limit': '20',
-                        'type': 'latest_comments'
-                    })
-                }
-                // 兼容2.8以后版本的artalk接口
-                getArtalkUrl();
-                fetch("[(${theme.config.comments.artalks.server})]" + artalkUrl, statheaderList)
+                fetch(LATEST_COMMENTS_API)
                         .then(response => response.json())
                         .then(d => {
-                            const artalk = d.data.map(function (e) {
+                            // 接口异常时会返回 {msg:...} 而没有 data，这里兜底避免抛错
+                            const list = Array.isArray(d.data) ? d.data : [];
+                            const artalk = list.map(function (e) {
                                 return {
                                     'avatar': 'https://cravatar.cn/avatar/' + e.email_encrypted + '?d=mp&s=240',
                                     'content': btf.changeContent(e.content_marked, 150),
@@ -133,9 +125,9 @@
                             saveToLocal.set('artalk-newest-comments', JSON.stringify(artalk), 10 / (60 * 24))
                             generateHtml(artalk)
                             document.querySelector('#newcomm') && necommHtml(artalk)
-                        }).catch(e => {
+                        }).catch(() => {
                     const $dom = document.querySelector('#card-newest-comments .aside-list')
-                    $dom.innerHTML = "无法获取评论，请确认相关配置是否正确"
+                    if ($dom) $dom.innerHTML = "无法获取评论，请确认相关配置是否正确"
                 })
             }
             const newestCommentInit = () => {

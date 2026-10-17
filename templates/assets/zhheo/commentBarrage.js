@@ -56,25 +56,28 @@ if(GLOBAL_CONFIG.htmlType!='comments' && document.querySelector('#post-comment')
         }
 
         if(commentBarrageConfig.use=='Artalk'){
-            var data ={
+            // Artalk 2.x 只提供 /api/v2/*，v1 的 /api/get 已移除（返回 404）。
+            // 这里必须用 GET + query string，v2 的评论列表是 GET 接口。
+            const query = new URLSearchParams({
                 "site_name": commentBarrageConfig.siteName,
                 "page_key": commentBarrageConfig.pageUrl,
-                "limit": 100,
-                "offset": 0
-            };
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-            xhr.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
-                    commentBarrageConfig.barrageList = commentLinkFilter(JSON.parse(this.responseText).data.comments);
+                "limit": "100",
+                "offset": "0"
+            }).toString();
+            // artalkUrl 配置时要求带结尾斜杠，这里去掉再拼，避免出现 "//api/v2/..."
+            const atkBase = String(commentBarrageConfig.artalkUrl || '').replace(/\/+$/, '');
+            fetch(atkBase + '/api/v2/comments?' + query)
+                .then(e => e.json())
+                .then(d => {
+                    // CORS 被拦时 fetch 也会 reject，这里兜底避免整段脚本崩掉
+                    const comments = d && d.data && d.data.comments ? d.data.comments : [];
+                    commentBarrageConfig.barrageList = commentLinkFilter(comments);
                     commentBarrageConfig.dom.innerHTML = '';
-                }
-            });
-            const usp = new URLSearchParams(data)
-            const query = usp.toString()
-            xhr.open("POST", commentBarrageConfig.artalkUrl+'api/get');
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(query);
+                })
+                .catch(() => {
+                    commentBarrageConfig.barrageList = [];
+                    commentBarrageConfig.dom.innerHTML = '';
+                });
         }
 
         if(commentBarrageConfig.use=='Waline'){

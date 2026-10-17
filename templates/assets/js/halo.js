@@ -298,20 +298,18 @@ let halo = {
                 ))
             }
             if (GLOBAL_CONFIG.source.comments.use == 'Artalk') {
-                const statheaderList = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Origin': window.location.origin
-                    },
-                    body: new URLSearchParams({
-                        'site_name': GLOBAL_CONFIG.source.artalk.siteName,
-                        'limit': '100',
-                        'type': 'latest_comments'
-                    })
-                }
-                fetch(GLOBAL_CONFIG.source.artalk.artalkUrl + 'api/stat', statheaderList)
-                    .then((e => e.json())).then((({data: t}) => {
+                // Artalk 2.x 已移除 v1 的 /api/stat，改用 /api/v2/stats/latest_comments。
+                // 该接口只接受 GET（POST 返回 {"msg":"Error: Method Not Allowed"}），
+                // 参数必须走 query string。
+                // artalkUrl 配置时要求带结尾斜杠，这里去掉再拼，避免出现 "//api/v2/..."
+                const atkBase = String(GLOBAL_CONFIG.source.artalk.artalkUrl || '').replace(/\/+$/, '');
+                const target = atkBase + '/api/v2/stats/latest_comments'
+                    + '?site_name=' + encodeURIComponent(GLOBAL_CONFIG.source.artalk.siteName)
+                    + '&limit=100';
+                fetch(target)
+                    .then((e => e.json())).then((d => {
+                        // 接口异常时没有 data，兜底为空数组
+                        const t = Array.isArray(d && d.data) ? d.data : [];
                         t.forEach((e => {
                                 n.push({
                                     avatar: 'https://cravatar.cn/avatar/' + e.email_encrypted + '?d=mp&s=240',
@@ -324,7 +322,7 @@ let halo = {
                             e.batchSend(n, !0),
                             saveToLocal.set("danmu", n, .02)
                     }
-                ))
+                )).catch(() => {})
             }
             if (GLOBAL_CONFIG.source.comments.use == 'Waline') {
                 const loadWaline = () => {

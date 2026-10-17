@@ -23,7 +23,11 @@
     <!-- canonical + Open Graph + Twitter Card：Halo 未统一生成，由主题按开关提供 -->
     <!-- perf-1: DNS 预解析外部域名，减少首次外联耗时 -->
     <link rel="preconnect" th:href="${theme.config.comments.twikoos.envId}" th:if="${theme.config.comments.use == 'Twikoo' and not #strings.isEmpty(theme.config.comments.twikoos.envId)}" crossorigin>
-    <link rel="preconnect" th:href="${'https://' + theme.config.comments.artalks.server}" th:if="${theme.config.comments.use == 'Artalk' and not #strings.isEmpty(theme.config.comments.artalks.server)}" crossorigin>
+    <!-- Artalk 后端 URL：直接用配置值，不要拼 'https://'。
+         artalks.server 的填写说明本身就要求带完整协议（后缀带 /），
+         形如 https://artalk.example.com/。若在此再拼一次协议，
+         会产出 https://https://artalk.example.com/ 这种非法 URL。 -->
+    <link rel="preconnect" th:href="${theme.config.comments.artalks.server}" th:if="${theme.config.comments.use == 'Artalk' and not #strings.isEmpty(theme.config.comments.artalks.server)}" crossorigin>
     <!-- pjax 要求这些 meta 在所有页面数量一致（new/old 都为 1）；标签始终输出，内容可为空 -->
     <th:block th:if="${theme.config.basics.seo.enable_metadata}">
         <!-- 文章页 -->

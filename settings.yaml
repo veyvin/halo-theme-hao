@@ -2027,7 +2027,7 @@ spec:
               key: artalkServer
               label: Artalk评论 - 后端URL
               placeholder: 请输入后端URL，例如：https://artalk.example.com/
-              help: 需自建 Artalk 服务端（Docker 一键部署），填站点可访问到的后端地址，后缀带 / 。验证：浏览器打开 该地址 + api/v2/conf 能返回 JSON 即配置正确。文档：https://artalk.js.org/guide/backend/install.html
+              help: 需自建 Artalk 服务端，填浏览器能访问到的后端地址，后缀带 / 。用域名能评论、用局域网 IP 打开博客却报 Failed to fetch，是 Artalk 的 CORS 白名单里没有这个来源：到 Artalk 控制台 /sidebar/ → 站点 → URL，补上局域网地址（如 http://192.168.x.x:8090），或在 artalk.yml 的 trusted_domains 里加上同一条。文档：https://artalk.js.org/guide/backend/config.html
               validation: required
             - $formkit: text
               name: siteName

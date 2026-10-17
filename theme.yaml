@@ -27,8 +27,12 @@ spec:
   repo: https://github.com/veyvin/halo-theme-hao
   settingName: "theme-hao-setting"
   configMapName: "theme-hao-configMap"
-  version: "1.10.45"
+  version: "1.10.50"
   requires: ">=2.22.8"
   license:
     - name: "GPL-3.0"
       url: "https://github.com/chengzhongxue/halo-theme-hao/blob/main/LICENSE"
+
+
+
+
