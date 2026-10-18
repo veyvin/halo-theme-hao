@@ -1,9 +1,7 @@
 apiVersion: theme.halo.run/v1alpha1
 kind: Theme
 metadata:
-  name: theme-hao
-  annotations:
-    "store.halo.run/app-id": "app-MgZJX"
+  name: theme-vhao
 spec:
   displayName: Hao
   author:
