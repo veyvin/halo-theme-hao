@@ -25,19 +25,22 @@
                  th:classappend="${#strings.equals(coverMode, 'gradient')} ? ' cover-art cover-preset-' + coverPreset : ''">
                 <a th:attr="title=${post.spec.title}" th:href="@{${post.status.permalink}}"
                    th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
+                    <!-- 首屏约 4 张封面直出（双列两行 / 单列约一屏），其余懒加载。
+                         只放行第 1 张时，第 2 张起要等进视口才请求，首屏会长时间只剩一张图。 -->
                     <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="800" height="450"
                          th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")},
                                    imgS = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")},
                                    imgL = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "l")},
                                    isFirst=${iStat.first},
+                                   isEager=${iStat.index &lt; 4},
                                    srcsetVal=${imgS + " 400w, " + img + " 800w, " + imgL + " 1200w"}'
                           th:alt="${post.spec.title}"
                           sizes="(max-width: 768px) 52vw, 400px"
-                          th:srcset="${isLazyload ? null : srcsetVal}"
-                          th:data-srcset="${isLazyload ? srcsetVal : null}"
-                          th:data-lazy-src="${isLazyload and !isFirst ? img : null}"
-                          th:src="${!isLazyload or isFirst ? img : loadingImg}"
-                          th:attr="fetchpriority=${isFirst ? 'high' : null}, loading=${isFirst ? 'eager' : null}"
+                          th:srcset="${!isLazyload or isEager ? srcsetVal : null}"
+                          th:data-srcset="${isLazyload and !isEager ? srcsetVal : null}"
+                          th:data-lazy-src="${isLazyload and !isEager ? img : null}"
+                          th:src="${!isLazyload or isEager ? img : loadingImg}"
+                          th:attr="fetchpriority=${isFirst ? 'high' : (isEager ? 'low' : null)}, loading=${isEager ? 'eager' : 'lazy'}"
                           decoding="async">
                     <div th:if="${#strings.equals(coverMode, 'gradient')}" class="post_bg post_art_bg"
                          th:style="'--cover-start:' + ${coverStart} + ';--cover-end:' + ${coverEnd} + ';--cover-accent:' + ${coverAccent} + ';--cover-text:' + ${coverTextColor} + ';background-color:' + ${coverStart} + ';background-image:linear-gradient(135deg,' + ${coverStart} + ',' + ${coverEnd} + ');'">

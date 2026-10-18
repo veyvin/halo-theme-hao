@@ -564,11 +564,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const lazyloadImg = () => {
         window.lazyLoadInstance = new LazyLoad({
-            elements_selector: 'img',
-            threshold: 0,
+            // 只接管带 data-lazy-src 的图；首屏 eager 封面不进队列，避免抢带宽
+            elements_selector: 'img[data-lazy-src]',
+            // 提前约一屏开始拉图，避免「滚到才请求 → 还要等 CDN」的空白段
+            threshold: 800,
             data_src: 'lazy-src',
             callback_error: (img) => {
-                img.setAttribute("srcset", GLOBAL_CONFIG.lazyload.error);
+                if (GLOBAL_CONFIG.lazyload.error) {
+                    img.setAttribute("srcset", GLOBAL_CONFIG.lazyload.error);
+                }
             }
         })
     }

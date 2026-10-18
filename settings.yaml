@@ -3022,7 +3022,7 @@ spec:
               id: enable
               key: enable
               label: 开启懒加载
-              help: 图片在进入可视区域时才加载，提升页面加载速度
+              help: 开启后非首屏图片进入视口前约一屏才请求。首页文章列表前 4 张封面始终直出，避免首屏长时间只出一张图
             - $formkit: attachment
               name: loadingImg
               id: loadingImg
