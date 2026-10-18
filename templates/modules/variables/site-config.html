@@ -141,6 +141,8 @@
                 skin: /*[[${assets_link + '/zhheo/artalk-heo.css' + theme_version}]]*/,
                 artalkUrl: "[(${theme.config.comments.artalks.server})]",
                 siteName: "[(${theme.config.comments.artalks.siteName})]",
+                loginText: /*[[${#messages.msg('comment.loginToComment')}]]*/ '使用本站账号登录发表评论',
+                loginUrl: '/login',
             },
             waline: {
                 js: /*[[${not #strings.isEmpty(theme.config.comments.walines.walinesJs) ? theme.config.comments.walines.walinesJs : 'https://cdn.cbd.int/@waline/client@2.15.7/dist/waline.js'}]]*/,

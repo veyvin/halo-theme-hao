@@ -713,7 +713,7 @@
     line-height: 1.65;
 }
 
-/* ========== 11. 输入区（对标 tk-submit + tk-rich-text-wrap） ========== */
+/* ========== 11. 输入区（对标 tk-submit + 三种身份切换） ========== */
 .artalk .atk-main-editor {
     background: transparent;
     border: none;
@@ -722,6 +722,249 @@
     margin: 0;
     padding: 0;
     overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ---------- 11a. 三种切换（对标 .tk-meta-mode-buttons） ---------- */
+.artalk .atk-heo-mode-bar {
+    display: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.artalk .atk-heo-mode-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.artalk .atk-heo-editor[data-atk-mode="default"] .atk-heo-mode-bar {
+    display: flex;
+}
+
+.artalk .atk-heo-mode-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: var(--atk-pill-radius);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-fontcolor);
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.artalk .atk-heo-mode-btn.atk-heo-mode-login {
+    min-width: 200px;
+    background: var(--heo-fontcolor);
+    color: var(--heo-card-bg);
+    border-color: var(--heo-fontcolor);
+    font-weight: 600;
+}
+
+.artalk .atk-heo-mode-logo {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--heo-blue);
+    flex-shrink: 0;
+}
+
+@media (hover: hover) {
+    .artalk .atk-heo-mode-btn:not(.atk-heo-mode-login):hover {
+        color: var(--heo-lighttext);
+        background: var(--heo-main-op-light);
+        border-color: var(--heo-main-op);
+    }
+
+    .artalk .atk-heo-mode-btn.atk-heo-mode-login:hover {
+        opacity: 0.92;
+    }
+}
+
+/* ---------- 11b. 身份行：头像 | 字段/昵称 | 动作 | 发送 ---------- */
+.artalk .atk-heo-identity {
+    display: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.artalk .atk-heo-editor[data-atk-mode="other"] .atk-heo-identity,
+.artalk .atk-heo-editor[data-atk-mode="anonymous"] .atk-heo-identity,
+.artalk .atk-heo-editor[data-atk-mode="halo"] .atk-heo-identity {
+    display: flex;
+}
+
+.artalk .atk-heo-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 99px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--heo-secondbg);
+    color: var(--heo-secondtext);
+}
+
+.artalk .atk-heo-avatar img,
+.artalk .atk-heo-avatar svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.artalk .atk-heo-avatar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.artalk .atk-heo-identity-main {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.artalk .atk-heo-editor[data-atk-mode="anonymous"] .atk-heo-identity-main,
+.artalk .atk-heo-editor[data-atk-mode="halo"] .atk-heo-identity-main {
+    display: inline-flex;
+}
+
+.artalk .atk-heo-nick {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--heo-fontcolor);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 3em;
+    max-width: 40vw;
+}
+
+.artalk .atk-heo-identity-tip {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--atk-pill-radius);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-secondtext);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.artalk .atk-heo-text-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 4px;
+    border: none;
+    background: transparent;
+    color: var(--heo-lighttext);
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.artalk .atk-heo-text-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.artalk .atk-heo-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.artalk .atk-heo-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: var(--atk-pill-radius);
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-fontcolor);
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+@media (hover: hover) {
+    .artalk .atk-heo-action-btn:hover {
+        color: var(--heo-lighttext);
+        background: var(--heo-main-op-light);
+        border-color: var(--heo-main-op);
+    }
+}
+
+/* 发送钮挪到身份行后，用 Twikoo 同款主色胶囊 */
+.artalk .atk-heo-actions .atk-send-btn.atk-heo-send {
+    min-width: 7.3em;
+    height: 34px;
+    margin: 0;
+    padding: 0 16px;
+    border: var(--style-border-always);
+    border-radius: var(--atk-pill-radius);
+    background: var(--heo-lighttext);
+    color: var(--heo-card-bg);
+    font-size: 14px;
+}
+
+@media (hover: hover) {
+    .artalk .atk-heo-actions .atk-send-btn.atk-heo-send:hover {
+        background: var(--heo-main-op-deep);
+        color: var(--heo-card-bg);
+    }
+}
+
+/* default 模式：隐藏身份行里的字段，底部也不露发送 */
+.artalk .atk-heo-editor[data-atk-mode="default"] .atk-heo-identity,
+.artalk .atk-heo-editor[data-atk-mode="default"] .atk-header {
+    display: none !important;
+}
+
+.artalk .atk-heo-editor[data-atk-mode="default"] .atk-bottom .atk-send-btn {
+    display: none;
+}
+
+/* anonymous / halo：隐藏三项输入 */
+.artalk .atk-heo-editor[data-atk-mode="anonymous"] .atk-header,
+.artalk .atk-heo-editor[data-atk-mode="halo"] .atk-header {
+    display: none !important;
+}
+
+/* other：三项输入进身份行 */
+.artalk .atk-heo-editor[data-atk-mode="other"] .atk-header {
+    display: flex !important;
+    flex: 1;
+    min-width: 0;
+    padding: 0;
 }
 
 /* 回复态：Artalk 把编辑器搬进评论内，此时包一层卡片（同 tk-submit-reply） */
@@ -742,7 +985,7 @@
 }
 
 /* 昵称 / 邮箱 / 网址：对标 tk-meta-input，标签和输入合成一粒胶囊，窄屏横向滑动而不是立刻折成三行 */
-.artalk .atk-main-editor > .atk-header {
+.artalk .atk-main-editor .atk-header {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
@@ -752,7 +995,7 @@
     scrollbar-width: none;
 }
 
-.artalk .atk-main-editor > .atk-header::-webkit-scrollbar {
+.artalk .atk-main-editor .atk-header::-webkit-scrollbar {
     display: none;
 }
 
@@ -784,7 +1027,7 @@
     user-select: none;
 }
 
-.artalk .atk-main-editor > .atk-header input,
+.artalk .atk-main-editor .atk-header input,
 .artalk .atk-meta-field input {
     flex: 1 1 0;
     min-width: 0;
@@ -808,17 +1051,17 @@
     padding: 8px 12px 8px 4px;
 }
 
-.artalk .atk-main-editor > .atk-header input:not(:last-child) {
+.artalk .atk-main-editor .atk-header input:not(:last-child) {
     margin-right: 0;
 }
 
 /* 未 wrap 时的兜底；包进 .atk-meta-field 后由 :focus-within 接管 */
-.artalk .atk-main-editor > .atk-header > input:focus {
+.artalk .atk-main-editor .atk-header > input:focus {
     border: var(--style-border-hover-always) !important;
     box-shadow: var(--heo-shadow-main);
 }
 
-.artalk .atk-main-editor > .atk-header input::placeholder {
+.artalk .atk-main-editor .atk-header input::placeholder {
     color: var(--heo-secondtext);
 }
 
@@ -1119,7 +1362,7 @@
     }
 
     /* iOS 聚焦不缩放：输入类控件字号必须 ≥16px */
-    .artalk .atk-main-editor > .atk-header input,
+    .artalk .atk-main-editor .atk-header input,
     .artalk .atk-main-editor > .atk-textarea-wrap > .atk-textarea {
         font-size: 16px !important;
     }
@@ -1142,14 +1385,18 @@
 /* 真正的窄屏才把三项折成一列；平板宽度保持和 Twikoo 一样的横排胶囊 */
 @media screen and (max-width: 520px) {
 
-    .artalk .atk-main-editor > .atk-header {
+    .artalk .atk-main-editor .atk-header {
         flex-wrap: wrap;
         overflow-x: visible;
     }
 
     .artalk .atk-meta-field,
-    .artalk .atk-main-editor > .atk-header > input {
+    .artalk .atk-main-editor .atk-header > input {
         flex: 1 1 100%;
         min-width: 0;
+    }
+
+    .artalk .atk-heo-identity {
+        flex-wrap: wrap;
     }
 }
