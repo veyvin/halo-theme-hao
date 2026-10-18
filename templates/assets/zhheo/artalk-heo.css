@@ -110,28 +110,126 @@
     position: relative;
 }
 
-/* 顶部标题行：条数 + 管理入口。Heo 皮肤里 Twikoo 的「评论 N 条」由 zhheoblog.css 调小字号，
-   这里保持同样的弱化处理，避免与主题自带的 #post-comment .comment-head 标题打架 */
+/* 列表骨架对标 Twikoo：正文在上，条数+排序在下（.tk-footer） */
+.artalk > .atk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.artalk > .atk-list > .atk-list-body {
+    order: 1;
+}
+
 .artalk > .atk-list > .atk-list-header {
+    order: 2;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
     padding: 0;
-    font-size: 14px;
-}
-
-.artalk > .atk-list > .atk-list-header .atk-comment-count {
+    margin-top: 0;
     font-size: 14px;
     color: var(--heo-secondtext);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.artalk > .atk-list > .atk-list-header::-webkit-scrollbar {
+    display: none;
+}
+
+.artalk > .atk-list > .atk-list-footer {
+    order: 3;
+}
+
+/* 条数：Twikoo 是弱化灰字，不要放大数字 */
+.artalk > .atk-list > .atk-list-header .atk-comment-count {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--heo-secondtext);
+    position: relative;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-comment-count .atk-text {
+    font-size: 14px;
+    color: var(--heo-secondtext);
+    white-space: nowrap;
 }
 
 .artalk > .atk-list > .atk-list-header .atk-comment-count .atk-comment-count-num {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--heo-fontcolor);
-    margin-right: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    color: inherit;
+    margin-right: 0;
+}
+
+/* 排序下拉改成常显胶囊（对标 .tk-footer-sort） */
+.artalk > .atk-list > .atk-list-header .atk-arrow-down-icon {
+    display: none !important;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-dropdown,
+.artalk > .atk-list > .atk-list-header > .atk-heo-sort-pills {
+    position: static !important;
+    display: inline-flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    flex-shrink: 0;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-dropdown::before {
+    content: "排序";
+    color: var(--heo-secondtext);
+    font-size: 14px;
+    margin-right: 2px;
+    white-space: nowrap;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-dropdown-item {
+    list-style: none;
+    margin: 0;
+    padding: 0 8px;
+    line-height: 1.8;
+    border-radius: 999px;
+    border: var(--style-border-always);
+    background: var(--heo-card-bg);
+    color: var(--heo-secondtext);
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.artalk > .atk-list > .atk-list-header .atk-dropdown-item.active,
+.artalk > .atk-list > .atk-list-header .atk-dropdown-item.atk-active {
+    color: var(--heo-lighttext);
+    background: var(--heo-main-op-light);
+    border-color: var(--heo-main-op);
+}
+
+@media (hover: hover) {
+    .artalk > .atk-list > .atk-list-header .atk-dropdown-item:hover {
+        color: var(--heo-lighttext);
+        border-color: var(--heo-main-op);
+    }
 }
 
 .artalk > .atk-list > .atk-list-header .atk-right-action {
@@ -139,6 +237,7 @@
     justify-content: flex-end;
     align-items: center;
     display: flex;
+    gap: 8px;
 }
 
 .artalk > .atk-list > .atk-list-header .atk-right-action > span {
@@ -149,14 +248,6 @@
 .artalk > .atk-list > .atk-list-header .atk-right-action > span.atk-on,
 .artalk > .atk-list > .atk-list-header .atk-right-action > span.atk-on * {
     color: var(--heo-lighttext);
-}
-
-.artalk > .atk-list > .atk-list-header .atk-dropdown {
-    background-color: var(--heo-card-bg);
-    border: var(--style-border-always) !important;
-    border-radius: 8px !important;
-    box-shadow: var(--heo-shadow-border);
-    backdrop-filter: saturate(180%) blur(10px);
 }
 
 .artalk > .atk-list > .atk-list-footer .atk-copyright {
@@ -923,17 +1014,41 @@
     }
 }
 
-/* 发送钮挪到身份行后，用 Twikoo 同款主色胶囊 */
+/* 发送钮挪到身份行后，用 Twikoo 同款主色胶囊 + Ctrl↵ 提示 */
 .artalk .atk-heo-actions .atk-send-btn.atk-heo-send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     min-width: 7.3em;
-    height: 34px;
+    height: 32px;
     margin: 0;
-    padding: 0 16px;
+    padding: 0 14px;
     border: var(--style-border-always);
     border-radius: var(--atk-pill-radius);
     background: var(--heo-lighttext);
     color: var(--heo-card-bg);
     font-size: 14px;
+}
+
+.artalk .atk-heo-send-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    opacity: 0.9;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.artalk .atk-heo-send-enter {
+    font-size: 13px;
+    line-height: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .artalk .atk-heo-send-shortcut {
+        display: none;
+    }
 }
 
 @media (hover: hover) {
@@ -1100,8 +1215,38 @@
     padding: 16px 16px 48px !important;
     font-size: 15px !important;
     line-height: 1.65 !important;
-    /* 对标截图：右下角可拖拽拉高 */
-    resize: vertical;
+    /* Twikoo 用自定义弯角把手，不用浏览器原生拖高 */
+    resize: none;
+}
+
+/* 对标 Twikoo .tk-textarea-resize-handle：右下角小弯角 */
+.artalk .atk-heo-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    cursor: ns-resize;
+    z-index: 3;
+    touch-action: none;
+}
+
+.artalk .atk-heo-resize-handle::after {
+    content: "";
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid rgba(144, 147, 153, 0.5);
+    border-bottom: 2px solid rgba(144, 147, 153, 0.5);
+    border-radius: 0 0 var(--atk-comment-input-radius) 0;
+}
+
+@media (hover: hover) {
+    .artalk .atk-heo-resize-handle:hover::after {
+        border-color: rgba(144, 147, 153, 0.8);
+    }
 }
 
 /* 对标 Twikoo .tk-row-actions-pill：表情 / 图片收在正文框左下角白色胶囊 */

@@ -323,11 +323,62 @@ const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '�
         })
     }
 
+    // 对标 Twikoo 自定义弯角把手（不是浏览器原生 resize）
+    const dressResizeHandle = (editor) => {
+        const wrap = editor.querySelector(':scope > .atk-textarea-wrap')
+        const textarea = wrap && wrap.querySelector(':scope > .atk-textarea')
+        if (!wrap || !textarea) return
+        if (wrap.querySelector(':scope > .atk-heo-resize-handle')) return
+
+        const handle = document.createElement('div')
+        handle.className = 'atk-heo-resize-handle'
+        handle.setAttribute('aria-hidden', 'true')
+        wrap.appendChild(handle)
+
+        let startY = 0
+        let startH = 0
+        const onMove = (e) => {
+            const y = e.touches ? e.touches[0].clientY : e.clientY
+            const next = Math.max(100, startH + (y - startY))
+            textarea.style.height = next + 'px'
+            if (e.cancelable) e.preventDefault()
+        }
+        const onUp = () => {
+            document.removeEventListener('mousemove', onMove)
+            document.removeEventListener('mouseup', onUp)
+            document.removeEventListener('touchmove', onMove)
+            document.removeEventListener('touchend', onUp)
+        }
+        const onDown = (e) => {
+            startY = e.touches ? e.touches[0].clientY : e.clientY
+            startH = textarea.getBoundingClientRect().height
+            document.addEventListener('mousemove', onMove)
+            document.addEventListener('mouseup', onUp)
+            document.addEventListener('touchmove', onMove, { passive: false })
+            document.addEventListener('touchend', onUp)
+            e.preventDefault()
+        }
+        handle.addEventListener('mousedown', onDown)
+        handle.addEventListener('touchstart', onDown, { passive: false })
+    }
+
+    // 发送按钮补 Twikoo 同款「Ctrl + ↵」提示
+    const dressSendHint = (editor) => {
+        const send = editor.querySelector('.atk-send-btn')
+        if (!send || send.querySelector('.atk-heo-send-shortcut')) return
+        const tip = document.createElement('span')
+        tip.className = 'atk-heo-send-shortcut'
+        tip.innerHTML = 'Ctrl&nbsp;<span class="atk-heo-send-enter" aria-hidden="true">↵</span>'
+        send.appendChild(tip)
+    }
+
     // 对标 Twikoo：表情 / 图片收成正文框左下角白色胶囊图标，不再用底部文字按钮
     const dressToolbar = (editor) => {
         const wrap = editor.querySelector(':scope > .atk-textarea-wrap')
         const plugWrap = editor.querySelector('.atk-plug-btn-wrap')
         if (!wrap || !plugWrap) return
+
+        dressResizeHandle(editor)
 
         let pill = wrap.querySelector(':scope > .atk-heo-toolbar-pill')
         if (!pill) {
@@ -365,11 +416,34 @@ const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '�
         }
     }
 
+    // 把 Artalk 排序下拉挪到标题行右侧，并保持常显（对标 Twikoo 底栏）
+    const dressListHeader = () => {
+        const header = document.querySelector('.artalk > .atk-list > .atk-list-header')
+        if (!header) return
+        const countWrap = header.querySelector('.atk-comment-count')
+        const dropdown = countWrap && countWrap.querySelector('.atk-dropdown')
+        if (dropdown && dropdown.parentElement === countWrap) {
+            header.appendChild(dropdown)
+            dropdown.classList.add('atk-heo-sort-pills')
+        }
+        // Artalk 点开/收起会改 display，强制保持胶囊可见
+        if (dropdown) {
+            dropdown.style.display = 'inline-flex'
+            dropdown.style.visibility = 'visible'
+            dropdown.style.opacity = '1'
+            dropdown.style.pointerEvents = 'auto'
+        }
+        const arrow = countWrap && countWrap.querySelector('.atk-arrow-down-icon')
+        if (arrow) arrow.style.display = 'none'
+    }
+
     const enhanceEditors = () => {
         editors().forEach((editor) => {
             ensureHeoChrome(editor)
             dressToolbar(editor)
+            dressSendHint(editor)
         })
+        dressListHeader()
         const user = haloUser()
         if (user && user.loggedIn) applyMode('halo')
         else applyMode(getMode())
