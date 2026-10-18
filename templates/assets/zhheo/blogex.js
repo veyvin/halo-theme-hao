@@ -860,19 +860,48 @@ if (document.readyState !== 'loading') {
             }
         });
     }
-    document.addEventListener('click', function (e) {
-        var btn = e.target.closest('.back-home-button');
-        if (!btn) { closeAll(); return; }
-        // 点在弹层内部的链接上：交给导航，不翻转状态
-        var panel = btn.querySelector('.back-menu-list-groups');
-        if (panel && panel.contains(e.target)) return;
+    function toggleBtn(btn) {
+        if (!btn) return;
         var open = !btn.classList.contains('active');
         closeAll();
         btn.classList.toggle('active', open);
         btn.setAttribute('aria-expanded', String(open));
+    }
+    // 点击目标是否落在「开关本体」（图标 / 按钮底），不含弹层
+    function isToggleTarget(btn, target) {
+        if (!btn || !target || !btn.contains(target)) return false;
+        var panel = btn.querySelector('.back-menu-list-groups');
+        if (panel && (target === panel || panel.contains(target))) return false;
+        return true;
+    }
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.back-home-button');
+        if (!btn) { closeAll(); return; }
+
+        var panel = btn.querySelector('.back-menu-list-groups');
+        // 入口链接：交给浏览器跳转，并收起面板
+        if (e.target.closest('a') && panel && panel.contains(e.target)) {
+            closeAll();
+            return;
+        }
+        // 点在弹层空白（含曾经盖住按钮的 ::before 桥）：只收起，不误判为「没点到」
+        if (panel && (e.target === panel || panel.contains(e.target))) {
+            closeAll();
+            return;
+        }
+        // 点在图标 / 按钮上：切换
+        if (isToggleTarget(btn, e.target)) toggleBtn(btn);
     });
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeAll();
+        if (e.key === 'Escape') { closeAll(); return; }
+        var btn = e.target.closest && e.target.closest('.back-home-button');
+        if (!btn) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+            // 避免空格滚动页面；链接内的键盘事件不拦截
+            if (e.target.closest('a')) return;
+            e.preventDefault();
+            toggleBtn(btn);
+        }
     });
     document.addEventListener('pjax:complete', function () { closeAll(); });
 })();

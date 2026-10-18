@@ -12,7 +12,7 @@
     <!-- 注意：th:if 的执行优先级高于 th:with，条件中引用的变量必须在此处先定义 -->
     <th:block th:if="${theme.config.nav.menus.pc_leftMenu and (useCustom or showMenu)}">
 
-        <div class="back-home-button" tabindex="-1" role="button" aria-expanded="false" aria-haspopup="true"
+        <div class="back-home-button" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true"
              title="快捷入口"
              th:style="|--apps-panel-width: ${appsWidth}px; --apps-panel-cols: ${appsColumns};|">
 
