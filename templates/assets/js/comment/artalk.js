@@ -31,9 +31,9 @@ const ATK_REFRESH_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill=
 
 // 与 heo.js 匿名评论同一套词表（精简副本，避免依赖顶层 const 是否暴露）
 const ATK_ADJ = ['美丽的', '聪明的', '可爱的', '开朗的', '有趣的', '温柔的', '幽默的', '有创新能力的', '善良的', '活泼的', '机智的', '真诚的']
-const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '西瓜', '蘑菇', '柠檬', '桃子', '樱桃', '黄瓜']
+const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '西瓜', '蘑菇', '柠檬', '桃子', '樱桃', '黄瓜'];
 
-(() => {
+;(() => {
     if (!document.getElementById('post-comment')) return
 
     const cfg = () => (GLOBAL_CONFIG && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.artalk) || {}
