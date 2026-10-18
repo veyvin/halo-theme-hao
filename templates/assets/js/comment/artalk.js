@@ -323,8 +323,53 @@ const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '�
         })
     }
 
+    // 对标 Twikoo：表情 / 图片收成正文框左下角白色胶囊图标，不再用底部文字按钮
+    const dressToolbar = (editor) => {
+        const wrap = editor.querySelector(':scope > .atk-textarea-wrap')
+        const plugWrap = editor.querySelector('.atk-plug-btn-wrap')
+        if (!wrap || !plugWrap) return
+
+        let pill = wrap.querySelector(':scope > .atk-heo-toolbar-pill')
+        if (!pill) {
+            pill = document.createElement('div')
+            pill.className = 'atk-heo-toolbar-pill'
+            wrap.appendChild(pill)
+        }
+
+        const keep = []
+        plugWrap.querySelectorAll('.atk-plug-btn').forEach((btn) => {
+            const label = ((btn.querySelector('[aria-label]') || btn).getAttribute('aria-label') || btn.textContent || '').trim()
+            const isEmoji = /表情|emoji|emoticon/i.test(label)
+            const isUpload = /上传|图片|image|upload/i.test(label)
+            if (isEmoji || isUpload) {
+                btn.classList.add('atk-heo-tool-icon')
+                if (isEmoji) btn.classList.add('atk-heo-tool-emoji')
+                if (isUpload) btn.classList.add('atk-heo-tool-upload')
+                pill.appendChild(btn)
+                keep.push(btn)
+            } else {
+                // 预览 / Markdown 等文字插件：Heo 风格输入框里不展示
+                btn.classList.add('atk-heo-tool-hidden')
+            }
+        })
+
+        if (keep.length) {
+            editor.classList.add('atk-heo-has-toolbar')
+            // 插件都搬走后，收起底部左侧空槽（只留「正在回复」等状态）
+            const left = editor.querySelector('.atk-bottom-left')
+            if (left) {
+                const hasState = !!left.querySelector('.atk-state-btn')
+                const hasLeftover = !!plugWrap.querySelector('.atk-plug-btn:not(.atk-heo-tool-hidden)')
+                left.classList.toggle('atk-heo-bottom-empty', !hasState && !hasLeftover)
+            }
+        }
+    }
+
     const enhanceEditors = () => {
-        editors().forEach(ensureHeoChrome)
+        editors().forEach((editor) => {
+            ensureHeoChrome(editor)
+            dressToolbar(editor)
+        })
         const user = haloUser()
         if (user && user.loggedIn) applyMode('halo')
         else applyMode(getMode())

@@ -1071,7 +1071,7 @@
     background: var(--heo-secondbg);
     border: var(--style-border-always);
     border-radius: var(--atk-comment-input-radius);
-    overflow: hidden;
+    overflow: visible;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -1097,10 +1097,82 @@
     width: 100%;
     min-height: 100px !important;
     margin: 0;
-    padding: 16px 16px 40px !important;
+    padding: 16px 16px 48px !important;
     font-size: 15px !important;
     line-height: 1.65 !important;
-    resize: none;
+    /* 对标截图：右下角可拖拽拉高 */
+    resize: vertical;
+}
+
+/* 对标 Twikoo .tk-row-actions-pill：表情 / 图片收在正文框左下角白色胶囊 */
+.artalk .atk-heo-toolbar-pill {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    background: var(--heo-card-bg);
+    border: var(--style-border-always);
+    border-radius: 999px;
+    box-shadow: var(--heo-shadow-border);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.artalk .atk-heo-toolbar-pill .atk-heo-tool-icon {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: var(--heo-fontcolor);
+    font-size: 0 !important;
+    line-height: 0 !important;
+    cursor: pointer;
+}
+
+.artalk .atk-heo-toolbar-pill .atk-heo-tool-icon i {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.artalk .atk-heo-toolbar-pill .atk-heo-tool-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: currentColor;
+}
+
+@media (hover: hover) {
+    .artalk .atk-heo-toolbar-pill .atk-heo-tool-icon:hover {
+        opacity: 0.8;
+        color: var(--heo-lighttext);
+    }
+}
+
+.artalk .atk-heo-toolbar-pill .atk-heo-tool-icon.active {
+    color: var(--heo-lighttext);
+}
+
+/* 底部只留「正在回复」等状态，插件按钮已进胶囊 */
+.artalk .atk-heo-has-toolbar .atk-plug-btn-wrap .atk-heo-tool-hidden,
+.artalk .atk-heo-tool-hidden {
+    display: none !important;
+}
+
+.artalk .atk-heo-has-toolbar .atk-bottom-left.atk-heo-bottom-empty {
+    display: none;
 }
 
 /* 表情 / 预览面板 */
