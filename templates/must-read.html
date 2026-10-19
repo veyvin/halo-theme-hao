@@ -17,7 +17,7 @@
                        poolSize=${mrLimit * 5},
                        showCover=${theme.config.mustRead == null or theme.config.mustRead.showCover == null or theme.config.mustRead.showCover},
                        mrMetric=${theme.config.mustRead != null and theme.config.mustRead.sort == 'comment' ? 'comment' : (theme.config.mustRead != null and theme.config.mustRead.sort == 'upvote' ? 'upvote' : 'visit')},
-                       mrDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '值得反复阅读的精选内容。' : singlePage.spec.excerpt.raw},
+                       mrDesc=${singlePage.spec.excerpt == null or #strings.isEmpty(singlePage.spec.excerpt.raw) ? '值得反复阅读的精选内容。' : singlePage.spec.excerpt.raw},
                        mustReadPosts=${postFinder.list({page: 1, size: poolSize, sort: {'spec.publishTime,desc'}})}">
             <div id="page">
 

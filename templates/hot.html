@@ -13,9 +13,10 @@
 
         <main class="layout hide-aside" id="content-inner"
               th:with="hotLimit=${theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20},
+                     poolSize=${hotLimit * 10},
                      showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
-                     hotDesc=${#strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
-                     hotPosts=${postFinder.list({page: 1, size: hotLimit})}">
+                     hotDesc=${singlePage.spec.excerpt == null or #strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
+                     hotPosts=${postFinder.list({page: 1, size: poolSize, sort: {'spec.publishTime,desc'}})}">
             <div id="page">
 
                 <!-- 组件样式：/hot/ 与 /must-read/ 共用 -->
@@ -44,7 +45,7 @@
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-window="0" aria-pressed="false" th:text="${#messages.msg('hot.tabAll')}"></button>
                             </div>
-                            <span class="hot-page-meta" th:text="${hotLimit} + #messages.msg('hot.postsCount')"></span>
+                            <span class="hot-page-meta" th:text="|${hotLimit}${#messages.msg('hot.postsCount')}|"></span>
                         </div>
                     </div>
 
@@ -57,8 +58,8 @@
 
                             <div class="hot-page-item"
                                  th:each="post,iter : ${hotPosts.items}"
-                                 th:attr="data-visit=${post.stats.visit},
-                                          data-published=${post.spec.publishTime.toEpochMilli()},
+                                 th:attr="data-visit=${post.stats.visit != null ? post.stats.visit : 0},
+                                          data-published=${post.spec.publishTime != null ? post.spec.publishTime.toEpochMilli() : 0},
                                           data-rank=${iter.count}">
 
                                 <span class="hot-page-thumb"
