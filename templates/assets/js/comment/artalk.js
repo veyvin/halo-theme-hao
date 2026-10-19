@@ -1,39 +1,40 @@
-// 不依赖外链的表情。key 是面板上的名字，val 是插入评论的字符。
-const ARTALK_LOCAL_EMOTICONS = [
-    {
-        name: '表情',
-        type: 'emoji',
-        items: ['😀', '😁', '😂', '🤣', '😊', '😍', '😘', '😜', '🤔', '😎', '😭', '😡', '👍', '👎', '👏', '🙏', '🎉', '🔥', '❤️', '✨', '🌟', '💡', '✅', '❌'].map(function (ch) {
-            return { key: ch, val: ch }
-        })
-    },
-    {
-        name: '颜文字',
-        type: 'emoji',
-        items: [
-            ['开心', '(^▽^)'],
-            ['笑哭', '(≧▽≦)'],
-            ['无语', '(￣▽￣)"'],
-            ['害羞', '(/ω＼)'],
-            ['惊讶', '(°o°)'],
-            ['生气', '(╯°□°)╯'],
-            ['哭', '(T_T)'],
-            ['赞', '(b￣▽￣)d']
-        ].map(function (pair) {
-            return { key: pair[0], val: pair[1] }
-        })
-    }
-]
-
-const ATK_MODE_KEY = 'artalk-heo-mode'
-const ATK_USER_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>'
-const ATK_REFRESH_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 13.65-6.65z"/></svg>'
-
-// 与 heo.js 匿名评论同一套词表（精简副本，避免依赖顶层 const 是否暴露）
-const ATK_ADJ = ['美丽的', '聪明的', '可爱的', '开朗的', '有趣的', '温柔的', '幽默的', '有创新能力的', '善良的', '活泼的', '机智的', '真诚的']
-const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '西瓜', '蘑菇', '柠檬', '桃子', '樱桃', '黄瓜'];
-
 ;(() => {
+    // 顶层 const 放 IIFE 内：脚本在 .js-pjax 里，换页会再执行，全局 const 会报 already been declared
+    // 不依赖外链的表情。key 是面板上的名字，val 是插入评论的字符。
+    const ARTALK_LOCAL_EMOTICONS = [
+        {
+            name: '表情',
+            type: 'emoji',
+            items: ['😀', '😁', '😂', '🤣', '😊', '😍', '😘', '😜', '🤔', '😎', '😭', '😡', '👍', '👎', '👏', '🙏', '🎉', '🔥', '❤️', '✨', '🌟', '💡', '✅', '❌'].map(function (ch) {
+                return { key: ch, val: ch }
+            })
+        },
+        {
+            name: '颜文字',
+            type: 'emoji',
+            items: [
+                ['开心', '(^▽^)'],
+                ['笑哭', '(≧▽≦)'],
+                ['无语', '(￣▽￣)"'],
+                ['害羞', '(/ω＼)'],
+                ['惊讶', '(°o°)'],
+                ['生气', '(╯°□°)╯'],
+                ['哭', '(T_T)'],
+                ['赞', '(b￣▽￣)d']
+            ].map(function (pair) {
+                return { key: pair[0], val: pair[1] }
+            })
+        }
+    ]
+
+    const ATK_MODE_KEY = 'artalk-heo-mode'
+    const ATK_USER_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>'
+    const ATK_REFRESH_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 13.65-6.65z"/></svg>'
+
+    // 与 heo.js 匿名评论同一套词表（精简副本）
+    const ATK_ADJ = ['美丽的', '聪明的', '可爱的', '开朗的', '有趣的', '温柔的', '幽默的', '有创新能力的', '善良的', '活泼的', '机智的', '真诚的']
+    const ATK_NOUN = ['茄子', '萝卜', '白菜', '苹果', '香蕉', '草莓', '西瓜', '蘑菇', '柠檬', '桃子', '樱桃', '黄瓜']
+
     if (!document.getElementById('post-comment')) return
 
     const cfg = () => (GLOBAL_CONFIG && GLOBAL_CONFIG.source && GLOBAL_CONFIG.source.artalk) || {}
