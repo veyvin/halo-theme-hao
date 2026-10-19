@@ -31,7 +31,6 @@
                                           data-title=${post.spec.title},
                                           data-theme=${itemTheme},
                                           data-selected-bg=${itemSelectedBg},
-                                          onclick='heo.handlePostClick(\'' + @{${post.status.permalink}} + '\', event)',
                                           style='--home-center-theme:' + ${itemTheme} + '; --home-center-theme-op:' + ${itemTheme} + '23; --home-center-theme-op-deep:' + ${itemTheme} + 'dd;'">
                                 <div class="home-center-cover">
                                     <img class="home-center-cover-img" width="800" height="450"
@@ -52,8 +51,7 @@
                 <!-- 标题放在 banner 外：移动端横向滑动时不会被当成额外一页 -->
                 <div class="home-center-title">
                     <a id="home-center-active-link"
-                       th:href="@{${firstPost.status.permalink}}"
-                       th:attr="onclick='heo.handlePostClick(\'' + @{${firstPost.status.permalink}} + '\', event)'">
+                       th:href="@{${firstPost.status.permalink}}">
                         <span th:text="${firstPost.spec.title}"></span>
                     </a>
                     <div class="home-center-title-bottom">
@@ -79,9 +77,7 @@
                                            itemIcon=${!#strings.isEmpty(item.icon) ? item.icon : itemCover}">
                             <div class="home-center-item"
                                  th:classappend="${iter.index == 0 ? ' active' : ''}"
-                                 th:attr="data-index=${iter.index},
-                                          onmouseenter='heo.switchHomeCenterBanner(' + ${iter.index} + ')',
-                                          onclick='heo.switchHomeCenterBanner(' + ${iter.index} + ', true)'">
+                                 th:attr="data-index=${iter.index}">
                                 <div class="home-center-item-icon">
                                     <img width="52" height="52"
                                          th:src="${isLazyload ? loadingImg : itemIcon}"
@@ -89,8 +85,7 @@
                                          th:alt="${post.spec.title}">
                                 </div>
                                 <div class="home-center-item-title">
-                                    <a th:href="@{${post.status.permalink}}"
-                                       th:attr="onclick='heo.handlePostClick(\'' + @{${post.status.permalink}} + '\', event)'">
+                                    <a th:href="@{${post.status.permalink}}">
                                         <span th:text="${post.spec.title}"></span>
                                     </a>
                                 </div>

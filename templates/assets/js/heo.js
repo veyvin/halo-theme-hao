@@ -734,7 +734,6 @@ var heo = {
                 titleLink.textContent = activeBanner.dataset.title || "";
             }
             titleLink.setAttribute("href", activeBanner.dataset.link || "/");
-            titleLink.setAttribute("onclick", `heo.handlePostClick('${activeBanner.dataset.link || "/"}', event)`);
         }
 
         heo.applyHomeCenterTheme(homeCenter, activeBanner.dataset.theme || "#425AEF");
@@ -763,6 +762,30 @@ var heo = {
         const homeCenter = document.getElementById("home_center");
         if (!homeCenter) return;
 
+        const bindPostLink = (link) => {
+            if (!link || link.dataset.pjaxBound === "true") return;
+            link.dataset.pjaxBound = "true";
+            link.addEventListener("click", (event) => {
+                const url = link.getAttribute("href");
+                if (!url) return;
+                heo.handlePostClick(url, event);
+            });
+        };
+
+        bindPostLink(document.getElementById("home-center-active-link"));
+        homeCenter.querySelectorAll(".home-center-item").forEach((item) => {
+            if (item.dataset.bound === "true") return;
+            item.dataset.bound = "true";
+            bindPostLink(item.querySelector("a"));
+            item.addEventListener("mouseenter", () => {
+                heo.switchHomeCenterBanner(Number(item.dataset.index));
+            });
+            item.addEventListener("click", (event) => {
+                if (event.target.closest("a")) return;
+                heo.switchHomeCenterBanner(Number(item.dataset.index), true);
+            });
+        });
+
         const indicators = homeCenter.querySelectorAll(".home-center-indicator");
         indicators.forEach((indicator) => {
             if (indicator.dataset.bound === "true") return;
@@ -773,6 +796,13 @@ var heo = {
         });
 
         const bannerItems = homeCenter.querySelectorAll(".home-center-banner-item");
+        bannerItems.forEach((banner) => {
+            if (banner.dataset.clickBound === "true") return;
+            banner.dataset.clickBound = "true";
+            banner.addEventListener("click", (event) => {
+                heo.handlePostClick(banner.dataset.link || "/", event);
+            });
+        });
         if (!bannerItems.length) return;
 
         const autoplay = homeCenter.dataset.autoplay === "true";
