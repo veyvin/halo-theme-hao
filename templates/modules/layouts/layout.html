@@ -201,14 +201,14 @@
         <script th:replace="~{modules/common/diytitle}"/>
         <!-- i18n 数据属性：供 blogex.js 等 JS 读取，避免硬编码 -->
         <div id="hao-i18n" style="display:none;"
-             data-i18n-copy-success="${#messages.msg('common.copySuccess')}"
-             data-i18n-back-to-top="${#messages.msg('common.backToTop')}"
-             data-i18n-go-to="${#messages.msg('common.goTo')}"
-             data-i18n-cancel="${#messages.msg('common.cancel')}"
-             data-i18n-dev-mode="${#messages.msg('common.devMode')}"
-             data-i18n-title-away="${#messages.msg('common.titleAway')}"
-             data-i18n-title-back="${#messages.msg('common.titleBack')}"
-             data-i18n-close="${#messages.msg('common.close')}"></div>
+             th:data-i18n-copy-success="${#messages.msg('common.copySuccess')}"
+             th:data-i18n-back-to-top="${#messages.msg('common.backToTop')}"
+             th:data-i18n-go-to="${#messages.msg('common.goTo')}"
+             th:data-i18n-cancel="${#messages.msg('common.cancel')}"
+             th:data-i18n-dev-mode="${#messages.msg('common.devMode')}"
+             th:data-i18n-title-away="${#messages.msg('common.titleAway')}"
+             th:data-i18n-title-back="${#messages.msg('common.titleBack')}"
+             th:data-i18n-close="${#messages.msg('common.close')}"></div>
     </div>
     
     <!-- 评论 -->
