@@ -19,7 +19,7 @@
                 <div class="content">
                     <div class="title"
                          style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"
-                         th:text="${#strings.abbreviate(#strings.defaultString(content.raw, ''), 80)}"></div>
+                         th:utext="${#strings.defaultString(content.raw, '')}"></div>
                     <time th:attr="datetime=${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"
                           th:text="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
                           th:title="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></time>
@@ -28,3 +28,8 @@
         </th:block>
     </div>
 </div>
+<style>
+    #aside-content .card-widget.card-moments .title img,
+    #aside-content .card-widget.card-moments .title video,
+    #aside-content .card-widget.card-moments .title audio { display: none; }
+</style>
