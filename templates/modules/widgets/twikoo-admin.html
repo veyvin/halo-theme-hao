@@ -6,20 +6,20 @@
               and #strings.equals(theme.config.comments.use, 'Twikoo')
               and not #strings.isEmpty(theme.config.comments.twikoos.envId)
               and not #strings.isEmpty(theme.config.comments.twikoos.adminPassword)}">
-    <div class="twka-panel" role="dialog" aria-modal="true" aria-label="评论管理">
+    <div class="twka-panel" role="dialog" aria-modal="true" th:aria-label="#{twikoo.admin.title}">
         <div class="twka-navbar">
-            <div class="twka-title"><i class="haofont hao-icon-chat--fill"></i> 评论管理</div>
-            <span class="twka-close" id="twka-close" title="关闭" role="button" tabindex="0"><i class="haofont hao-icon-xmark"></i></span>
+            <div class="twka-title"><i class="haofont hao-icon-chat--fill"></i> <span th:text="#{twikoo.admin.title}">评论管理</span></div>
+            <span class="twka-close" id="twka-close" th:title="#{common.close}" role="button" tabindex="0"><i class="haofont hao-icon-xmark"></i></span>
         </div>
 
         <div class="twka-toolbar">
-            <input id="twka-keyword" class="twka-input" type="search" autocomplete="off" placeholder="搜索昵称 / 邮箱 / IP / 内容 / 文章路径">
-            <button id="twka-search" class="twka-btn twka-search" type="button" title="搜索"><i class="haofont hao-icon-search--line"></i></button>
+            <input id="twka-keyword" class="twka-input" type="search" autocomplete="off" th:placeholder="#{twikoo.admin.searchPlaceholder}">
+            <button id="twka-search" class="twka-btn twka-search" type="button" th:title="#{common.search}"><i class="haofont hao-icon-search--line"></i></button>
             <div class="twka-tabs">
-                <span class="twka-tab active" data-type="">全部</span>
-                <span class="twka-tab" data-type="VISIBLE">正常</span>
-                <span class="twka-tab" data-type="HIDDEN">垃圾/隐藏</span>
-                <span class="twka-tab" id="twka-only-cur">只看本页</span>
+                <span class="twka-tab active" data-type="" th:text="#{twikoo.admin.all}">全部</span>
+                <span class="twka-tab" data-type="VISIBLE" th:text="#{twikoo.admin.visible}">正常</span>
+                <span class="twka-tab" data-type="HIDDEN" th:text="#{twikoo.admin.hidden}">垃圾/隐藏</span>
+                <span class="twka-tab" id="twka-only-cur" th:text="#{twikoo.admin.onlyCurrent}">只看本页</span>
             </div>
         </div>
 
@@ -29,11 +29,11 @@
             <table class="twka-table">
                 <thead>
                 <tr>
-                    <th class="twka-col-check"><input type="checkbox" id="twka-check-all" title="全选本页"></th>
-                    <th class="twka-col-user">用户</th>
-                    <th>内容</th>
-                    <th class="twka-col-time">时间</th>
-                    <th class="twka-col-act">操作</th>
+                    <th class="twka-col-check"><input type="checkbox" id="twka-check-all" th:title="#{twikoo.admin.selectAll}"></th>
+                    <th class="twka-col-user" th:text="#{twikoo.admin.user}">用户</th>
+                    <th th:text="#{twikoo.admin.content}">内容</th>
+                    <th class="twka-col-time" th:text="#{twikoo.admin.time}">时间</th>
+                    <th class="twka-col-act" th:text="#{twikoo.admin.action}">操作</th>
                 </tr>
                 </thead>
                 <tbody id="twka-body"></tbody>

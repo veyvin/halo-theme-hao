@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <!-- 跳转到分类页 -->
-                    <a class="category-bar-more" th:href="@{${site.routes.categoriesUri}}">更多</a>
+                    <a class="category-bar-more" th:href="@{${site.routes.categoriesUri}}" th:text="#{common.more}"></a>
                 </div>
                 <!-- 文章 -->
                 <th:block th:replace="~{macro/post-list :: post-list(${category.status.permalink})}" />

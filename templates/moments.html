@@ -165,10 +165,10 @@
                 <nav class="moment-pagination" th:if="${moments != null and moments.totalPages > 1}"
                      style="display:flex;justify-content:center;align-items:center;gap:12px;margin:16px 0;">
                     <a th:if="${moments.hasPrevious}" th:href="@{/moments(page=${moments.page - 1})}"
-                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;">上一页</a>
-                    <span style="color:var(--heo-secondtext);font-size:13px;">第 [[${moments.page}]] / [[${moments.totalPages}]] 页</span>
+                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;" th:text="#{common.previousPage}">上一页</a>
+                    <span style="color:var(--heo-secondtext);font-size:13px;" th:text="#{moment.pageInfo(${moments.page},${moments.totalPages})}">第 [[${moments.page}]] / [[${moments.totalPages}]] 页</span>
                     <a th:if="${moments.hasNext}" th:href="@{/moments(page=${moments.page + 1})}"
-                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;">下一页</a>
+                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;" th:text="#{common.nextPage}">下一页</a>
                 </nav>
                 <script>heo.reflashEssayWaterFall();</script>
                 <hr th:if="${theme.config.comments.use != 'commentWidget'}" />

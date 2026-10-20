@@ -1,7 +1,7 @@
 <!-- 通讯录 -->
 <div class="card-widget card-friend-link">
     <div class="item-headline"><i class="haofont hao-icon-tongxunlu07"
-                                  style="font-size: 0.9rem;font-weight: 700;"></i><span>通讯录</span></div>
+                                  style="font-size: 0.9rem;font-weight: 700;"></i><span th:text="#{friend.link.title}">通讯录</span></div>
     <div class="card-friend-link-container"
          th:if="${pluginFinder.available('PluginLinks')}"
          th:with="groups = ${linkFinder.groupBy()}">

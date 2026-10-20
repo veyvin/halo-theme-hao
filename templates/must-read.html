@@ -40,15 +40,15 @@
                             <div class="hot-page-metrics" role="tablist" aria-label="精选排序依据">
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-metric="visit" th:classappend="${mrMetric == 'visit' ? 'is-active' : ''}"
-                                        aria-pressed="false">最多阅读</button>
+                                        aria-pressed="false" th:text="#{mustread.metric.visit}">最多阅读</button>
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-metric="upvote" th:classappend="${mrMetric == 'upvote' ? 'is-active' : ''}"
-                                        aria-pressed="false">最多点赞</button>
+                                        aria-pressed="false" th:text="#{mustread.metric.upvote}">最多点赞</button>
                                 <button class="hot-period-btn" type="button" role="tab"
                                         data-metric="comment" th:classappend="${mrMetric == 'comment' ? 'is-active' : ''}"
-                                        aria-pressed="false">最多评论</button>
+                                        aria-pressed="false" th:text="#{mustread.metric.comment}">最多评论</button>
                             </div>
-                            <span class="hot-page-meta" th:text="${limit} + ' 篇'"></span>
+                            <span class="hot-page-meta" th:text="${limit} + ' ' + #{post.unit}"></span>
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                         <div class="hot-page-toolbar">
                             <div class="hot-page-periods" id="must-read-cats" role="tablist" aria-label="分类筛选">
                                 <button class="hot-period-btn is-active" type="button" role="tab"
-                                        data-category="" aria-pressed="true">全部分类</button>
+                                        data-category="" aria-pressed="true" th:text="#{mustread.allCategories}">全部分类</button>
                                 <button class="hot-period-btn" type="button" role="tab"
                                         th:each="cat : ${categoryFinder.listAll()}"
                                         th:attr="data-category=${cat.metadata.name}"
@@ -121,7 +121,7 @@
                                 <i class="haofont hao-icon-chevron-right fa-fw hot-page-item-arrow" aria-hidden="true"></i>
                             </div>
 
-                            <div class="hot-page-state" id="must-read-empty" hidden>该分类下还没有精选文章</div>
+                            <div class="hot-page-state" id="must-read-empty" hidden th:text="#{mustread.empty}">该分类下还没有精选文章</div>
                         </div>
                     </div>
 

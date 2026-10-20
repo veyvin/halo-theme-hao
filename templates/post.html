@@ -52,17 +52,17 @@
                                   th:if="${not #strings.isEmpty(#annotations.get(post, 'copyrightEnable')) ?
                                           #annotations.get(post, 'copyrightEnable')  == 'true' : theme.config.post.copyrights.enable}">
                             <a class="post-meta-original"
-                               title="该文章为原创文章，注意版权协议"
+                               th:title="#{post.originalTitle}"
                                th:if="${#strings.equals(#annotations.getOrDefault(post, 'copyrightType','original'),'original')}"
                                th:href="@{${not #strings.isEmpty(copyrightUrl) ? copyrightUrl :
                                 not #strings.isEmpty(theme.config.post.copyrights.originalUrl) ? theme.config.post.copyrights.originalUrl : '#'}}"
-                            >原创</a>
+                            th:text="#{post.original}">原创</a>
                             <a class="post-meta-original"
-                               title="该文章为转载文章，版权归原作者所有"
+                               th:title="#{post.reprintTitle}"
                                th:if="${#strings.equals(#annotations.getOrDefault(post, 'copyrightType','original'),'reprint')}"
                                th:href="@{${not #strings.isEmpty(copyrightUrl) ? copyrightUrl :
                                 not #strings.isEmpty(theme.config.post.copyrights.originalUrl) ? theme.config.post.copyrights.reprintUrl : '#'}}"
-                            >转载</a>
+                            th:text="#{post.reprint}">转载</a>
                         </th:block>
                         <span class="post-meta-categories" th:each="category : ${post.categories}"
                               th:if="${not #lists.isEmpty(post.categories)}">
@@ -90,12 +90,12 @@
                         <span class="post-meta-wordcount"
                               th:with="wordCount = ${#strings.length(post.content.content)}">
                             <i class="haofont hao-icon-file-word post-meta-icon" title="字数"></i>
-                            <span class="post-meta-label">字数:</span>
+                            <span class="post-meta-label" th:text="#{post.wordCountLabel}">字数:</span>
                             <span class="word-count" th:text="${{wordCount}}"></span>
                             <span class="post-meta-separator"></span>
                             <i class="haofont hao-icon-clock post-meta-icon" title="阅读耗时"></i>
-                            <span class="post-meta-label">阅读耗时:</span>
-                            <span>[[${wordCount / 400}]] 分钟</span>
+                            <span class="post-meta-label" th:text="#{post.readTimeLabel}">阅读耗时:</span>
+                            <span>[[${wordCount / 400}]] <span th:text="#{post.minutes}">分钟</span></span>
                         </span>
                         <span class="post-meta-date">
                             <i class="haofont hao-icon-calendar-days post-meta-icon"></i>
@@ -124,7 +124,7 @@
                         <a class="post-meta-pv" data-flag-title="热度"
                            title="热度" >
                             <i class="haofont hao-icon-fire post-meta-icon"></i>
-                            <span class="post-meta-label">热度:</span>
+                            <span class="post-meta-label" th:text="#{post.heatLabel}">热度:</span>
                             <span id="visit" th:text="${post.stats.visit}"></span>
                         </a>
                         <a th:if="${post.spec.allowComment && #strings.contains('Twikoo,Artalk,commentWidget',theme.config.comments.use)}"
@@ -132,7 +132,7 @@
                            title="评论数"
                            href="#post-comment">
                             <i class="haofont hao-icon-chat--fill post-meta-icon" style="font-size: 17px;"></i>
-                            <span class="post-meta-label">评论:</span>
+                            <span class="post-meta-label" th:text="#{post.commentLabel}">评论:</span>
                             <span th:if="${#strings.equals(theme.config.comments.use, 'commentWidget')}"
                                   id="comment-count" th:text="${post.stats.comment}">
                                 <i class="haofont hao-icon-spinner fa-spin"></i>
@@ -152,7 +152,7 @@
                                th:if="${contributorLogin.name} == ${post.spec.owner}"
                                th:attr="onclick='javascript:window.open(\''+ '/console/posts/editor?name='+${post.metadata.name}+'&returnToView=true\''+ ',' +'\'_self'+'\')'">
                                 <i style="margin-top: 2px;" class="haofont hao-icon-bianji post-meta-icon"></i>
-                                <span>编辑</span>
+                                <span th:text="#{post.edit}">编辑</span>
                             </a>
                         </th:block>
                     </div>

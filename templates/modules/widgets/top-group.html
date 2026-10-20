@@ -22,7 +22,7 @@
                 <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
                    th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                     <span class="recent-post-top-text"
-                          th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
+                          th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'" th:text="#{topgroup.recommend}">荐</span>
                     <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                          th:with=' img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")},
                                   imgM = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")},
@@ -78,7 +78,7 @@
                     <a th:href="@{${post.status.permalink}}" th:title="${post.spec.title}"
                        th:style="${#strings.equals(coverMode, 'gradient')} ? '--cover-start:' + coverStart + ';--cover-end:' + coverEnd + ';--cover-accent:' + coverAccent + ';--cover-text:' + coverTextColor + ';' : ''">
                         <span class="recent-post-top-text"
-                              th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'">荐</span>
+                              th:attr="onclick='pjax.loadUrl(\''+ @{${post.status.permalink}} +'\')'" th:text="#{topgroup.recommend}">荐</span>
                         <img th:if="${!#strings.equals(coverMode, 'gradient')}" class="post_bg" width="400" height="225"
                              th:with='img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "s")},
                                       imgM = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, "m")},
@@ -132,7 +132,7 @@
         <div class="banner-button-group">
             <a class="banner-button" onclick="window.event.cancelBubble=!0;heo.hideTodayCard()">
                 <i class="haofont hao-icon-circle-plus"></i>
-                <span class="banner-button-text">更多推荐</span>
+                <span class="banner-button-text" th:text="#{topgroup.moreRecommend}">更多推荐</span>
             </a>
         </div>
     </div>

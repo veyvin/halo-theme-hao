@@ -38,7 +38,7 @@
 
 <body>
 
-<a class="skip-link" href="#content-inner">跳转到正文</a>
+<a class="skip-link" href="#content-inner" th:text="#{common.skipToContent}">跳转到正文</a>
 
 <!-- loading 页面 -->
 <th:block th:replace="~{modules/loading-box}"/>
@@ -219,7 +219,7 @@
     </th:block>
     
     <canvas th:if="${theme.config.style.universe}" id="universe" width="1312" height="880"></canvas>
-    <script th:if="${theme.config.style.universe}" async="" th:src="${assets_link + '/libs/canvas/dark.js'}"></script>
+    <script th:if="${theme.config.style.universe}" defer th:src="${assets_link + '/libs/canvas/dark.js'}"></script>
 
     <script th:src="${assets_link + '/libs/pjax/pjax.min.js'}"></script>
 

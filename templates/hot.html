@@ -15,7 +15,7 @@
               th:with="hotLimit=${theme.config.hot != null and theme.config.hot.listNum != null and theme.config.hot.listNum > 0 ? theme.config.hot.listNum : 20},
                      poolSize=${hotLimit * 10},
                      showCover=${theme.config.hot == null or theme.config.hot.showCover == null or theme.config.hot.showCover},
-                     hotDesc=${singlePage.spec.excerpt == null or #strings.isEmpty(singlePage.spec.excerpt.raw) ? '近期最受关注的文章。' : singlePage.spec.excerpt.raw},
+                     hotDesc=${singlePage.spec.excerpt == null or #strings.isEmpty(singlePage.spec.excerpt.raw) ? #messages.msg('hot.defaultDesc') : singlePage.spec.excerpt.raw},
                      hotPosts=${postFinder.list({page: 1, size: poolSize, sort: {'spec.publishTime,desc'}})}">
             <div id="page">
 
@@ -84,7 +84,7 @@
                                        th:text="${post.spec.title}"></a>
                                     <span class="hot-page-item-meta">
                                         <span class="hot-page-item-visitors"
-                                              th:text="${post.stats.visit} + ' 热度'"></span>
+                                              th:text="${post.stats.visit} + ' ' + #messages.msg('hot.heat')"></span>
                                         <span aria-hidden="true">·</span>
                                         <time th:datetime="${post.spec.publishTime}"
                                               th:text="${#dates.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>

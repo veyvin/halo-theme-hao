@@ -7,7 +7,7 @@ postRandomImg=${#strings.contains(theme.config.layout.postRandomImg,'?') ? theme
     <div class="relatedPosts" th:if="${recommandPosts.total>1}">
         <div class="headline">
             <i class="haofont hao-icon-cainixihuan" style="font-size: 1.1rem;"></i>
-            <span>阅读建议</span>
+            <span th:text="#{post.readingSuggestion}">阅读建议</span>
         </div>
         <!-- 六篇文章 -->
         <div th:if="${#strings.equals(recommendQuantity, 'six')}" class="relatedPosts-list">

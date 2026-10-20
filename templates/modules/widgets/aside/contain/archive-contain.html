@@ -28,7 +28,7 @@
                     <div class="card-archive-list-count-group">
                         <span class="card-archive-list-count"
                               th:text="${month.posts != null ? #lists.size(month.posts) : 0}"></span>
-                        <span class="card-archive-list-count-unit">篇</span>
+                        <span class="card-archive-list-count-unit" th:text="#{post.unit}">篇</span>
                     </div>
                 </a>
             </li>

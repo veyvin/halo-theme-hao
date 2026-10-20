@@ -30,7 +30,7 @@
                                     <time class="post-meta-date-created"
                                           th:attr="datetime=${#dates.format(post.spec.publishTime,'yyyy-MM-dd HH:mm:ss')}"
                                           th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"
-                                          th:title="'创建于' + ${#dates.format(post.spec.publishTime,'yyyy-MM-dd HH:mm:ss')}">
+                                          th:title="#{archives.created(${#dates.format(post.spec.publishTime,'yyyy-MM-dd HH:mm:ss')})}">
                                     </time>
                                 </div>
                                 <a class="article-sort-item-title" onclick="window.event.cancelBubble=!0"

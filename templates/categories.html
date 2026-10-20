@@ -19,8 +19,12 @@
                         <th:block th:replace="~{modules/common/empty-state :: empty-state('page.categories.title', '', 'fas fa-folder', 'empty-state')}"></th:block>
                     </th:block>
                     <div class="category-stats">
-                        查看不同领域的 <a th:href="@{${site.routes.categoriesUri}}" th:text="${#lists.size(allCats)}"></a> 个分类，
-                        共 <a th:href="@{${site.routes.archivesUri}}" th:text="${stats.post}"></a> <span th:text="${#messages.msg('page.archives.posts')}"></span>
+                        <span th:text="#{categories.stats.viewDomains}">查看不同领域的</span>
+                        <a th:href="@{${site.routes.categoriesUri}}" th:text="${#lists.size(allCats)}"></a>
+                        <span th:text="#{categories.stats.categoriesSuffix}">个分类，</span>
+                        <span th:text="#{categories.stats.totalPrefix}">共</span>
+                        <a th:href="@{${site.routes.archivesUri}}" th:text="${stats.post}"></a>
+                        <span th:text="${#messages.msg('page.archives.posts')}"></span>
                     </div>
                     <section class="category-section" th:each="categoryItem : ${allCats}">
                         <h2 class="category-section-title">
@@ -37,7 +41,7 @@
                                 <time th:text="${#dates.format(post.spec.publishTime,'yyyy-MM-dd')}"></time>
                             </li>
                         </ul>
-                        <a class="category-more" th:href="@{${categoryItem.status.permalink}}">进入分类 →</a>
+                        <a class="category-more" th:href="@{${categoryItem.status.permalink}}" th:text="${#messages.msg('categories.enter')}"></a>
                     </section>
                 </div>
                 <th:block th:if="${#strings.equals(theme.config.categories.use, '3D')}">

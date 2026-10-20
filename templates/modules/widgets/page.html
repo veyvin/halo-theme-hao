@@ -34,20 +34,20 @@
            th:if="${pageInfo.hasPrevious}"
            th:href="${pageInfo.prevUrl}">
             <i class="haofont hao-icon-chevron-left fa-fw"></i>
-            <div class="pagination_tips_prev">上页</div>
+            <div class="pagination_tips_prev" th:text="#{pagination.prev}">上页</div>
         </a>
 
         <a class="extend next"
            rel="next" th:if="${pageInfo.hasNext}"
            th:href="${pageInfo.nextUrl}">
-            <div class="pagination_tips_next">下页</div>
+            <div class="pagination_tips_next" th:text="#{pagination.next}">下页</div>
             <i class="haofont hao-icon-chevron-right fa-fw"></i>
         </a>
         <div th:if="${pageInfo.totalPages > 1}" class="toPageGroup">
-            <input id="toPageText" maxlength="3" title="跳转到指定页面"
+            <input id="toPageText" maxlength="3" th:title="#{pagination.goToPage}"
                    oninput="value=value.replace(/[^0-9]/g,'')"
                    onkeyup="if (this.value === '0') this.value = ''">
-            <a id="toPageButton" onclick="heo.toPage();" aria-label="跳转到指定页面" title="跳转到指定页面"><i class="haofont hao-icon-angles-right"></i>
+            <a id="toPageButton" onclick="heo.toPage();" th:aria-label="#{pagination.goToPage}" th:title="#{pagination.goToPage}"><i class="haofont hao-icon-angles-right"></i>
             </a>
         </div>
 
