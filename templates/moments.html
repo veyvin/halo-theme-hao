@@ -55,7 +55,7 @@
                                         </div>
                                     </div>
                                     <a class="bber-reply" th:if="${theme.config.comments.use != 'commentWidget'}"
-                                       th:onclick="rightMenuCommentText([[${content.html}]]);"
+                                       th:onclick="rightMenuCommentText(stripHtml([[${content.html}]]));"
                                        data-pjax-state=""> <i class="haofont hao-icon-chat--fill"
                                                               style="font-size: 20px;"></i>
                                     </a>

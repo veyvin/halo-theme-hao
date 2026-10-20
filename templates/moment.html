@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page', title = ${#messages.msg('page.moments.title') + ' | ' + site.title}, head = ~{::head})}">
+<th:block th:fragment="head">
+</th:block>
+<th:block th:fragment="content">
+
+    <div class="page" id="body-wrap">
+
+        <!-- 头部导航栏 -->
+        <header class="not-top-img" id="page-header">
+            <nav th:replace="~{modules/nav :: nav(title = ${#messages.msg('page.moments.title')})}"></nav>
+        </header>
+        <main class="layout hide-aside" id="content-inner">
+            <div id="page">
+                <div class="card-widget" style="padding: 24px;">
+                    <!-- 作者与时间 -->
+                    <div class="moment-meta" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                        <img th:if="${not #strings.isEmpty(moment.owner.avatar)}" class="avatar" width="40" height="40"
+                             th:src="${moment.owner.avatar}" th:alt="${moment.owner.displayName}"
+                             style="border-radius:50%;object-fit:cover;">
+                        <div th:if="${#strings.isEmpty(moment.owner.avatar)}" class="no-avatar"
+                             style="width:40px;height:40px;border-radius:50%;background:var(--heo-main-op);display:flex;align-items:center;justify-content:center;color:var(--heo-main);font-weight:700;">
+                            <span th:text="${#strings.substring(moment.owner.displayName, 0, 1)}"></span>
+                        </div>
+                        <div>
+                            <div style="font-weight:600;color:var(--heo-fontcolor);" th:text="${moment.owner.displayName}"></div>
+                            <time style="font-size:12px;color:var(--heo-secondtext);"
+                                  th:attr="datetime=${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                  th:text="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
+                                  th:title="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></time>
+                        </div>
+                    </div>
+
+                    <!-- 内容 -->
+                    <div class="moment-content" style="line-height:1.8;color:var(--heo-fontcolor);"
+                         th:utext="${moment.spec.content.html}"></div>
+
+                    <!-- 媒体 -->
+                    <th:block th:if="${not #lists.isEmpty(moment.spec.content.medium)}">
+                        <div class="moment-media" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;">
+                            <th:block th:each="momentItem : ${moment.spec.content.medium}">
+                                <img th:if="${momentItem.type.name == 'PHOTO'}" th:src="${momentItem.url}"
+                                     th:alt="${#messages.msg('moment.imageDesc')}"
+                                     style="max-width:100%;border-radius:8px;object-fit:cover;">
+                                <video th:if="${momentItem.type.name == 'VIDEO'}" th:src="${momentItem.url}"
+                                       preload="none" controls playsinline style="max-width:100%;border-radius:8px;"></video>
+                                <audio th:if="${momentItem.type.name == 'AUDIO'}" th:src="${momentItem.url}" controls
+                                       style="width:100%;"></audio>
+                            </th:block>
+                        </div>
+                    </th:block>
+
+                    <!-- 标签 -->
+                    <div th:if="${not #lists.isEmpty(moment.spec.tags)}" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;">
+                        <a th:each="tag : ${moment.spec.tags}" th:href="@{/tags}" th:text="${tag}"
+                           style="font-size:12px;padding:2px 8px;border-radius:4px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;"></a>
+                    </div>
+
+                    <!-- 操作 -->
+                    <div style="margin-top:16px;display:flex;gap:16px;font-size:13px;color:var(--heo-secondtext);">
+                        <span><i class="haofont hao-icon-heart"></i> <span th:text="${moment.stats.upvote}"></span></span>
+                        <span><i class="haofont hao-icon-chat--fill"></i> <span th:text="${moment.stats.totalComment}"></span></span>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!--/* 评论组件 */-->
+                <th:block th:replace="~{modules/comment :: comment(group = 'moment.halo.run',
+                  kind = 'Moment',
+                  name = ${moment.metadata.name},
+                  allowComment = ${true})}" />
+            </div>
+        </main>
+
+        <!-- 底部 -->
+        <footer th:replace="~{modules/footer}"/>
+    </div>
+
+</th:block>
+</html>

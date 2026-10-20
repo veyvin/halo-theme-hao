@@ -274,6 +274,10 @@ var getTimeState = () => {
     };
 
 //引用到评论
+function stripHtml(html) {
+    if (html == null) return '';
+    return String(html).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
 function rightMenuCommentText(txt) {
     if (GLOBAL_CONFIG.rightMenuEnable && typeof rm !== 'undefined') {
         rm.hideRightMenu();
