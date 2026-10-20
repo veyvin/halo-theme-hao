@@ -972,6 +972,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "moments"
+                      label: 瞬间说说
                     - value: "visit-posts"
                       label: 热门文章
                     - value: "comments"
@@ -1035,6 +1037,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "moments"
+                      label: 瞬间说说
                     - value: "post-audio"
                       label: 文章音频播放器
                     - value: "visit-posts"
@@ -1098,6 +1102,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "moments"
+                      label: 瞬间说说
                     - value: "visit-posts"
                       label: 热门文章
                     - value: "comments"
@@ -1158,6 +1164,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "moments"
+                      label: 瞬间说说
                     - value: "visit-posts"
                       label: 热门文章
                     - value: "comments"
@@ -1219,6 +1227,8 @@ spec:
                       label: 通讯录
                     - value: "recent-posts"
                       label: 最新文章
+                    - value: "moments"
+                      label: 瞬间说说
                     - value: "visit-posts"
                       label: 热门文章
                     - value: "comments"

@@ -1,0 +1,30 @@
+<!-- 瞬间说说 -->
+<div class="card-widget card-moments" th:if="${pluginFinder.available('PluginMoments')}">
+    <div class="item-headline">
+        <i class="haofont hao-icon-logo-moment"></i>
+        <span th:text="${#messages.msg('nav.moments')}"></span>
+        <a class="card-more-btn" th:href="@{/moments}" th:title="${#messages.msg('common.viewMore')}"
+           aria-label="${#messages.msg('common.viewMore')}"><i class="haofont hao-icon-chevron-right"></i></a>
+    </div>
+    <div class="aside-list">
+        <th:block th:with="moments=${momentFinder.list(1, 5)}">
+            <a class="aside-list-item" th:each="moment : ${moments.items}"
+               th:with="content=${moment.spec.content}"
+               th:href="@{/moments/{name}(name=${moment.metadata.name})}">
+                <img th:if="${not #lists.isEmpty(content.medium) and content.medium[0].type.name == 'PHOTO'}"
+                     class="thumbnail" width="80" height="80" loading="lazy" decoding="async"
+                     th:src="${isLazyload ? loadingImg : content.medium[0].url}"
+                     th:data-lazy-src="${isLazyload ? content.medium[0].url : ''}"
+                     th:alt="${#messages.msg('moment.imageDesc')}">
+                <div class="content">
+                    <div class="title"
+                         style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"
+                         th:text="${#strings.abbreviate(#strings.defaultString(content.raw, ''), 80)}"></div>
+                    <time th:attr="datetime=${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"
+                          th:text="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
+                          th:title="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></time>
+                </div>
+            </a>
+        </th:block>
+    </div>
+</div>
