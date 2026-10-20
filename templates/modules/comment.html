@@ -14,7 +14,7 @@
                 <a href="/privacy" th:text="${#messages.msg('comment.privacy')}"></a>
             </div>
             <div class="comment-tips" id="comment-tips">
-                <span th:text="${#messages.msg('comment.tip')}"></span>
+                <span th:text="${#messages.msg('comment.tip')}" aria-live="polite"></span>
             </div>
         </div>
 
@@ -37,4 +37,50 @@
             </div>
         </div>
     </div>
+    <div style="text-align:center;margin:12px 0;">
+        <button type="button" id="comment-load-more" onclick="loadMoreComments()" aria-live="polite"
+                style="padding:6px 14px;border:none;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);cursor:pointer;">
+            [[${#messages.msg('common.loadMoreComments')}]]
+        </button>
+    </div>
+    <script>
+        function loadMoreComments() {
+            var clicked = false;
+            // Twikoo 原生：优先调用其内部加载更多
+            try {
+                if (window.twikoo && typeof window.twikoo.getComments === 'function') {
+                    window.twikoo.getComments({ replace: false });
+                    clicked = true;
+                }
+            } catch (e) {}
+            // Artalk 原生
+            try {
+                if (!clicked && window.Artalk && typeof window.Artalk.loadMore === 'function') {
+                    window.Artalk.loadMore();
+                    clicked = true;
+                }
+            } catch (e) {}
+            // 通用：点击组件内部的加载更多按钮
+            if (!clicked) {
+                var selectors = ['.tk-load-more', '.atk-load-more', '.wl-more', '#load-more', '.comment-load-more', 'button[data-action="load-more"]'];
+                selectors.forEach(function (sel) {
+                    var btns = document.querySelectorAll(sel);
+                    btns.forEach(function (b) { if (b && b.offsetParent !== null) { b.click(); clicked = true; } });
+                });
+            }
+            if (!clicked) {
+                var btn = document.getElementById('comment-load-more');
+                if (btn) { btn.textContent = '暂无更多或由评论组件自动加载'; btn.disabled = true; }
+            }
+        }
+        (function () {
+            // 评论组件可能异步渲染，延迟隐藏无用按钮
+            setTimeout(function () {
+                var selectors = ['.tk-load-more', '.atk-load-more', '.wl-more', '#load-more', '.comment-load-more'];
+                var has = selectors.some(function (sel) { return document.querySelector(sel) !== null; });
+                var btn = document.getElementById('comment-load-more');
+                if (btn && !has) btn.style.display = 'none';
+            }, 2000);
+        })();
+    </script>
 </th:block>

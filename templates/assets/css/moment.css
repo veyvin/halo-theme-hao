@@ -1,0 +1,27 @@
+.moment-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.moment-content { line-height: 1.8; color: var(--heo-fontcolor); }
+.moment-media { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; }
+.moment-media img, .moment-media video { max-width: 100%; border-radius: 8px; }
+.moment-media audio { width: 100%; }
+.moment-tags { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.moment-tag { font-size: 12px; padding: 2px 8px; border-radius: 4px; background: var(--heo-main-op); color: var(--heo-main); text-decoration: none; }
+.moment-actions { margin-top: 16px; display: flex; gap: 16px; font-size: 13px; color: var(--heo-secondtext); }
+.moment-nav { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.moment-nav a { padding: 10px 12px; border-radius: 8px; background: var(--heo-main-op); color: var(--heo-main); text-decoration: none; font-size: 13px; }
+.moment-nav .spacer { flex: 1; }
+.moment-nav .prev, .moment-nav .next { padding: 10px 12px; border-radius: 8px; background: var(--heo-main-op); color: var(--heo-main); text-decoration: none; font-size: 13px; }
+.moment-nav .prev { text-align: left; }
+.moment-nav .next { text-align: right; }
+.moment-nav .all { padding: 10px 12px; border-radius: 8px; background: var(--heo-main-op); color: var(--heo-main); text-decoration: none; font-size: 13px; }
+.moment-upvote { border: none; background: var(--heo-main-op); color: var(--heo-main); padding: 4px 10px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.moment-upvote:disabled { opacity: 0.6; cursor: default; }
+.moment-author-card { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; background: var(--heo-main-op); margin-bottom: 16px; }
+.moment-author-card .moment-author-avatar { border-radius: 50%; object-fit: cover; flex: 0 0 56px; }
+.moment-author-card .moment-author-noavatar { width: 56px; height: 56px; border-radius: 50%; background: var(--heo-main); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; flex: 0 0 56px; }
+.moment-author-name { font-weight: 600; color: var(--heo-fontcolor); text-decoration: none; font-size: 15px; }
+.moment-author-bio { font-size: 12px; color: var(--heo-secondtext); margin-top: 2px; }
+.moment-author-meta { margin-top: 6px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.moment-header { padding: 24px; }
+.moment-author-info { flex: 1; min-width: 0; }
+.moment-view-author { font-size: 12px; color: var(--heo-main); text-decoration: none; }
+.moment-release-time { font-size: 12px; color: var(--heo-secondtext); }

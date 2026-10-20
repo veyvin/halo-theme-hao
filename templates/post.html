@@ -6,6 +6,20 @@
     <link rel="stylesheet" th:href="${assets_link + '/css/hao-post-tools.css' + theme_version}">
     <script defer th:if="${theme.config.post.readAloudEnable}" th:src="${assets_link + '/js/hao-read.js' + theme_version}"></script>
   </th:block>
+  <!-- 按需加载多媒体库：仅文章内容包含对应标签时加载 -->
+  <th:block th:if="${not #strings.isEmpty(post?.content?.content)}">
+    <th:block th:if="${#strings.contains(post.content.content, 'meting') or #strings.contains(post.content.content, 'aplayer')}">
+      <link rel="stylesheet" th:href="${assets_link + '/libs/aplayer/APlayer.min.css'}">
+      <script defer th:src="${assets_link + '/libs/aplayer/APlayer.min.js'}"></script>
+      <script defer th:src="${assets_link + '/libs/aplayer/Meting2.min.js'}"></script>
+    </th:block>
+    <th:block th:if="${#strings.contains(post.content.content, 'dplayer')}">
+      <script defer th:src="${assets_link + '/libs/dplayer/DPlayer.min.js'}"></script>
+    </th:block>
+    <th:block th:if="${#strings.contains(post.content.content, 'hls')}">
+      <script defer th:src="${assets_link + '/libs/hls/hls.min.js'}"></script>
+    </th:block>
+  </th:block>
   <script th:if="${theme.config.basics.seo.enable_structured_data}" type="application/ld+json" th:inline="javascript">
   {"@context":"https://schema.org","@type":"BlogPosting","headline":[[${post.spec.title}]],"description":[[${post.status.excerpt ?: ''}]],"image":[[${#strings.isEmpty(post.spec.cover) ? '' : post.spec.cover}]],"datePublished":[[${#dates.format(post.spec.publishTime,'yyyy-MM-dd''T''HH:mm:ss')}]],"dateModified":[[${#dates.format(post.status.lastModifyTime,'yyyy-MM-dd''T''HH:mm:ss')}]],"author":{"@type":"Person","name":[[${post.owner.displayName}]]}}
   </script>
@@ -13,7 +27,7 @@
 <th:block th:fragment="content">
     <div class="post" id="body-wrap">
 
-        <header class="post-bg" id="page-header">
+        <header class="post-bg" id="page-header" role="banner">
             <nav th:replace="~{modules/nav :: nav(title = ${post.spec.title})}"></nav>
             <div class="coverdiv loaded" id="coverdiv">
                 <!-- perf LCP：m 作主图 + s/m/l 三档 srcset，首屏 eager+high 优先级 -->
@@ -26,7 +40,8 @@
                      th:src="${coverM}"
                      th:srcset="${coverS + ' 400w, ' + coverM + ' 800w, ' + coverL + ' 1200w'}"
                      sizes="100vw"
-                     th:attr="data-cover-small=${#strings.isEmpty(post.spec.cover) ? theme.config.layout.postRandomImg : thumbnail.gen(post.spec.cover, 's')}">
+                     th:attr="data-cover-small=${#strings.isEmpty(post.spec.cover) ? theme.config.layout.postRandomImg : thumbnail.gen(post.spec.cover, 's')}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221280%22 height=%22720%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
             </div>
 
             <div id="post-info">

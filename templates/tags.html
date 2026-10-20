@@ -14,6 +14,9 @@
             <div id="page"><h1 class="page-title" th:text="${#messages.msg('page.title.tag')}">标签</h1>
                 <div class="tag-cloud-title is-center">标签 - <span class="tag-cloud-amount">0</span></div>
                 <div class="tag-cloud-list is-center">
+                    <th:block th:if="${#lists.isEmpty(tagFinder.listAll())}">
+                        <th:block th:replace="~{modules/common/empty-state :: empty-state('page.tags.title', '', 'fas fa-tag', 'empty-state')}"></th:block>
+                    </th:block>
                     <a th:each="tagItem : ${tagFinder.listAll()}"
                        th:href="@{${tagItem.status.permalink}}"
                        th:id="${tagItem.spec.displayName}" th:style="'font-size: 1em; color:' + ${tagItem.spec.color} ">

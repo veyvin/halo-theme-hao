@@ -1431,6 +1431,15 @@ spec:
           help: 「最新文章」「热门文章」小工具展示的文章数量
           placeholder: 例如：4
           min: 1
+          max: 20
+        - $formkit: number
+          name: momentCount
+          label: 侧栏瞬间数量
+          value: 5
+          help: 「瞬间说说」小工具展示的瞬间条数
+          placeholder: 例如：5
+          min: 1
+          max: 20
         - $formkit: group
           name: newcomment
           label: 最新评论
@@ -1450,6 +1459,7 @@ spec:
               help: 最新评论小工具展示的条数
               placeholder: 例如：5
               min: 1
+              max: 50
             - $formkit: text
               label: 头像服务镜像地址
               name: providerMirror
@@ -2943,6 +2953,24 @@ spec:
           label: 按钮跳转链接
           placeholder: 例如 https://github.com/halo-sigs/plugin-moments
           help: 点击横幅按钮后跳转的地址
+        - $formkit: switch
+          name: replyQuote
+          label: 回复时引用瞬间内容
+          value: true
+          help: 开启后点击瞬间的回复按钮会自动引用该瞬间内容；关闭则仅跳转到评论框
+        - $formkit: switch
+          name: quoteTruncate
+          label: 自动截断引用内容
+          value: true
+          help: 开启后引用瞬间内容超过最大长度时自动截断
+        - $formkit: number
+          name: quoteLength
+          label: 引用内容最大长度
+          value: 120
+          help: 回复瞬间时引用内容的最大字数，超出部分以省略号截断
+          placeholder: 例如：120
+          min: 20
+          max: 500
 
     - group: categories
       label: 13 · 页面-分类

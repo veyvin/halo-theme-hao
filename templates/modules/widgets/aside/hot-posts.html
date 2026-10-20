@@ -8,6 +8,9 @@
         <a class="banner-button secondary" th:href="@{/hot}" target="_blank" rel="external nofollow" th:text="${#messages.msg('common.viewMore')}"></a>
     </div>
     <div class="hotpost-list">
+        <div class="hotpost-empty" th:if="${#lists.isEmpty(hotPosts.items)}"
+             style="text-align:center;color:var(--heo-secondtext);font-size:13px;padding:12px 0;"
+             th:text="${#messages.msg('common.empty')}"></div>
         <div class="hotpost-item" th:each="post,iterStat : ${hotPosts.items}">
             <div class="hotpost-rank">
                 <span th:text="${iterStat.index + 1}"></span>

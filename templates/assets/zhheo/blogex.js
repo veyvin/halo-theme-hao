@@ -278,6 +278,18 @@ function stripHtml(html) {
     if (html == null) return '';
     return String(html).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
+function quoteMomentText(html, maxLen) {
+    maxLen = (typeof maxLen === 'number' && maxLen > 0) ? maxLen : 120;
+    var text = stripHtml(html);
+    if (text.length > maxLen) text = text.slice(0, maxLen) + '…';
+    rightMenuCommentText(text);
+}
+function scrollToComment() {
+    var comment = document.querySelector("#post-comment");
+    if (comment) window.scrollTo({ top: comment.offsetTop - 80, behavior: 'smooth' });
+    var input = document.querySelector("#post-comment textarea, #post-comment input[type=text]");
+    if (input) input.focus();
+}
 function rightMenuCommentText(txt) {
     if (GLOBAL_CONFIG.rightMenuEnable && typeof rm !== 'undefined') {
         rm.hideRightMenu();
@@ -320,7 +332,7 @@ document.addEventListener('touchstart', e => {
 $(document).off('keydown').on('keydown', function (e) {
     if (GLOBAL_CONFIG.rightMenuEnable) {
         if ((e.ctrlKey || e.metaKey) && (e.keyCode == 67) && (selectTextNow != '')) {
-            btf.snackbarShow('复制成功，复制和转载请标注本文地址');
+            btf.snackbarShow(document.getElementById('hao-i18n').getAttribute('data-i18n-copy-success') || '复制成功，复制和转载请标注本文地址');
             rm.rightmenuCopyText(selectTextNow);
             return false;
         }
@@ -364,7 +376,7 @@ function travelling() {
             text: msg,
             duration: 8000,
             pos: 'top-center',
-            actionText: '前往',
+            actionText: document.getElementById('hao-i18n').getAttribute('data-i18n-go-to') || '前往',
             onActionClick: function (element) {
                 $(element).css('opacity', 0);
                 window.open(link, '_blank');
@@ -391,7 +403,7 @@ function toforeverblog() {
         text: msg,
         duration: 8000,
         pos: 'top-center',
-        actionText: '前往',
+        actionText: document.getElementById('hao-i18n').getAttribute('data-i18n-go-to') || '前往',
         onActionClick: function (element) {
             //Set opacity of element to 0 to close Snackbar
             $(element).css('opacity', 0);
@@ -405,7 +417,7 @@ function totraveling() {
     btf.snackbarShow("即将跳转到「开往」项目的成员博客，不保证跳转网站的安全性和可用性", function (element) {
         element.style.opacity = 0,
         travellingsTimer && clearTimeout(travellingsTimer)
-    }, 5000, "取消"),
+    }, 5000, document.getElementById('hao-i18n').getAttribute('data-i18n-cancel') || '取消'),
         travellingsTimer = setTimeout(function () {
             window.open("https://www.travellings.cn/go.html", "_blank")
         }, "5000")
@@ -507,7 +519,7 @@ function owoBig() {
 // 检测按键
 window.onkeydown = function (e) {
     if (e.keyCode === 123) {
-        btf.snackbarShow('开发者模式已打开，请遵循GPL协议', false, 3000)
+        btf.snackbarShow(document.getElementById('hao-i18n').getAttribute('data-i18n-dev-mode') || '开发者模式已打开，请遵循GPL协议', false, 3000)
     }
 }
 
@@ -552,7 +564,7 @@ function percent() {
     var a = window.scrollY + document.documentElement.clientHeight
         , i = document.getElementById("post-comment") || document.getElementById("footer");
     i.offsetTop + i.offsetHeight / 2 < a || o > 90 ? (document.querySelector("#nav-totop").classList.add("long"),
-        n.innerHTML = "返回顶部") : (document.querySelector("#nav-totop").classList.remove("long"),
+        n.innerHTML = document.getElementById('nav-totop').getAttribute('data-i18n-totop') || '返回顶部') : (document.querySelector("#nav-totop").classList.remove("long"),
     o >= 0 && (n.innerHTML = o)),
         endresult = t - e,
         endresult < 100 ? $(".needEndHide").addClass("hide") : $(".needEndHide").removeClass("hide"),
@@ -841,10 +853,10 @@ if (document.readyState !== 'loading') {
     var originTitle = document.title, titleTimer = null;
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) {
-            document.title = '✨ 页面去远方旅行了~';
+            document.title = document.getElementById('hao-i18n').getAttribute('data-i18n-title-away') || '✨ 页面去远方旅行了~';
             if (titleTimer) { clearTimeout(titleTimer); titleTimer = null; }
         } else {
-            document.title = '🐴 欢迎回来~ ' + originTitle;
+            document.title = document.getElementById('hao-i18n').getAttribute('data-i18n-title-back') || '🐴 欢迎回来~ ' + originTitle;
             titleTimer = setTimeout(function () { document.title = originTitle; }, 2000);
         }
     });

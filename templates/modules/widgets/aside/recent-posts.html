@@ -3,13 +3,18 @@
     <div class="item-headline"><i class="haofont hao-icon-eicon_map-2-line1"></i><span th:text="${#messages.msg('console.recentPosts')}"></span></div>
     <div class="aside-list">
         <!-- 最新文章，用户可以自定义展示数量 -->
-        <div class="aside-list-item" th:each="post : ${postFinder.list({page: 1, size: theme.config.sidebar.recentPost, sort: {'spec.publishTime,desc'}})}">
+        <th:block th:with="recentPosts=${postFinder.list({page: 1, size: theme.config.sidebar.recentPost, sort: {'spec.publishTime,desc'}})}">
+            <div class="aside-list-item" th:if="${#lists.isEmpty(recentPosts.items)}"
+                 style="justify-content:center;color:var(--heo-secondtext);font-size:13px;"
+                 th:text="${#messages.msg('common.empty')}"></div>
+            <div class="aside-list-item" th:each="post : ${recentPosts.items}">
             <a class="thumbnail" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
                 <img th:alt="${post.spec.title}" width="80" height="80"
                      th:with="img = ${#strings.isEmpty(post.spec.cover) ? postRandomImg+post.spec.title : thumbnail.gen(post.spec.cover, 's')}"
 
                      th:src="${isLazyload ? loadingImg : img}"
-                     th:data-lazy-src="${ isLazyload ? img : ''}">
+                     th:data-lazy-src="${ isLazyload ? img : ''}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
             </a>
             <div class="content">
                 <a class="title" th:href="@{${post.status.permalink}}" th:text="${post.spec.title}" th:title="${post.spec.title}"></a>
@@ -19,5 +24,6 @@
                 </time>
             </div>
         </div>
+        </th:block>
     </div>
 </div>

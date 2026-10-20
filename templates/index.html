@@ -2,12 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'index', title = null, head = ~{::head})}">
 <th:block th:fragment="head">
+    <script type="application/ld+json" th:inline="javascript">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "[[${site.title}]]",
+            "url": "[[${site.url}]]",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "[[${site.url}]]/search?keyword={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
 </th:block>
 <th:block th:fragment="content">
     
     <div class="page" id="body-wrap">
         <!-- 头部导航栏 -->
-        <header class="not-top-img" id="page-header">
+        <header class="not-top-img" id="page-header" role="banner">
             <nav th:replace="~{modules/nav :: nav(title = ${siteTitle})}"></nav>
             <!-- 问候语 -->
             <th:block th:replace="~{modules/header/greeting}"/>

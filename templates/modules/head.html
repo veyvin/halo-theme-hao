@@ -28,6 +28,8 @@
          形如 https://artalk.example.com/。若在此再拼一次协议，
          会产出 https://https://artalk.example.com/ 这种非法 URL。 -->
     <link rel="preconnect" th:href="${theme.config.comments.artalks.server}" th:if="${theme.config.comments.use == 'Artalk' and not #strings.isEmpty(theme.config.comments.artalks.server)}" crossorigin>
+<link rel="preconnect" th:href="${theme.config.comments.walines.serverURL}" th:if="${theme.config.comments.use == 'Waline' and not #strings.isEmpty(theme.config.comments.walines.serverURL)}" crossorigin>
+<link rel="preconnect" th:href="${theme.config.other.staticResource.cdn_link}" th:if="${theme.config.other.staticResource.use == 'custom' and not #strings.isEmpty(theme.config.other.staticResource.cdn_link)}" crossorigin>
     <!-- pjax 要求这些 meta 在所有页面数量一致（new/old 都为 1）；标签始终输出，内容可为空 -->
     <th:block th:if="${theme.config.basics.seo.enable_metadata}">
         <!-- 文章页 -->
@@ -100,6 +102,10 @@
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/zhheoblog.css' + theme_version}">
 
     <link rel="stylesheet" th:href="${assets_link + '/zhheo/custom.css' + theme_version}">
+    <link rel="stylesheet" th:if="${htmlType == 'moment'}" th:href="${assets_link + '/css/moment.css' + theme_version}">
+    <link rel="stylesheet" th:if="${htmlType == 'category'}" th:href="${assets_link + '/css/category.css' + theme_version}">
+    <link rel="stylesheet" th:if="${htmlType == 'index'}" th:href="${assets_link + '/css/index.css' + theme_version}">
+    <link rel="stylesheet" th:if="${htmlType == 'post'}" th:href="${assets_link + '/css/post.css' + theme_version}">
 
     <!-- Twikoo 2.x Heo 皮肤：先于移动端样式，避免桌面规则被 mw768 误伤 -->
     <link rel="stylesheet"
@@ -125,6 +131,7 @@
         && theme.config.comments.commentsEnable}" th:href="${assets_link + '/zhheo/commentBarrage.min.css'}">
 
     <link rel="stylesheet" th:href="${assets_link + '/css/a11y-reduce-motion.css' + theme_version}">
+    <link rel="stylesheet" th:href="${assets_link + '/css/a11y.css' + theme_version}">
 
     <script defer th:if="${theme.config.post.aiAssistantEnable}" th:src="${assets_link + '/js/hao-ai.js' + theme_version}"></script>
 
@@ -160,6 +167,14 @@
     <th:block th:if="${htmlType == 'page'}">
         <th:block th:if="${not #strings.isEmpty(singlePage?.content?.content)}">
             <th:block th:if="${#strings.contains(singlePage.content.content, '<pre')}">
+                <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
+                <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
+            </th:block>
+        </th:block>
+    </th:block>
+    <th:block th:if="${htmlType == 'moment'}">
+        <th:block th:if="${not #strings.isEmpty(moment?.spec?.content?.html)}">
+            <th:block th:if="${#strings.contains(moment.spec.content.html, '<pre')}">
                 <th:block th:if="${pluginFinder.available('PluginPrismJS')}" th:replace="~{modules/common/code}"/>
                 <th:block th:unless="${pluginFinder.available('PluginPrismJS')}" th:replace="~{macro/prism-code}"/>
             </th:block>
@@ -288,8 +303,10 @@
     <!-- 复制：仅文章/页面需要，且 defer 不阻塞 -->
     <script defer th:if="${htmlType == 'post' or htmlType == 'page'}" th:src="${assets_link + '/libs/clipboard/clipboard.min.js'}"></script>
 
-    <!-- icon图标 -->
-    <link rel="stylesheet" th:href="${assets_link + '/icon/iconfont.css' + theme_version}">
+    <!-- icon图标：异步加载，避免阻塞首屏渲染 -->
+    <link rel="stylesheet" th:href="${assets_link + '/icon/iconfont.css' + theme_version}"
+          media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" th:href="${assets_link + '/icon/iconfont.css' + theme_version}"></noscript>
 
     <th:block th:replace="~{modules/variables/site-config}" />
 

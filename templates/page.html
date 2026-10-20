@@ -8,7 +8,7 @@
     <div class="page" id="body-wrap">
 
         <!-- 头部导航栏 -->
-        <header class="not-top-img" id="page-header">
+        <header class="not-top-img" id="page-header" role="banner">
             <nav th:replace="~{modules/nav :: nav(title = ${singlePage.spec.title})}"></nav>
         </header>
         <main class="layout" th:classappend="${not #lists.isEmpty(theme.config.sidebar.widgetss.pageWidget) ? '' : 'hide-aside'}" id="content-inner">

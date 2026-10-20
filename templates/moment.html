@@ -1,67 +1,186 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'page', title = ${#messages.msg('page.moments.title') + ' | ' + site.title}, head = ~{::head})}">
+      th:replace="~{modules/layouts/layout :: layout(content = ~{::content}, htmlType = 'moment', title = ${#messages.msg('page.moments.title') + ' | ' + site.title}, head = ~{::head})}">
 <th:block th:fragment="head">
+    <link rel="canonical" th:href="@{${site.url + '/moments/' + moment.metadata.name}}"/>
+    <meta name="description" th:content="${#strings.abbreviate(#strings.defaultString(moment.spec.content.raw, ''), 120)}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" th:content="${#messages.msg('page.moments.title')}">
+    <meta property="og:url" th:content="${site.url + '/moments/' + moment.metadata.name}">
+    <meta property="og:description" th:content="${#strings.abbreviate(#strings.defaultString(moment.spec.content.raw, ''), 120)}">
+    <meta property="og:image" th:if="${not #lists.isEmpty(moment?.spec?.content?.medium) and moment.spec.content.medium[0].type.name == 'PHOTO'}"
+          th:content="${moment.spec.content.medium[0].url}">
+    <meta property="og:locale" th:content="${#locale.toLanguageTag()}">
+    <meta property="article:author" th:content="${moment.owner.displayName}">
+    <script type="application/ld+json" th:inline="javascript">
+        {
+            "@context": "https://schema.org",
+            "@type": "SocialMediaPosting",
+            "headline": "瞬间",
+            "datePublished": "[[${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd''T''HH:mm:ss')}]]",
+            "author": { "@type": "Person", "name": "[[${moment.owner.displayName}]]" },
+            "url": "[[${site.url + '/moments/' + moment.metadata.name}]]",
+            "image": "[[${not #lists.isEmpty(moment.spec.content.medium) and moment.spec.content.medium[0].type.name == 'PHOTO' ? moment.spec.content.medium[0].url : ''}]]",
+            "interactionStatistic": [
+                { "@type": "InteractionCounter", "interactionType": "https://schema.org/LikeAction", "userInteractionCount": [[${moment.stats.upvote}]] },
+                { "@type": "InteractionCounter", "interactionType": "https://schema.org/CommentAction", "userInteractionCount": [[${moment.stats.totalComment}]] }
+            ]
+        }
+    </script>
 </th:block>
 <th:block th:fragment="content">
 
     <div class="page" id="body-wrap">
 
         <!-- 头部导航栏 -->
-        <header class="not-top-img" id="page-header">
+        <header class="not-top-img" id="page-header" role="banner">
             <nav th:replace="~{modules/nav :: nav(title = ${#messages.msg('page.moments.title')})}"></nav>
         </header>
-        <main class="layout hide-aside" id="content-inner">
+        <main class="layout hide-aside" id="content-inner" role="main">
             <div id="page">
-                <div class="card-widget" style="padding: 24px;">
-                    <!-- 作者与时间 -->
-                    <div class="moment-meta" style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                        <img th:if="${not #strings.isEmpty(moment.owner.avatar)}" class="avatar" width="40" height="40"
-                             th:src="${moment.owner.avatar}" th:alt="${moment.owner.displayName}"
-                             style="border-radius:50%;object-fit:cover;">
-                        <div th:if="${#strings.isEmpty(moment.owner.avatar)}" class="no-avatar"
-                             style="width:40px;height:40px;border-radius:50%;background:var(--heo-main-op);display:flex;align-items:center;justify-content:center;color:var(--heo-main);font-weight:700;">
+                <div class="card-widget moment-header">
+                    <!-- 作者卡片 -->
+                    <div class="moment-author-card">
+                        <img th:if="${not #strings.isEmpty(moment?.owner?.avatar)}" class="avatar moment-author-avatar" width="56" height="56"
+                             th:src="${moment?.owner?.avatar}" th:alt="${moment?.owner?.displayName}"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
+                        <div th:if="${#strings.isEmpty(moment?.owner?.avatar)}" class="no-avatar moment-author-noavatar">
                             <span th:text="${#strings.substring(moment.owner.displayName, 0, 1)}"></span>
                         </div>
-                        <div>
-                            <div style="font-weight:600;color:var(--heo-fontcolor);" th:text="${moment.owner.displayName}"></div>
-                            <time style="font-size:12px;color:var(--heo-secondtext);"
-                                  th:attr="datetime=${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"
-                                  th:text="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
-                                  th:title="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></time>
+                        <div class="moment-author-info">
+                            <a th:href="@{/authors/{name}(name=${moment?.owner?.name})}" class="moment-author-name"
+                               th:text="${moment?.owner?.displayName}"></a>
+                            <div th:if="${not #strings.isEmpty(moment?.owner?.bio)}" class="moment-author-bio"
+                                 th:text="${moment?.owner?.bio}"></div>
+                            <div class="moment-author-meta">
+                                <a th:href="@{/moments(ownerName=${moment?.owner?.name})}" class="moment-view-author">
+                                    [[${#messages.msg('moment.viewAuthorMoments')}]] →
+                                </a>
+                                <time class="moment-release-time"
+                                      th:attr="datetime=${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                      th:text="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
+                                      th:title="${#dates.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></time>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 内容 -->
-                    <div class="moment-content" style="line-height:1.8;color:var(--heo-fontcolor);"
-                         th:utext="${moment.spec.content.html}"></div>
+                    <div class="moment-content" th:utext="${moment?.spec?.content?.html ?: ''}"></div>
 
                     <!-- 媒体 -->
-                    <th:block th:if="${not #lists.isEmpty(moment.spec.content.medium)}">
-                        <div class="moment-media" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;">
+                    <th:block th:if="${not #lists.isEmpty(moment?.spec?.content?.medium)}">
+                        <div class="moment-media">
                             <th:block th:each="momentItem : ${moment.spec.content.medium}">
                                 <img th:if="${momentItem.type.name == 'PHOTO'}" th:src="${momentItem.url}"
                                      th:alt="${#messages.msg('moment.imageDesc')}"
-                                     style="max-width:100%;border-radius:8px;object-fit:cover;">
+                                     loading="lazy" decoding="async"
+                                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2214%22%3E%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%A4%B1%E8%B4%A5%3C/text%3E%3C/svg%3E'">
                                 <video th:if="${momentItem.type.name == 'VIDEO'}" th:src="${momentItem.url}"
-                                       preload="none" controls playsinline style="max-width:100%;border-radius:8px;"></video>
-                                <audio th:if="${momentItem.type.name == 'AUDIO'}" th:src="${momentItem.url}" controls
-                                       style="width:100%;"></audio>
+                                       preload="none" controls playsinline></video>
+                                <audio th:if="${momentItem.type.name == 'AUDIO'}" th:src="${momentItem.url}" controls></audio>
                             </th:block>
                         </div>
                     </th:block>
 
                     <!-- 标签 -->
-                    <div th:if="${not #lists.isEmpty(moment.spec.tags)}" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;">
-                        <a th:each="tag : ${moment.spec.tags}" th:href="@{/tags}" th:text="${tag}"
-                           style="font-size:12px;padding:2px 8px;border-radius:4px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;"></a>
+                    <div th:if="${not #lists.isEmpty(moment?.spec?.tags)}" class="moment-tags">
+                        <a th:each="tag : ${moment.spec.tags}" th:href="@{/moments(tag=${tag})}" th:text="${tag}" class="moment-tag"></a>
                     </div>
 
                     <!-- 操作 -->
-                    <div style="margin-top:16px;display:flex;gap:16px;font-size:13px;color:var(--heo-secondtext);">
-                        <span><i class="haofont hao-icon-heart"></i> <span th:text="${moment.stats.upvote}"></span></span>
-                        <span><i class="haofont hao-icon-chat--fill"></i> <span th:text="${moment.stats.totalComment}"></span></span>
+                    <div class="moment-actions">
+                        <button id="moment-upvote" type="button" class="moment-upvote" aria-pressed="false" aria-live="polite" aria-label="点赞"
+                                th:data-group="'moment.halo.run'"
+                                th:data-plural="'moments'"
+                                th:data-name="${moment.metadata.name}"
+                                onclick="upvoteMoment(this)"
+                                style="border:none;background:var(--heo-main-op);color:var(--heo-main);padding:4px 10px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                            <i class="haofont hao-icon-heart"></i> <span th:text="${moment?.stats?.upvote ?: 0}"></span>
+                        </button>
+                        <span><i class="haofont hao-icon-chat--fill"></i> <span th:text="${moment?.stats?.totalComment ?: 0}"></span></span>
+                        <button type="button" class="moment-upvote" onclick="copyMomentLink()" aria-label="复制链接">
+                            <i class="haofont hao-icon-link"></i> <span th:text="${#messages.msg('moment.copyLink')}"></span>
+                        </button>
+                        <button type="button" class="moment-upvote" onclick="shareMoment()" aria-label="分享">
+                            <i class="haofont hao-icon-share"></i> <span th:text="${#messages.msg('moment.share')}"></span>
+                        </button>
                     </div>
+                    <script th:inline="javascript">
+                        window.copyMomentLink = function () {
+                            var url = /*[[${site.url + '/moments/' + moment.metadata.name}]]*/ window.location.href;
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                navigator.clipboard.writeText(url).then(function () { if (window.Snackbar) Snackbar.show({ text: '链接已复制', pos: 'bottom-center' }); });
+                            } else {
+                                var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                                if (window.Snackbar) Snackbar.show({ text: '链接已复制', pos: 'bottom-center' });
+                            }
+                        };
+                        window.shareMoment = function () {
+                            var url = /*[[${site.url + '/moments/' + moment.metadata.name}]]*/ window.location.href;
+                            if (navigator.share) {
+                                navigator.share({ title: document.title, url: url }).catch(function () {});
+                            } else {
+                                copyMomentLink();
+                            }
+                        };
+                    </script>
+                    <script>
+                        (function () {
+                            var KEY = 'hao.upvoted.moments';
+                            function getUpvoted() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
+                            var btn = document.getElementById('moment-upvote');
+                            if (!btn) return;
+                            var name = btn.getAttribute('data-name');
+                            if (getUpvoted().indexOf(name) !== -1) { btn.disabled = true; btn.style.opacity = '0.6'; btn.setAttribute('aria-pressed', 'true'); }
+                            window.upvoteMoment = function (el) {
+                                var n = el.getAttribute('data-name');
+                                if (getUpvoted().indexOf(n) !== -1) return;
+                                el.disabled = true;
+                                fetch('/apis/api.halo.run/v1alpha1/trackers/upvote', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ group: el.getAttribute('data-group'), plural: el.getAttribute('data-plural'), name: n })
+                                }).then(function (r) {
+                                    if (r.ok) {
+                                        var list = getUpvoted(); list.push(n); localStorage.setItem(KEY, JSON.stringify(list));
+                                        var span = el.querySelector('span'); if (span) span.textContent = (parseInt(span.textContent || '0', 10) + 1);
+                                        el.disabled = true; el.style.opacity = '0.6'; el.setAttribute('aria-pressed', 'true');
+                                    } else {
+                                        el.disabled = false;
+                                    }
+                                }).catch(function () { el.disabled = false; });
+                            };
+                        })();
+                    </script>
+
+                    <!-- 上一条 / 下一条瞬间 -->
+                    <th:block th:with="allMoments=${momentFinder != null ? momentFinder.listAll() : {}}">
+                        <nav class="moment-nav" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                            <th:block th:each="m,iter : ${allMoments}" th:if="${m.metadata.name == moment.metadata.name}">
+                                <a th:if="${iter.index > 0}" th:href="@{/moments/{name}(name=${allMoments[iter.index - 1].metadata.name})}"
+                                   class="prev">
+                                    ← 上一条
+                                </a>
+                                <span th:if="${iter.index == 0}" class="spacer"></span>
+                                <a th:href="@{/moments}" class="all"
+                                   th:text="${#messages.msg('moment.allMoments')}"></a>
+                                <a th:if="${iter.index < #lists.size(allMoments) - 1}" th:href="@{/moments/{name}(name=${allMoments[iter.index + 1].metadata.name})}"
+                                   class="next">
+                                    下一条 →
+                                </a>
+                                <span th:if="${iter.index == #lists.size(allMoments) - 1}" class="spacer"></span>
+                            </th:block>
+                        </nav>
+                        <script>
+                            document.addEventListener('keydown', function (e) {
+                                if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+                                var prev = document.querySelector('.moment-nav a[href*="/moments/"]:first-of-type');
+                                var next = document.querySelector('.moment-nav a[href*="/moments/"]:last-of-type');
+                                if (e.key === 'ArrowLeft' && prev) prev.click();
+                                if (e.key === 'ArrowRight' && next) next.click();
+                            });
+                        </script>
+                    </th:block>
                 </div>
 
                 <hr>

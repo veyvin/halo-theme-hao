@@ -14,7 +14,8 @@
                          th:with=" img = @{${#strings.isEmpty(site.logo) ? assets_link + '/images/hao-logo.jpg' : site.logo}}"
 
                          th:src="${isLazyload ? loadingImg : img}"
-                         th:data-lazy-src="${ isLazyload ? img : ''}">
+                         th:data-lazy-src="${ isLazyload ? img : ''}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
                 </div>
                 <div class="author-info__name" th:if="${#strings.isEmpty(theme.config.sidebar.profile.profileName)}"
                      th:text="${site.title}"></div>

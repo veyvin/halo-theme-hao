@@ -1,0 +1,10 @@
+<!-- 统一空状态组件：empty-state(titleKey, descKey, icon, emptyClass) -->
+<th:block th:fragment="empty-state(titleKey, descKey, icon, emptyClass)">
+    <div th:class="${emptyClass ?: 'empty-state'}" role="status" aria-live="polite"
+         style="text-align:center;padding:40px 0;color:var(--heo-secondtext);">
+        <i th:class="${icon ?: 'fas fa-inbox'}" style="font-size:32px;margin-bottom:12px;opacity:0.6;"></i>
+        <h3 style="margin:0 0 8px;font-size:16px;font-weight:600;color:var(--heo-fontcolor);"
+            th:text="${#messages.msg(titleKey ?: 'common.empty')}"></h3>
+        <p style="margin:0;font-size:13px;" th:utext="${#messages.msg(descKey ?: '')}"></p>
+    </div>
+</th:block>

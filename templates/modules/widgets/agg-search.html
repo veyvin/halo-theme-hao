@@ -3,9 +3,10 @@
   封面由公开文章列表按 metadataName 联出；友链/评论由后端注入候选，前端按关键词过滤。
   回车在面板内出结果，不再调起搜索插件弹窗 -->
 <th:block th:if="${theme.config.tool.aggSearch.aggSearchEnable}">
-  <div id="hao-aggsearch" style="display:none;">
+  <div id="hao-aggsearch" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="aggsearch-title">
     <div class="aggsearch-dialog">
       <div class="aggsearch-navbar">
+        <div class="aggsearch-title" id="aggsearch-title" th:text="${#messages.msg('aggsearch.title')}"></div>
         <div class="aggsearch-title" th:text="${#messages.msg('aggsearch.title')}"></div>
         <span class="aggsearch-close" onclick="haoAggSearch.close()" th:title="${#messages.msg('common.close')}"><i class="haofont hao-icon-xmark"></i></span>
       </div>

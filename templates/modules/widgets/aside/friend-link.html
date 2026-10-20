@@ -18,7 +18,8 @@
 
                                         th:src="${isLazyload ? loadingImg : link.spec.logo}"
                                         th:data-lazy-src="${ isLazyload ? link.spec.logo : ''}"
-                                        th:alt="${link.spec.displayName}">
+                                        th:alt="${link.spec.displayName}"
+                                        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
                     <div class="card-friend-details">
                         <div class="card-friend-name">[[${link.spec.displayName}]]</div>
                         <div class="card-friend-descr" >[[${link.spec.description}]]</div>
@@ -37,7 +38,8 @@
 
                                         th:src="${isLazyload ? loadingImg : link.spec.logo}"
                                         th:data-lazy-src="${ isLazyload ? link.spec.logo : ''}"
-                                        th:alt="${link.spec.displayName}">
+                                        th:alt="${link.spec.displayName}"
+                                        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect fill=%22%23f2f4f7%22 width=%22100%25%22 height=%22100%25%22/%3E%3C/svg%3E'">
                     <div class="card-friend-details">
                         <div class="card-friend-name">[[${link.spec.displayName}]]</div>
                         <div class="card-friend-descr" >[[${link.spec.description}]]</div>

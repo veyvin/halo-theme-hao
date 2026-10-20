@@ -24,8 +24,8 @@
                     th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
         </th:block>
     </th:block>
-    <th:block th:if="${htmlType == 'page'}">
-        <th:block th:if="${not #strings.isEmpty(singlePage?.content?.content)}">
+    <th:block th:if="${htmlType == 'page' or htmlType == 'moment'}">
+        <th:block th:if="${htmlType == 'page' and not #strings.isEmpty(singlePage?.content?.content)}">
             <script defer th:if="${#strings.contains(singlePage.content.content, 'hao-')}"
                     th:src="${assets_link + '/js/custom.js' + theme_version}"></script>
         </th:block>
@@ -37,6 +37,8 @@
 </head>
 
 <body>
+
+<a class="skip-link" href="#content-inner">跳转到正文</a>
 
 <!-- loading 页面 -->
 <th:block th:replace="~{modules/loading-box}"/>
@@ -92,7 +94,7 @@
 
 <!-- 随机文章：输出最新 50 篇 permalink，每次点击在前端随机（原先服务端写死 1 条导致永远跳同一篇） -->
 <script th:inline="javascript"
-        th:with="randPosts=${postFinder.list({page: 1, size: 50, sort: {'spec.publishTime,desc'}}).items},
+        th:with="randPosts=${postFinder.list({page: 1, size: 20, sort: {'spec.publishTime,desc'}}).items},
                  randLinks=${randPosts != null ? randPosts.![status.permalink] : null}">
     window.__haoRandomPosts = /*[[${randLinks}]]*/ [];
     if (!Array.isArray(window.__haoRandomPosts)) window.__haoRandomPosts = [];
@@ -184,7 +186,7 @@
                         delay: 1500,
                         ignores: [
                             function (uri) { return uri.indexOf('#') !== -1; },
-                            /\/console|\/logout|\/login|\/uc\b|\/apis?\/|\/upload|\/avatar|\/search|\/moments|\/photos|\/videos|\/music|\/links|\/about|\.xml|\.txt|\.json|javascript:/i
+                            /\/console|\/logout|\/login|\/uc\b|\/apis?\/|\/upload|\/avatar|\/search|\/moments(\?|$)|\/photos|\/videos|\/music|\/links|\/about|\.xml|\.txt|\.json|javascript:/i
                         ]
                     });
                 };
@@ -197,6 +199,16 @@
     <div class="js-pjax">
         <!-- 动态标题 -->
         <script th:replace="~{modules/common/diytitle}"/>
+        <!-- i18n 数据属性：供 blogex.js 等 JS 读取，避免硬编码 -->
+        <div id="hao-i18n" style="display:none;"
+             data-i18n-copy-success="${#messages.msg('common.copySuccess')}"
+             data-i18n-back-to-top="${#messages.msg('common.backToTop')}"
+             data-i18n-go-to="${#messages.msg('common.goTo')}"
+             data-i18n-cancel="${#messages.msg('common.cancel')}"
+             data-i18n-dev-mode="${#messages.msg('common.devMode')}"
+             data-i18n-title-away="${#messages.msg('common.titleAway')}"
+             data-i18n-title-back="${#messages.msg('common.titleBack')}"
+             data-i18n-close="${#messages.msg('common.close')}"></div>
     </div>
     
     <!-- 评论 -->
@@ -320,6 +332,99 @@
         halo.dataCodeTheme()
     }
 
+</script>
+<script>
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            var panels = ['#agg-search', '#rightside-config-show', '#console', '.right-menu'];
+            panels.forEach(function (sel) {
+                document.querySelectorAll(sel).forEach(function (el) { el.classList.remove('show', 'active'); });
+            });
+        }
+    });
+    // 聚合搜索打开时自动聚焦输入框 + 焦点陷阱
+    (function () {
+        var agg = document.getElementById('hao-aggsearch');
+        if (!agg) return;
+        var observer = new MutationObserver(function () {
+            if (agg.style.display !== 'none') {
+                var input = document.getElementById('aggsearch-input');
+                if (input) input.focus();
+                // 焦点陷阱
+                agg.addEventListener('keydown', trapFocus);
+            } else {
+                agg.removeEventListener('keydown', trapFocus);
+            }
+        });
+        function trapFocus(e) {
+            if (e.key !== 'Tab') return;
+            var focusable = agg.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+            if (!focusable.length) return;
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+            } else {
+                if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+            }
+        }
+        observer.observe(agg, { attributes: true, attributeFilter: ['style'] });
+    })();
+
+    // 右键菜单焦点陷阱
+    (function () {
+        var rm = document.getElementById('rightMenu');
+        if (!rm) return;
+        var observer = new MutationObserver(function () {
+            var visible = rm.style.display !== 'none' && rm.offsetParent !== null;
+            if (visible) {
+                var focusable = rm.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+                if (focusable.length) focusable[0].focus();
+                rm.addEventListener('keydown', trap);
+            } else {
+                rm.removeEventListener('keydown', trap);
+            }
+        });
+        function trap(e) {
+            if (e.key !== 'Tab') return;
+            var focusable = rm.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+            if (!focusable.length) return;
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+            } else {
+                if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+            }
+        }
+        observer.observe(rm, { attributes: true, attributeFilter: ['style', 'class'] });
+    })();
+
+    // 控制台焦点陷阱
+    (function () {
+        var consolePanel = document.getElementById('console');
+        if (!consolePanel) return;
+        var observer = new MutationObserver(function () {
+            var visible = consolePanel.style.display !== 'none' && consolePanel.offsetParent !== null;
+            if (visible) {
+                var focusable = consolePanel.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+                if (focusable.length) focusable[0].focus();
+                consolePanel.addEventListener('keydown', trap);
+            } else {
+                consolePanel.removeEventListener('keydown', trap);
+            }
+        });
+        function trap(e) {
+            if (e.key !== 'Tab') return;
+            var focusable = consolePanel.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+            if (!focusable.length) return;
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+            } else {
+                if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+            }
+        }
+        observer.observe(consolePanel, { attributes: true, attributeFilter: ['style', 'class'] });
+    })();
 </script>
 </body>
 

@@ -8,10 +8,10 @@
     <div class="page" id="body-wrap">
 
         <!-- 头部导航栏 -->
-        <header class="not-top-img" id="page-header">
+        <header class="not-top-img" id="page-header" role="banner">
             <nav th:replace="~{modules/nav :: nav(title = ${_title})}"></nav>
         </header>
-        <main class="layout hide-aside" id="content-inner">
+        <main class="layout hide-aside" id="content-inner" role="main">
             <div id="page">
                 <div th:replace="~{macro/author-content :: author-content(background = ${theme.config.moment.backgroundImg},
                         smallTitle = ${theme.config.moment.smallTitle},
@@ -22,6 +22,10 @@
                 <div id="bber">
                     <section class="timeline page-1">
                         <ul class="list" id="waterfall">
+                            <li class="item empty" th:if="${#lists.isEmpty(moments.items)}"
+                                style="list-style:none;">
+                                <th:block th:replace="~{modules/common/empty-state :: empty-state('page.moments.title', 'friends.noResults', 'fas fa-inbox', 'empty-state')}"></th:block>
+                            </li>
                             <li class="item" th:each="moment : ${moments.items}"
                                 th:with="content=${moment.spec.content}">
                                 <div class="bber-content">
@@ -54,8 +58,13 @@
                                                   th:text="${#dates.format(moment.spec.releaseTime,'yyyy-MM-dd')}"></time>
                                         </div>
                                     </div>
-                                    <a class="bber-reply" th:if="${theme.config.comments.use != 'commentWidget'}"
-                                       th:onclick="rightMenuCommentText(stripHtml([[${content.html}]]));"
+                                    <a class="bber-reply" th:if="${theme.config.comments.use != 'commentWidget' and theme.config.moment.replyQuote}"
+                                       th:onclick="quoteMomentText([[${content.html}]], ${theme.config.moment.quoteTruncate} ? ${theme.config.moment.quoteLength ?: 120} : 0);"
+                                       data-pjax-state=""> <i class="haofont hao-icon-chat--fill"
+                                                              style="font-size: 20px;"></i>
+                                    </a>
+                                    <a class="bber-reply" th:if="${theme.config.comments.use != 'commentWidget' and not theme.config.moment.replyQuote}"
+                                       th:onclick="scrollToComment();"
                                        data-pjax-state=""> <i class="haofont hao-icon-chat--fill"
                                                               style="font-size: 20px;"></i>
                                     </a>
@@ -65,7 +74,102 @@
                     </section>
                     <!--  分页还没写 -->
                 </div>
-                <div id="bber-tips" style="color: var(--heo-secondtext);">- 只展示最近30条短文 -</div>
+                <!-- 当前筛选条件提示 -->
+                <div th:if="${not #strings.isEmpty(param.ownerName) or not #strings.isEmpty(param.tag)}"
+                     style="margin:8px 0 12px;font-size:13px;color:var(--heo-secondtext);">
+                    <span th:if="${not #strings.isEmpty(param.ownerName)}" th:text="${#messages.msg('common.author')}"></span><span th:text="${param.ownerName}"></span>
+                    <span th:if="${not #strings.isEmpty(param.tag)}" th:text="${#messages.msg('common.tag')}"></span><span th:text="${param.tag}"></span>
+                    <a th:href="@{/moments}" style="margin-left:8px;color:var(--heo-main);text-decoration:none;" th:text="${#messages.msg('common.clearFilter')}"></a>
+                </div>
+                <!-- 标签筛选（插件提供 tags 时显示） -->
+                <div class="moment-tag-filter" th:if="${tags != null and not #lists.isEmpty(tags)}"
+                     style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px;">
+                    <a th:class="${#strings.isEmpty(param.tag) ? 'active' : ''}" th:href="@{/moments}"
+                       style="padding:4px 10px;border-radius:999px;font-size:12px;text-decoration:none;background:var(--heo-main-op);color:var(--heo-main);"
+                       th:text="${#messages.msg('common.all')}"></a>
+                    <a th:each="tag : ${tags}" th:class="${#strings.equals(param.tag, tag.name) ? 'active' : ''}"
+                       th:href="@{/moments(tag=${tag.name})}" th:text="${tag.name}"
+                       style="padding:4px 10px;border-radius:999px;font-size:12px;text-decoration:none;background:var(--heo-main-op);color:var(--heo-main);"></a>
+                </div>
+                <div id="bber-tips" style="color: var(--heo-secondtext);" aria-live="polite" role="status"
+                     th:text="${#messages.msg('moment.limitTip')}">- 只展示最近30条短文 -</div>
+                <style>
+                    @keyframes skeleton-pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+                </style>
+                <div style="text-align:center;margin:16px 0;">
+                    <button id="moment-load-more" th:if="${moments.hasNext}" type="button" aria-live="polite"
+                            th:data-loading-text="${#messages.msg('common.loading')}"
+                            th:data-retry-text="${#messages.msg('common.retry')}"
+                            th:data-load-more-text="${#messages.msg('common.loadMore')}"
+                            th:data-load-failed-text="${#messages.msg('common.loadFailedRetry')}"
+                            style="padding:8px 16px;border:none;border-radius:8px;background:var(--heo-main-op);color:var(--heo-main);cursor:pointer;">
+                        [[${#messages.msg('common.loadMore')}]]
+                    </button>
+                </div>
+                <script th:inline="javascript">
+                    (function () {
+                        var page = /*[[${moments.page}]]*/ 1;
+                        var totalPages = /*[[${moments.totalPages}]]*/ 1;
+                        var tag = /*[[${param.tag}]]*/ null;
+                        var ownerName = /*[[${param.ownerName}]]*/ null;
+                        var btn = document.getElementById('moment-load-more');
+                        if (!btn) return;
+                        btn.addEventListener('click', function () {
+                            if (page >= totalPages) { btn.style.display = 'none'; return; }
+                            var next = page + 1;
+                            var url = '/apis/api.moment.halo.run/v1alpha1/moments?page=' + next + '&size=10&sort=spec.releaseTime,desc';
+                            if (tag) url += '&tag=' + encodeURIComponent(tag);
+                            if (ownerName) url += '&ownerName=' + encodeURIComponent(ownerName);
+                            btn.disabled = true;
+                            btn.textContent = btn.getAttribute('data-loading-text') || '加载中...';
+                            // 骨架屏占位
+                            var skeletonIds = [];
+                            var list = document.getElementById('waterfall');
+                            for (var si = 0; si < 3; si++) {
+                                var sk = document.createElement('li');
+                                sk.className = 'item skeleton';
+                                sk.style.cssText = 'list-style:none;padding:16px;border-radius:8px;background:var(--heo-card-bg);margin-bottom:12px;animation:skeleton-pulse 1.2s ease-in-out infinite;';
+                                sk.innerHTML = '<div style="height:12px;width:60%;background:var(--heo-main-op);border-radius:4px;margin-bottom:8px;"></div><div style="height:12px;width:90%;background:var(--heo-main-op);border-radius:4px;"></div>';
+                                if (list) { list.appendChild(sk); skeletonIds.push(sk); }
+                            }
+                            fetch(url, { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (data) {
+                                var items = data.items || [];
+                                var list = document.getElementById('waterfall');
+                                // 移除骨架屏
+                                skeletonIds.forEach(function (sk) { if (sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+                                items.forEach(function (m) {
+                                    var content = (m.spec && m.spec.content) ? m.spec.content : {};
+                                    var html = content.html || '';
+                                    var release = (m.spec && m.spec.releaseTime) ? m.spec.releaseTime : '';
+                                    var timeText = '';
+                                    try { timeText = new Date(release).toLocaleString(); } catch (e) { timeText = release; }
+                                    var li = document.createElement('li');
+                                    li.className = 'item';
+                                    li.innerHTML = '<div class="bber-content"><div class="datacont">' + html + '</div></div>'
+                                        + '<hr><div class="bber-bottom"><div class="bber-info"><div class="bber-info-time">'
+                                        + '<i class="haofont hao-icon-clock"></i> <time>' + timeText + '</time></div></div></div>';
+                                    if (list) list.appendChild(li);
+                                });
+                                page = next;
+                                btn.disabled = false;
+                                btn.textContent = btn.getAttribute('data-load-more-text') || '加载更多';
+                                if (page >= totalPages) btn.style.display = 'none';
+                            }).catch(function () {
+                                skeletonIds.forEach(function (sk) { if (sk && sk.parentNode) sk.parentNode.removeChild(sk); });
+                                btn.disabled = false;
+                                btn.textContent = btn.getAttribute('data-load-failed-text') || '加载失败，点击重试';
+                            });
+                        });
+                    })();
+                </script>
+                <nav class="moment-pagination" th:if="${moments != null and moments.totalPages > 1}"
+                     style="display:flex;justify-content:center;align-items:center;gap:12px;margin:16px 0;">
+                    <a th:if="${moments.hasPrevious}" th:href="@{/moments(page=${moments.page - 1})}"
+                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;">上一页</a>
+                    <span style="color:var(--heo-secondtext);font-size:13px;">第 [[${moments.page}]] / [[${moments.totalPages}]] 页</span>
+                    <a th:if="${moments.hasNext}" th:href="@{/moments(page=${moments.page + 1})}"
+                       style="padding:6px 12px;border-radius:6px;background:var(--heo-main-op);color:var(--heo-main);text-decoration:none;">下一页</a>
+                </nav>
                 <script>heo.reflashEssayWaterFall();</script>
                 <hr th:if="${theme.config.comments.use != 'commentWidget'}" />
                 <!--/* 评论组件 */-->
