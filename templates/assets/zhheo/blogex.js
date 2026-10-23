@@ -526,7 +526,8 @@ window.onkeydown = function (e) {
 // 阻止中控台打开时背景页面滚动。
 // wheel 必须是非 passive 才能 preventDefault；仅在 #console 显示时挂载，
 // 避免页面加载阶段就注册 scroll-blocking 监听触发浏览器警告。
-(function () {
+// 前置分号不能省：上一个语句是函数表达式赋值且没有分号，否则会被解析成连续调用。
+;(function () {
     var consoleEl = document.querySelector('#console')
     if (!consoleEl) return
 
