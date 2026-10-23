@@ -218,6 +218,7 @@
                         </div>
                         <div class="ai-input">
                             <input class="ai-input-field" type="text" name="ai-question" id="ai-input-field"
+                                   autocomplete="off"
                                    th:placeholder="${not #strings.isEmpty(theme.config.post.aiDescription.askPlaceholder) ? theme.config.post.aiDescription.askPlaceholder : '针对这个文章有什么想问的？'}"
                                    th:attr="data-ask-url=${theme.config.post.aiDescription.askUrl},data-post-title=${post.spec.title},data-post-url=${post.status.permalink}">
                             <button class="ai-input-send" id="ai-input-send" type="button" title="发送">发送</button>

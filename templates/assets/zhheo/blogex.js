@@ -523,13 +523,31 @@ window.onkeydown = function (e) {
     }
 }
 
-// 阻止搜索滚动
-// document.querySelector('#algolia-search').addEventListener('wheel', (e) => {
-//   e.preventDefault()
-// })
-document.querySelector('#console') && document.querySelector('#console').addEventListener('wheel', (e) => {
-    e.preventDefault()
-})
+// 阻止中控台打开时背景页面滚动。
+// wheel 必须是非 passive 才能 preventDefault；仅在 #console 显示时挂载，
+// 避免页面加载阶段就注册 scroll-blocking 监听触发浏览器警告。
+(function () {
+    var consoleEl = document.querySelector('#console')
+    if (!consoleEl) return
+
+    var preventBackgroundScroll = function (e) {
+        e.preventDefault()
+    }
+
+    function syncConsoleScrollLock() {
+        if (consoleEl.classList.contains('show')) {
+            consoleEl.addEventListener('wheel', preventBackgroundScroll, { passive: false })
+        } else {
+            consoleEl.removeEventListener('wheel', preventBackgroundScroll)
+        }
+    }
+
+    new MutationObserver(syncConsoleScrollLock).observe(consoleEl, {
+        attributes: true,
+        attributeFilter: ['class']
+    })
+    syncConsoleScrollLock()
+})()
 // document.querySelector('#loading-box').addEventListener('wheel', (e) => {
 //   e.preventDefault()
 // })
